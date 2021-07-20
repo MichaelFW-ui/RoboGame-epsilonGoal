@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "debug.h": "c",
+        "stm32f1xx_hal.h": "c",
+        "freertos.h": "c"
+    }
+}
