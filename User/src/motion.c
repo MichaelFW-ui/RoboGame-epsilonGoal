@@ -2,14 +2,15 @@
 
 //给个结构体对运动控制
 struct Motion_Control{
+  uint8_t Motion_Speed;
   uint8_t Motion_Wheel;
   uint8_t Motion_Left_Arm[3];
-  uint8_t Motion_Right_Arm{3];
+  uint8_t Motion_Right_Arm[3];
   uint8_t Motion_Pushbeam;
   uint8_t Motion_Frictiongear;
 };
 
-//前后左右移动以及停下
+//前后左右移动以及刹车
 void Motion_GoNorth(void){
 }
 
