@@ -39,6 +39,10 @@ extern UART_HandleTypeDef huart4;
 /*    BEGIN OF DEBUG TYPE DEFINITION                                          */
 
 typedef uint8_t Debug_QueueItemTypeDef;
+typedef enum {
+  Debug_OperationOnLoad = 0x01,
+  Debug_OperationHalt   = 0x10
+} Debug_CommandStatus;
 
 /*
 *       我们使用如下格式来表示队列格式
@@ -46,6 +50,7 @@ typedef uint8_t Debug_QueueItemTypeDef;
 *       接收到新的指令待处理
 *       command == 0x10:
 *       程序中止
+
 *
 *
 */

@@ -47,7 +47,12 @@ void Debug_Main(void) {
   uint8_t cmd;
   while (1) {
     xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
-    Debug_CommandHandler(cmd);
+    if (cmd == Debug_OperationOnLoad) Debug_CommandHandler(Debug_USART_CommandBuffer);
+    else if (cmd == Debug_OperationHalt) {
+      // TODO Completion
+    } else {
+      Debug_BugCatcher(HAL_ERROR);
+    }
     /*
       TODO: 现在是转发消息，今后可以实现更复杂的关系！
     */
@@ -100,7 +105,7 @@ int fputc(int ch, FILE *f) {
  * @retval None
  */
 void Debug_PutString(uint8_t *str) {
-  printf((const char *restrict)str);
+  printf((char *restrict)str);
 }
 
 /**
@@ -115,13 +120,14 @@ void Debug_Receive_DMA(void) {
 
 
 
-__STATIC_INLINE Debug_MotionHandler(uint8_t *str) {
+__STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
   switch (str[1]) {
     case 'P':
       /*TODO 处理信息*/
       break;
     default:
       /*TODO错误处理*/
+      break;
   }
 }
 

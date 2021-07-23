@@ -49,6 +49,8 @@
 "robogame\rfid.o"
 "robogame\steer_ctrl.o"
 "robogame\trace.o"
+"robogame\pid.o"
+"robogame\flag.o"
 "robogame\croutine.o"
 "robogame\event_groups.o"
 "robogame\list.o"

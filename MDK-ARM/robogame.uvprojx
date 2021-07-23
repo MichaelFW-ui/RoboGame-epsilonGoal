@@ -1270,11 +1270,6 @@
               <FilePath>..\User\src\pid.c</FilePath>
             </File>
             <File>
-              <FileName>callback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\src\callback.c</FilePath>
-            </File>
-            <File>
               <FileName>flag.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\src\flag.c</FilePath>
