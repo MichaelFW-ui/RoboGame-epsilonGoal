@@ -60,7 +60,7 @@ void Debug_Init(void);
 
 void Debug_USART_SendByte(uint8_t byte);
 
-void Debug_CommandHandler(void);
+void Debug_CommandHandler(uint8_t *str);
 
 void Debug_BugCatcher(HAL_StatusTypeDef status);
 

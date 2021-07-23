@@ -60,7 +60,8 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, Motor_OutAP_Pin|Motor_OutAN_Pin|Motor_OutBP_Pin|Motor_OutBN_Pin
-                          |Motor_OutCP_Pin|Motor_OutCN_Pin|Motor_OutDP_Pin|Motor_OutDN_Pin, GPIO_PIN_RESET);
+                          |Motor_OutCP_Pin|Motor_OutCN_Pin|Pushrod_Pulse_Pin|Pushrod_Direction_Pin
+                          |Motor_OutDP_Pin|Motor_OutDN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, GY_CS_Pin|VA_CS_Pin|VB_CS_Pin|NRF_CE_Pin
@@ -91,6 +92,13 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = Motor_OutAP_Pin|Motor_OutAN_Pin|Motor_OutBP_Pin|Motor_OutBN_Pin
                           |Motor_OutCP_Pin|Motor_OutCN_Pin|Motor_OutDP_Pin|Motor_OutDN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PFPin PFPin */
+  GPIO_InitStruct.Pin = Pushrod_Pulse_Pin|Pushrod_Direction_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
