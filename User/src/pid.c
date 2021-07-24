@@ -19,7 +19,7 @@
  *         内容 PID handle
  * @return None 
  */
-__STATIC_INLINE void PID_InformationInit(PID_InformationTypeDef *handle) {
+void PID_InformationInit(PID_InformationTypeDef *handle) {
   handle->Current = 0;
   handle->Target = 0;
 
@@ -45,7 +45,7 @@ __STATIC_INLINE void PID_InformationInit(PID_InformationTypeDef *handle) {
  *                内容 当前参量
  * @return None 
  */
-__STATIC_INLINE void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current) {
+void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current) {
   // 计算
   double error = handle->Target - current;
   double lastError = handle->Current - handle->Previous;
@@ -76,7 +76,7 @@ __STATIC_INLINE void PID_Calculate_Locational(PID_InformationTypeDef *handle, do
  *                        内容 积分上限
  * @return None 
  */
-__STATIC_INLINE void PID_Calculate_Locational_CounterOverflow(
+void PID_Calculate_Locational_CounterOverflow(
   PID_InformationTypeDef *handle, double current, double IntegralMinimum,
   double IntegralMaximum) {
   // 计算
@@ -99,15 +99,23 @@ __STATIC_INLINE void PID_Calculate_Locational_CounterOverflow(
   handle->Previous - handle->Current;
   handle->Current = current;
 }
-
-__STATIC_INLINE void PID_Calculate_Incremental(PID_InformationTypeDef *handle,
+/**
+ * @brief 增量式PID计算
+ * 
+ * @param handle  类型 PID_InformationTypeDef 
+ *                内容 PID handle
+ * @param current 类型 double
+ *                内容 当前参量
+ * @return None 
+ */
+void PID_Calculate_Incremental(PID_InformationTypeDef *handle,
                                                double current) {
   // 计算
   double error = handle->Target - current;
 
   // 求值
   handle->Integral = error;
-  handle->Derivative = error - 2 * handle->prePrevious + handle->prePrevious;
+  handle->Derivative = error - 2 * handle->Previous + handle->prePrevious;
 
   // 输出
   handle->Output +=

@@ -51,6 +51,8 @@
 "robogame\trace.o"
 "robogame\pid.o"
 "robogame\flag.o"
+"robogame\pwm_generate.o"
+"robogame\callback.o"
 "robogame\croutine.o"
 "robogame\event_groups.o"
 "robogame\list.o"

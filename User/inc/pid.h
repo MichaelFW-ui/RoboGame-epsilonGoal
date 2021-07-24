@@ -9,6 +9,11 @@
  * 
  */
 
+#ifndef __PID_H
+#define __PID_H
+
+#endif // !__PID_H
+
 #include "stm32f1xx_hal.h"
 
 /*             PID TypeDef Begin                                              */
@@ -35,22 +40,25 @@ typedef struct {
 *     增量式PID中，有
 *         Current 当前参量
 *         Previous 先前误差
-*         prePrevious 先先前误差*
+*         prePrevious 先先前误差
 *
 *
 */
 
 /*             PID TypeDef End                                                */
 
-__STATIC_INLINE void PID_InformationInit(PID_InformationTypeDef *handle);
-
-__STATIC_INLINE void PID_Calculate_Locational(PID_InformationTypeDef *handle,
-                                              double current);
-
-__STATIC_INLINE void PID_Calculate_Incremental(PID_InformationTypeDef *handle,
-                                               double current);
-
 __STATIC_INLINE void PID_SetTarget(PID_InformationTypeDef *handle,
                                    double target) {
   handle->Target = target;
 }
+void PID_InformationInit(PID_InformationTypeDef *handle);
+
+void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current);
+
+void PID_Calculate_Locational_CounterOverflow(PID_InformationTypeDef *handle,
+                                              double current,
+                                              double IntegralMinimum,
+                                              double IntegralMaximum);
+
+void PID_Calculate_Incremental(PID_InformationTypeDef *handle, double current);
+

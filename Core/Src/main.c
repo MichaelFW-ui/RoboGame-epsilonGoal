@@ -30,6 +30,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "motor_feedback.h"
 
 /* USER CODE END Includes */
 
@@ -193,6 +194,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+  if (htim->Instance == TIM2) {
+    MotorFeedback_TIM_PeriodElapsedCallback();
+  }
 
   /* USER CODE END Callback 1 */
 }

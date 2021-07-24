@@ -1,28 +1,28 @@
 # 可能的电控规划
 
-| category | 文件             | 功能                     | 工程前缀               |
-| -------- | ---------------- | ------------------------ | ---------------------- |
-| 照搬的   | \*.*              | 从各个地方直接copy过来的 | 无                     |
-| 底层     | motor_ctrl.*     | 底盘电机基本驱动         | MotorCtrl & MOTOR_CTRL |
-| 底层     | motor_feedback.* | 底盘电机反馈编码器       | MotorFb & MOTOR_FB     |
-| 底层     | trace.*          | 底盘红外对管信号         | Trace & TRACE          |
-| 底层     | pushrod.*        | 推杆驱动信号             | Pushrod & PUSHROD      |
-| 底层     | steer_ctrl.*     | 所有舵机驱动信号         | SteerCtrl & STEER_CTRL |
-| 底层     | can_.*           | CAN 通信逻辑             | CAN & CAN              |
-| 底层     | foc.*            | FOC 调用方法             | FOC & FOC              |
-| 底层     | cannon.*         | 摩擦轮电机驱动信号       | Cannon & CANNON        |
-| 通用层   | debug.*          | 调试信息输出             | Debug & DEBUG          |
-| 通用层   | com.*            | 上位机通信               | Communication & COM    |
-| 通用层   | detect.*         | 驱动电路上电检测         | Detect & DETECT        |
-| 通用层   | rfid.*           | RFID 信号（选配）        | RFID & RFID            |
-| 通用层   | ranging.*        | 激光测距信号             | Ranging & RANGING      |
-| 通用层   | position.*       | 姿态，GY-9250 信号       | Position & POSITION    |
-| 通用层   | nrf.*            | NRF 调试遥控             | NRF & NRF              |
-| 应用层   | motor.*          | 底盘电机操作接口         | Motor & MOTOR          |
-| 应用层   | motion.*         | 移动控制方法             | Motion & MOTION        |
-| 应用层   | error.*          | 错误模式处理             | Error & ERROR          |
-| 应用层   | procedure.*      | 全部流程                 | Procedure & PROCEDURE  |
-| 应用层   | main_.*          | 启动全部流程             | Main_ & MAIN           |
+| category | 文件             | 功能                     | 工程前缀                       |
+| -------- | ---------------- | ------------------------ | ------------------------------ |
+| 照搬的   | \*.*             | 从各个地方直接copy过来的 | 无                             |
+| 底层     | motor_ctrl.*     | 底盘电机基本驱动         | MotorCtrl & MOTOR_CTRL         |
+| 底层     | motor_feedback.* | 底盘电机反馈编码器       | MotorFeedback & MOTOR_FEEDBACK |
+| 底层     | trace.*          | 底盘红外对管信号         | Trace & TRACE                  |
+| 底层     | pushrod.*        | 推杆驱动信号             | Pushrod & PUSHROD              |
+| 底层     | steer_ctrl.*     | 所有舵机驱动信号         | SteerCtrl & STEER_CTRL         |
+| 底层     | can_.*           | CAN 通信逻辑             | CAN & CAN                      |
+| 底层     | foc.*            | FOC 调用方法             | FOC & FOC                      |
+| 底层     | cannon.*         | 摩擦轮电机驱动信号       | Cannon & CANNON                |
+| 通用层   | debug.*          | 调试信息输出             | Debug & DEBUG                  |
+| 通用层   | com.*            | 上位机通信               | Communication & COM            |
+| 通用层   | detect.*         | 驱动电路上电检测         | Detect & DETECT                |
+| 通用层   | rfid.*           | RFID 信号（选配）        | RFID & RFID                    |
+| 通用层   | ranging.*        | 激光测距信号             | Ranging & RANGING              |
+| 通用层   | position.*       | 姿态，GY-9250 信号       | Position & POSITION            |
+| 通用层   | nrf.*            | NRF 调试遥控             | NRF & NRF                      |
+| 应用层   | motor.*          | 底盘电机操作接口         | Motor & MOTOR                  |
+| 应用层   | motion.*         | 移动控制方法             | Motion & MOTION                |
+| 应用层   | error.*          | 错误模式处理             | Error & ERROR                  |
+| 应用层   | procedure.*      | 全部流程                 | Procedure & PROCEDURE          |
+| 应用层   | main_.*          | 启动全部流程             | Main_ & MAIN                   |
 
 注：
 

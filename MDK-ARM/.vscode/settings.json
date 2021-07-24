@@ -6,6 +6,10 @@
         "freertos.h": "c",
         "pushrod.h": "c",
         "callback.h": "c",
-        "pid.h": "c"
+        "pid.h": "c",
+        "pwm_generate.h": "c",
+        "i2c.h": "c",
+        "stdarg.h": "c",
+        "motor_feedback.h": "c"
     }
 }

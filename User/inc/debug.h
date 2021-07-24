@@ -69,7 +69,7 @@ void Debug_CommandHandler(uint8_t *str);
 
 void Debug_BugCatcher(HAL_StatusTypeDef status);
 
-void Debug_PutString(uint8_t *str);
+void Debug_PutString(uint8_t *str, ...);
 
 void Debug_Receive_DMA(void);
 

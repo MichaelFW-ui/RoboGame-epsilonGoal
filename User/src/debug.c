@@ -24,6 +24,7 @@
 #include "main.h"
 #include "debug.h"
 #include "stdio.h"
+#include "stdarg.h"
 
 #include "freertos.h"
 #include "queue.h"
@@ -104,8 +105,11 @@ int fputc(int ch, FILE *f) {
  * @param str string to print
  * @retval None
  */
-void Debug_PutString(uint8_t *str) {
-  printf((char *restrict)str);
+void Debug_PutString(uint8_t *str, ...) {
+  va_list args;
+  va_start(args, str);
+  printf(str, args);
+  va_end(args);
 }
 
 /**
@@ -155,6 +159,7 @@ void Debug_CommandHandler(uint8_t *str) {
       break;
     default:
       /*TODO 错误处理*/
+      break;
   }
 }
 
