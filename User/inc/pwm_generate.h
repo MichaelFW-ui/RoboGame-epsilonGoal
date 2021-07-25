@@ -47,7 +47,9 @@
  * @param len 数据长度
  * @return HAL_StatusTypeDef 无需介绍
  */
-__STATIC_INLINE HAL_StatusTypeDef PWM_I2C_WriteByte(uint16_t addr, uint8_t *byte, uint8_t len) {
+__STATIC_INLINE HAL_StatusTypeDef PWM_I2C_WriteByte(uint16_t addr,
+                                                    uint8_t *byte,
+                                                    uint8_t len) {
   return HAL_I2C_Master_Transmit(&PWM_Handle, addr, byte, len, 0xFFFF);
 }
 
@@ -58,7 +60,8 @@ __STATIC_INLINE HAL_StatusTypeDef PWM_I2C_WriteByte(uint16_t addr, uint8_t *byte
  * @param byte 写入的字节（一个）
  * @return HAL_StatusTypeDef 
  */
-__STATIC_INLINE HAL_StatusTypeDef PWM_WriteByte(uint8_t reg_addr, uint8_t *byte) {
+__STATIC_INLINE HAL_StatusTypeDef PWM_WriteByte(uint8_t reg_addr,
+                                                uint8_t *byte) {
   uint8_t bytes[] = { reg_addr, *byte };
   return PWM_I2C_WriteByte(PWM_I2C_ADDR, bytes, 2);
 }
@@ -71,7 +74,8 @@ __STATIC_INLINE HAL_StatusTypeDef PWM_WriteByte(uint8_t reg_addr, uint8_t *byte)
  * @param len 数据长度
  * @return HAL_StatusTypeDef 无需介绍
  */
-__STATIC_INLINE HAL_StatusTypeDef PWM_I2C_ReadByte(uint16_t addr, uint8_t *byte, uint8_t len) {
+__STATIC_INLINE HAL_StatusTypeDef PWM_I2C_ReadByte(uint16_t addr, uint8_t *byte,
+                                                   uint8_t len) {
   return HAL_I2C_Master_Receive(&PWM_Handle, addr, byte, len, 0xFFFF);
 }
 
@@ -82,7 +86,8 @@ __STATIC_INLINE HAL_StatusTypeDef PWM_I2C_ReadByte(uint16_t addr, uint8_t *byte,
  * @param byte 读取数据存储区(1个字节)
  * @return HAL_StatusTypeDef 
  */
-__STATIC_INLINE HAL_StatusTypeDef PWM_ReadByte(uint8_t reg_addr, uint8_t *byte) {
+__STATIC_INLINE HAL_StatusTypeDef PWM_ReadByte(uint8_t reg_addr,
+                                               uint8_t *byte) {
   PWM_I2C_WriteByte(PWM_I2C_ADDR, &reg_addr, 1);
   return PWM_I2C_ReadByte(PWM_I2C_ADDR, byte, 1);
 }
@@ -105,7 +110,8 @@ HAL_StatusTypeDef __STATIC_INLINE PWM_Reset(void) {
  * @param off 低电平
  * @return HAL_StatusTypeDef 
  */
-HAL_StatusTypeDef __STATIC_INLINE PWM_SetPWM(uint8_t ordinal, uint16_t on, uint16_t off) {
+HAL_StatusTypeDef __STATIC_INLINE PWM_SetPWM(uint8_t ordinal, uint16_t on,
+                                             uint16_t off) {
   uint8_t bytes[] = {LED0_ON_L + (ordinal << 2), (uint8_t)on,
                      (uint8_t)(on >> 8), (uint8_t)off, (uint8_t)(off >> 8)};
   return PWM_I2C_WriteByte(PWM_I2C_ADDR, bytes, 5);

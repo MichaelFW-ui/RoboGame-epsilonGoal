@@ -59,7 +59,7 @@ void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current) {
                    handle->Kd * handle->Derivative;
 
   // 迭代
-  handle->Previous - handle->Current;
+  handle->Previous = handle->Current;
   handle->Current = current;
 }
 
@@ -96,7 +96,7 @@ void PID_Calculate_Locational_CounterOverflow(
                    handle->Kd * handle->Derivative;
 
   // 迭代
-  handle->Previous - handle->Current;
+  handle->Previous = handle->Current;
   handle->Current = current;
 }
 /**

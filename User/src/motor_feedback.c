@@ -22,22 +22,30 @@ MotorFeedback_InformationTypeDef Motor_InformationInstance;
  *      作用：检查当前活跃通道，将其计数器的结果计算出来。
  * 
  * @param htim 
- * @return __STATIC_INLINE 
+ * @return None 
  */
 void MotorFeedback_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   static uint16_t MotorFeedback_LastTick[4];
 
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_1) {
     Temp_GetTicks(0);
+    Motor_InformationInstance.Directions[0] =
+      (Motor_InA_GPIO_Port->IDR & Motor_InA_Pin) ? Motor_CW : Motor_CCW;
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_2) {
     Temp_GetTicks(1);
+    Motor_InformationInstance.Directions[1] =
+      (Motor_InB_GPIO_Port->IDR & Motor_InB_Pin) ? Motor_CW : Motor_CCW;
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_3) {
     Temp_GetTicks(2);
+    Motor_InformationInstance.Directions[2] =
+      (Motor_InC_GPIO_Port->IDR & Motor_InC_Pin) ? Motor_CW : Motor_CCW;
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_4) {
     Temp_GetTicks(3);
+    Motor_InformationInstance.Directions[3] =
+      (Motor_InD_GPIO_Port->IDR & Motor_InD_Pin) ? Motor_CW : Motor_CCW;
   }
 }
 

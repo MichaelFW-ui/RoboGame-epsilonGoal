@@ -94,7 +94,8 @@ __STATIC_INLINE void MotorFeedback_Init(void) {
  * @param None
  * @return MotorFeedback_InformationTypeDef 
  */
-MotorFeedback_InformationTypeDef __STATIC_INLINE MotorFeedback_GetInformation(void) {
+MotorFeedback_InformationTypeDef __STATIC_INLINE
+MotorFeedback_GetInformation(void) {
   return Motor_InformationInstance;
 }
 

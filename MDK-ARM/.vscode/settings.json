@@ -10,6 +10,7 @@
         "pwm_generate.h": "c",
         "i2c.h": "c",
         "stdarg.h": "c",
-        "motor_feedback.h": "c"
+        "motor_feedback.h": "c",
+        "steer_ctrl.h": "c"
     }
 }
