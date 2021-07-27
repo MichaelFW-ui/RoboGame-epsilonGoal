@@ -11,6 +11,8 @@
         "i2c.h": "c",
         "stdarg.h": "c",
         "motor_feedback.h": "c",
-        "steer_ctrl.h": "c"
+        "steer_ctrl.h": "c",
+        "motor_ctrl.h": "c",
+        "tim.h": "c"
     }
 }

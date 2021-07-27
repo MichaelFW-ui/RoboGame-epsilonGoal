@@ -108,7 +108,7 @@ int fputc(int ch, FILE *f) {
 void Debug_PutString(uint8_t *str, ...) {
   va_list args;
   va_start(args, str);
-  printf(str, args);
+  vprintf((char *)str, args);
   va_end(args);
 }
 
@@ -155,6 +155,7 @@ void Debug_CommandHandler(uint8_t *str) {
       /*    TODO      */
       break;
     case 'M':
+    Debug_MotionHandler(str);
       /*    TODO      */
       break;
     default:

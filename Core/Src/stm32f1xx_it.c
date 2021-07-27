@@ -216,7 +216,7 @@ void UART4_IRQHandler(void)
     __HAL_UART_CLEAR_IDLEFLAG(&huart4);
     HAL_UART_DMAStop(&huart4);
     temp = 0x01;
-    /* pxHigherPriorityTaskWoken的取值并不清楚 */ 
+    /* pxHigherPriorityTaskWoken的取值并不清�? */ 
     xQueueSendToBackFromISR(DebugCommandHandle, &temp, NULL);
     Debug_Receive_DMA();
     
@@ -224,7 +224,7 @@ void UART4_IRQHandler(void)
     /*
       TODO: 如何才能多线程的处理这些通信呢？
       要FreeRTOS！学OS！！
-      这里没有完成整个函数，记得补全 ！！！
+      这里没有完成整个函数，记得补�? ！！�?
     */
   }
 

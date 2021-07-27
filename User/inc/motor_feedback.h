@@ -13,7 +13,6 @@
 #ifndef __MOTOR_FEEDBACK_H
 #define __MOTOR_FEEDBACK_H
 
-#endif // !__MOTOR_FEEDBACK_H
 
 #include "stm32f1xx_hal.h"
 #include "tim.h"
@@ -32,7 +31,10 @@
 
 typedef uint32_t MotorFeedback_TimeTick_t;
 typedef uint8_t MotorFeedback_ReloadTime_t;
-typedef enum { Motor_CW = 0, Motor_CCW = 1 } MotorFeedback_Direction_t;
+typedef enum {
+  MotorFeedback_CW  = 0,
+  MotorFeedback_CCW = 1
+} MotorFeedback_Direction_t;
 typedef struct {
   MotorFeedback_TimeTick_t TimeTicks[4];
   MotorFeedback_ReloadTime_t ReloadTimes[4];
@@ -92,12 +94,13 @@ __STATIC_INLINE void MotorFeedback_Init(void) {
  * @brief 获取电机的反馈信息
  * 
  * @param None
- * @return MotorFeedback_InformationTypeDef 
+ * @return MotorFeedback_InformationTypeDef *
  */
-MotorFeedback_InformationTypeDef __STATIC_INLINE
-MotorFeedback_GetInformation(void) {
-  return Motor_InformationInstance;
+__STATIC_INLINE MotorFeedback_InformationTypeDef* MotorFeedback_GetInformation(
+  void) {
+  return &Motor_InformationInstance;
 }
 
 void MotorFeedback_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 
+#endif // !__MOTOR_FEEDBACK_H

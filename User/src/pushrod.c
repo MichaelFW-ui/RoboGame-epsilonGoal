@@ -26,9 +26,10 @@ void Pushrod_TIM_UpdateHandler(void) {
       TODO:使用合适的引脚，完成推杆的运转
   */
   if (Pushrod_DistanceInstance) {
-    HAL_GPIO_WritePin(
-      Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin,
-      ((Pushrod_DistanceInstance & 0x0001) == 1) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin,
+                      ((Pushrod_DistanceInstance & 0x0001) == 1)
+                        ? GPIO_PIN_SET
+                        : GPIO_PIN_RESET);
     --Pushrod_DistanceInstance;
   }
 }

@@ -4,6 +4,9 @@
  * @brief 底盘电机的编码器信号解析
  *    参考TIM2 的分频设置和reload设计计算具体时间
  *    为保证精度，读取的值均为 时间计数
+ * 
+ *    注释里的警告（Attention或Warning）都是值得注意的。
+ *    为了减少代码耦合度，不得已而为之，能力太差。
  * @version 0.1
  * @date 2021-07-24
  * 
@@ -30,24 +33,25 @@ void MotorFeedback_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_1) {
     Temp_GetTicks(0);
     Motor_InformationInstance.Directions[0] =
-      (Motor_InA_GPIO_Port->IDR & Motor_InA_Pin) ? Motor_CW : Motor_CCW;
+      ((Motor_InA_GPIO_Port->IDR & Motor_InA_Pin) ? MotorFeedback_CW
+                                                  : MotorFeedback_CCW);
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_2) {
     Temp_GetTicks(1);
     Motor_InformationInstance.Directions[1] =
-      (Motor_InB_GPIO_Port->IDR & Motor_InB_Pin) ? Motor_CW : Motor_CCW;
+      ((Motor_InB_GPIO_Port->IDR & Motor_InB_Pin) ? MotorFeedback_CW
+                                                  : MotorFeedback_CCW);
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_3) {
     Temp_GetTicks(2);
     Motor_InformationInstance.Directions[2] =
-      (Motor_InC_GPIO_Port->IDR & Motor_InC_Pin) ? Motor_CW : Motor_CCW;
+      ((Motor_InC_GPIO_Port->IDR & Motor_InC_Pin) ? MotorFeedback_CW
+                                                  : MotorFeedback_CCW);
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_4) {
     Temp_GetTicks(3);
     Motor_InformationInstance.Directions[3] =
-      (Motor_InD_GPIO_Port->IDR & Motor_InD_Pin) ? Motor_CW : Motor_CCW;
+      ((Motor_InD_GPIO_Port->IDR & Motor_InD_Pin) ? MotorFeedback_CW
+                                                  : MotorFeedback_CCW);
   }
 }
-
-
-

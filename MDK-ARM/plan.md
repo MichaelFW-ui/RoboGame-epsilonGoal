@@ -94,8 +94,8 @@
     Example_Name_HandlerTypeDef NameHandle;
 
     void Example_Name_Init(*NameHandle, uint8_t identifier) {
-        NameHandle-> indentifier = identifier;
-        NameHandle-> Forward_GPIO_Pin = Forward_GPIO_Pins[identifer];
+        NameHandle->indentifier = identifier;
+        NameHandle->Forward_GPIO_Pin = Forward_GPIO_Pins[identifer];
         /* And so on */
     }
     ```
