@@ -80,6 +80,10 @@ void Error_Handler(void);
 #define Motor_OutCP_GPIO_Port GPIOF
 #define Motor_OutCN_Pin GPIO_PIN_5
 #define Motor_OutCN_GPIO_Port GPIOF
+#define Pushrod_Pulse_Pin GPIO_PIN_6
+#define Pushrod_Pulse_GPIO_Port GPIOF
+#define Pushrod_Direction_Pin GPIO_PIN_8
+#define Pushrod_Direction_GPIO_Port GPIOF
 #define Motor_A_Pin GPIO_PIN_0
 #define Motor_A_GPIO_Port GPIOA
 #define Motor_B_Pin GPIO_PIN_1

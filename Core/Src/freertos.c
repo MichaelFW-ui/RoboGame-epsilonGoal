@@ -124,7 +124,6 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(MovementTask, StartMovement, osPriorityIdle, 0, 128);
   MovementTaskHandle = osThreadCreate(osThread(MovementTask), NULL);
 
-
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */

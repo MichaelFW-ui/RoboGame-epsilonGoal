@@ -24,6 +24,7 @@
 #include "main.h"
 #include "debug.h"
 #include "stdio.h"
+#include "stdarg.h"
 
 #include "freertos.h"
 #include "queue.h"
@@ -47,13 +48,12 @@ void Debug_Main(void) {
   uint8_t cmd;
   while (1) {
     xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
-    uint8_t cnt;
-    for (cnt = 0; Debug_USART_CommandBuffer[cnt] != '\n' &&
-                   cnt < DEBUG_USART_BUFFER_SIZE;
-         ++cnt) {
-      fputc(Debug_USART_CommandBuffer[cnt], stdout);
+    if (cmd == Debug_OperationOnLoad) Debug_CommandHandler(Debug_USART_CommandBuffer);
+    else if (cmd == Debug_OperationHalt) {
+      // TODO Completion
+    } else {
+      Debug_BugCatcher(HAL_ERROR);
     }
-    fputc('\n', stdout);
     /*
       TODO: 现在是转发消息，今后可以实现更复杂的关系！
     */
@@ -105,8 +105,11 @@ int fputc(int ch, FILE *f) {
  * @param str string to print
  * @retval None
  */
-void Debug_PutString(uint8_t *str) {
-  printf((const char *restrict)str);
+void Debug_PutString(uint8_t *str, ...) {
+  va_list args;
+  va_start(args, str);
+  vprintf((char *)str, args);
+  va_end(args);
 }
 
 /**
@@ -118,3 +121,46 @@ void Debug_Receive_DMA(void) {
   Debug_BugCatcher(HAL_UART_Receive_DMA(
     &Debug_Handle, Debug_USART_CommandBuffer, DEBUG_USART_BUFFER_SIZE));
 }
+
+
+
+__STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
+  switch (str[1]) {
+    case 'P':
+      /*TODO 处理信息*/
+      break;
+    default:
+      /*TODO错误处理*/
+      break;
+  }
+}
+
+/**
+ * @brief 处理命令 
+ *    开头：
+ *    P 打印数据
+ *    S 设置参数
+ *    M 设置运动
+ *        PU     推杆前进
+ *        PB     推杆后退
+ * 
+ * @param str 命令；要求：不长于50字节；以"\r\n"结尾。
+ */
+void Debug_CommandHandler(uint8_t *str) {
+  switch (str[0]) {
+    case 'P':
+      /*    TODO      */
+      break;
+    case 'S':
+      /*    TODO      */
+      break;
+    case 'M':
+    Debug_MotionHandler(str);
+      /*    TODO      */
+      break;
+    default:
+      /*TODO 错误处理*/
+      break;
+  }
+}
+
