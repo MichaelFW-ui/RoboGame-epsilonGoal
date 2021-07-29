@@ -81,36 +81,43 @@ void MotorCtrl_CalculateNextOutputByTargets(PID_InformationTypeDef *PIDs,
                                                  MotorDirection_t direction) {
   switch (Motor_Encode(Motor, direction)) {
     case Motor_Encode(Motor_A, Motor_CW):
-      /*TODO*/
-      Motor_OutAP_GPIO_Port->IDR &= Motor_OutAP_Pin;
       Motor_OutAN_GPIO_Port->IDR &= (~Motor_OutAN_Pin);
+      HAL_Delay(1);
+      Motor_OutAP_GPIO_Port->IDR &= Motor_OutAP_Pin;
       break;
     case Motor_Encode(Motor_A, Motor_CCW):
       Motor_OutAP_GPIO_Port->IDR &= (~Motor_OutAP_Pin);
+      HAL_Delay(1);
       Motor_OutAN_GPIO_Port->IDR &= Motor_OutAN_Pin;
       break;
     case Motor_Encode(Motor_B, Motor_CW):
-      Motor_OutBP_GPIO_Port->IDR &= Motor_OutBP_Pin;
       Motor_OutBN_GPIO_Port->IDR &= (~Motor_OutBN_Pin);
+      HAL_Delay(1);
+      Motor_OutBP_GPIO_Port->IDR &= Motor_OutBP_Pin;
       break;
     case Motor_Encode(Motor_B, Motor_CCW):
       Motor_OutBP_GPIO_Port->IDR &= (~Motor_OutBP_Pin);
+      HAL_Delay(1);
       Motor_OutBN_GPIO_Port->IDR &= Motor_OutBN_Pin;
       break;
     case Motor_Encode(Motor_C, Motor_CW):
-      Motor_OutCP_GPIO_Port->IDR &= Motor_OutCP_Pin;
       Motor_OutCN_GPIO_Port->IDR &= (~Motor_OutCN_Pin);
+      HAL_Delay(1);
+      Motor_OutCP_GPIO_Port->IDR &= Motor_OutCP_Pin;
       break;
     case Motor_Encode(Motor_C, Motor_CCW):
       Motor_OutCP_GPIO_Port->IDR &= (~Motor_OutCP_Pin);
+      HAL_Delay(1);
       Motor_OutCN_GPIO_Port->IDR &= Motor_OutCN_Pin;
       break;
     case Motor_Encode(Motor_D, Motor_CW):
-      Motor_OutDP_GPIO_Port->IDR &= Motor_OutDP_Pin;
       Motor_OutDN_GPIO_Port->IDR &= (~Motor_OutDN_Pin);
+      HAL_Delay(1);
+      Motor_OutDP_GPIO_Port->IDR &= Motor_OutDP_Pin;
       break;
     case Motor_Encode(Motor_D, Motor_CCW):
       Motor_OutDP_GPIO_Port->IDR &= (~Motor_OutDP_Pin);
+      HAL_Delay(1);
       Motor_OutDN_GPIO_Port->IDR &= Motor_OutDN_Pin;
       break;
     default:
