@@ -1,7 +1,7 @@
 /**
  * @file pid.c
  * @author Michael Francis Williams (GitHub:Michael-ui)
- * @brief PID 的C语言面向对象实践
+ * @brief 牛神的pid用了几个全局的结构体变量（需要自己来定义）
  *    未测试！！！
  * @version 0.1
  * @date 2021-07-23
