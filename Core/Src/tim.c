@@ -409,7 +409,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   {
     MotorFeedback_TIM_PeriodElapsedCallback();
   }
-  elif(htim->Instance == &htim4)
+  else if(htim->Instance == &htim4)
   {
     MotorCtrl_UpdateControlFlow();
     
