@@ -197,9 +197,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM2) {
     MotorFeedback_TIM_PeriodElapsedCallback();
   }
-
+  if (htim->Instance == TIM4)
+  {
+    MotorCtrl_UpdateControlFlow();
+  }
   /* USER CODE END Callback 1 */
 }
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance == TIM2)
+  {
+    MotorFeedback_IC_CaptureCallback(htim);
+    
+  }
+}
+
 
 /**
   * @brief  This function is executed in case of error occurrence.
