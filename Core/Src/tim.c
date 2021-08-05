@@ -403,26 +403,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  if(htim->Instance == &htim2)
-  {
-    MotorFeedback_TIM_PeriodElapsedCallback();
-  }
-  else if(htim->Instance == &htim4)
-  {
-    MotorCtrl_UpdateControlFlow();
-    
-  }
-}
 
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
-{
-  if(htim->Instance == &htim2)
-  {
-    MotorFeedback_IC_CaptureCallback(htim);
-  }
-}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
