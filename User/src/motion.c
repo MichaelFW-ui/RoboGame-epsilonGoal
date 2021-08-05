@@ -1,7 +1,7 @@
-#include ""
+#include "motion.h"
 
 //给个结构体对运动控制
-
+Motion_t Motion_Information;
 
 //前后左右移动以及刹车
 void Motion_GoNorth(void){
