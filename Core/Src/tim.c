@@ -21,7 +21,8 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "motor_feedback.h"
+#incluce "motor_ctrl.h"
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
@@ -402,7 +403,26 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance == &htim2)
+  {
+    MotorFeedback_TIM_PeriodElapsedCallback();
+  }
+  elif(htim->Instance == &htim4)
+  {
+    MotorCtrl_UpdateControlFlow();
+    
+  }
+}
 
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance == &htim2)
+  {
+    MotorFeedback_IC_CaptureCallback(htim);
+  }
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
