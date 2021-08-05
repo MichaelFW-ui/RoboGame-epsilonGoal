@@ -1,14 +1,7 @@
 #include ""
 
 //给个结构体对运动控制
-struct Motion_Data{
-  uint8_t Motion_Speed;
-  uint8_t Motion_Wheel;
-  uint8_t Motion_Left_Arm[3];
-  uint8_t Motion_Right_Arm[3];
-  uint8_t Motion_Pushbeam;
-  uint8_t Motion_Frictiongear;
-}Motion_Control;
+
 
 //前后左右移动以及刹车
 void Motion_GoNorth(void){
