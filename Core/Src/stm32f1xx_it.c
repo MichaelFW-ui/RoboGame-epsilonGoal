@@ -63,6 +63,7 @@
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim5;
+extern TIM_HandleTypeDef htim8;
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern DMA_HandleTypeDef hdma_uart4_tx;
 extern UART_HandleTypeDef huart4;
@@ -189,6 +190,20 @@ void TIM2_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM8 update interrupt.
+  */
+void TIM8_UP_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM8_UP_IRQn 0 */
+
+  /* USER CODE END TIM8_UP_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim8);
+  /* USER CODE BEGIN TIM8_UP_IRQn 1 */
+
+  /* USER CODE END TIM8_UP_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM5 global interrupt.
   */
 void TIM5_IRQHandler(void)
@@ -223,8 +238,8 @@ void UART4_IRQHandler(void)
     // temp = __HAL_DMA_GET_COUNTER(&hdma_uart4_rx);
     /*
       TODO: 如何才能多线程的处理这些通信呢？
-      要FreeRTOS！学OS！！
-      这里没有完成整个函数，记得补�? ！！�?
+      要FreeRTOS！学OS!!
+      这里没有完成整个函数，记得补全！�?
     */
   }
 

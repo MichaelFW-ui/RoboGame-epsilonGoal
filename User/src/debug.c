@@ -30,6 +30,8 @@
 #include "queue.h"
 #include "cmsis_os.h"
 
+#include "tim.h"
+
 uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 uint8_t Debug_USART_TransmitBuffer[DEBUG_USART_BUFFER_SIZE];
 uint16_t Debug_USART_BufferCur = 0;
@@ -124,10 +126,104 @@ void Debug_Receive_DMA(void) {
 
 
 
+/**
+ * @brief 打印指令的控制
+ *    TODO
+ * 
+ * @param str 命令的字符串
+ * @return None 
+ */
+__STATIC_INLINE void Debug_PrintHandler(uint8_t *str) {
+  /*TODO:COMPLETION*/
+}
+
+/**
+ * @brief 设置函数的控制，主要用于PID调试
+ *      遇到浮点数可以使用std库的string方法哦
+ *      TODO
+ * 
+ * @param str 
+ * @return None 
+ */
+__STATIC_INLINE void Debug_SetArgumentHandler(uint8_t *str) {
+  /*TODO:COMPLETION*/
+}
+
+
+/**
+ * @brief 运动控制的信息处理
+ * 
+ *      格式：M{控制单元}{可选编号}{控制要求}
+ *  
+ *       控制单元：P推杆，M电机，G摩擦轮，S舵机。
+ *       MPU     推杆前进
+ *       MPB     推杆后退
+ *       MMAU    电机 A 提速
+ *       MMBB    电机 B 降速
+ *      
+ *      警告：使用时请关闭Motor的PID更新！
+ *  TODO：Else?
+ * @param str 
+ * @return None 
+ */
 __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
+  static uint16_t TemporaryMotorCompare[] = {500, 500, 500, 500};
   switch (str[1]) {
     case 'P':
       /*TODO 处理信息*/
+      break;
+    case 'M':
+      switch (str[2]) {
+        case 'A':
+          if (str[3] == 'U') {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+                                  TemporaryMotorCompare[0] += 50);
+          } else {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+                                  TemporaryMotorCompare[0] -= 50);
+          }
+          Debug_PutString("A%d\r\n", TemporaryMotorCompare[0]);
+          break;
+        case 'B':
+          if (str[3] == 'U') {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
+                                  TemporaryMotorCompare[1] += 50);
+          } else {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
+                                  TemporaryMotorCompare[1] -= 50);
+          }
+          Debug_PutString("B%d\r\n", TemporaryMotorCompare[1]);
+          break;
+        case 'C':
+          if (str[3] == 'U') {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
+                                  TemporaryMotorCompare[2] += 50);
+          } else {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
+                                  TemporaryMotorCompare[2] -= 50);
+          }
+          Debug_PutString("C%d\r\n", TemporaryMotorCompare[2]);
+          break;
+        case 'D':
+          if (str[3] == 'U') {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,
+                                  TemporaryMotorCompare[3] += 50);
+          } else {
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,
+                                  TemporaryMotorCompare[3] -= 50);
+          }
+          Debug_PutString("D%d\r\n", TemporaryMotorCompare[3]);
+          break;
+        default:
+          /*TODO*/
+          break;
+      }
+      break;
+    case 'G':
+      /*TODO*/
+      break;
+    case 'S':
+      /*TODO*/
       break;
     default:
       /*TODO错误处理*/
@@ -141,8 +237,6 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
  *    P 打印数据
  *    S 设置参数
  *    M 设置运动
- *        PU     推杆前进
- *        PB     推杆后退
  * 
  * @param str 命令；要求：不长于50字节；以"\r\n"结尾。
  */
@@ -150,13 +244,13 @@ void Debug_CommandHandler(uint8_t *str) {
   switch (str[0]) {
     case 'P':
       /*    TODO      */
+      Debug_PrintHandler(str);
       break;
     case 'S':
-      /*    TODO      */
+      Debug_SetArgumentHandler(str);
       break;
     case 'M':
-    Debug_MotionHandler(str);
-      /*    TODO      */
+      Debug_MotionHandler(str);
       break;
     default:
       /*TODO 错误处理*/

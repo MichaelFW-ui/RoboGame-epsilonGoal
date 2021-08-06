@@ -58,6 +58,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define pushrod_Update htim5
+#define PIDlocationUpdate htim8
+#define PID_Update htim4
 #define KEY1_Pin GPIO_PIN_3
 #define KEY1_GPIO_Port GPIOE
 #define KEY0_Pin GPIO_PIN_4
