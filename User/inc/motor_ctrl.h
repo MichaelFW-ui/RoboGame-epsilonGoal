@@ -17,6 +17,7 @@
 #include "tim.h"
 #include "pid.h"
 #include "motor_feedback.h"
+#include "stdio.h"
 
 /*      Begin of Motor control typedef                                        */
 typedef enum {
@@ -54,7 +55,7 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  */
 #define Motor_Encode(Motor, Direction) (uint8_t)((Motor << 1) | Direction)
 
-
+#define M(output) (output * 4)
 
 /**
  * @brief 修正output用于PWM占空比设置
@@ -62,7 +63,10 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @param output 原始PID计算的output
  * @retval 修正后的PWM占空比
  */
-#define Motor_OutputFix(output) (uint16_t)((output) / 20)
+#define Motor_OutputFix(output)                                            \
+  (((uint16_t)(M(output)) < 800)                                        \
+     ? (((uint16_t)(M(output)) > 300) ? (uint16_t)(M(output)) : 300) \
+     : 800)
 
 /**
  * @brief 修正反馈值用于PID计算
@@ -70,7 +74,7 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @param feedback 原始反馈值
  * @retval 修正后的可用于PID的占空比
  */
-#define Motor_FeedbackFix(feedback) (int16_t)((feedback));
+#define Motor_FeedbackFix(feedback) ( 32000 / (int16_t)((feedback)))
 /*              Preoperation ends                                             */
 
 
@@ -108,29 +112,30 @@ __STATIC_FORCEINLINE void MotorCtrl_SetDutyCycle(MotorOrdinal_t Motor,
  * @return None 
  */
 __STATIC_INLINE void MotorCtrl_Init(void) {
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  HAL_TIM_Base_Start_IT(&htim4);
   for (int i = 0; i < 4; ++i) {
     PID_InformationInit(&Motor_PID_Speed[i]);
   }
   /*TODO*/
   /*
-  *   这里放置PID的调试后的完美参数
+  *   这里放置PID的调试后的参数
   */
 
-  Motor_PID_Speed[0].Kp = 0.7;
-  Motor_PID_Speed[0].Ki = 0.03;
+  Motor_PID_Speed[0].Kp = 1;
+  Motor_PID_Speed[0].Ki = 0.3;
   Motor_PID_Speed[0].Kd = 0;
-  Motor_PID_Speed[1].Kp = 0.7;
-  Motor_PID_Speed[1].Ki = 0.03;
+  Motor_PID_Speed[1].Kp = 1;
+  Motor_PID_Speed[1].Ki = 0.3;
   Motor_PID_Speed[1].Kd = 0;
-  Motor_PID_Speed[2].Kp = 0.7;
-  Motor_PID_Speed[2].Ki = 0.03;
+  Motor_PID_Speed[2].Kp = 1;
+  Motor_PID_Speed[2].Ki = 0.3;
   Motor_PID_Speed[2].Kd = 0;
-  Motor_PID_Speed[3].Kp = 0.7;
-  Motor_PID_Speed[3].Ki = 0.03;
+  Motor_PID_Speed[3].Kp = 1;
+  Motor_PID_Speed[3].Ki = 0.3;
   Motor_PID_Speed[3].Kd = 0;
 }
 
@@ -144,8 +149,8 @@ void MotorCtrl_SetDirection(MotorOrdinal_t Motor, MotorDirection_t direction);
  *
  * @param PIDs PID数据类型
  */
-void __STATIC_INLINE MotorCtrl_CalculateNextOutput(PID_InformationTypeDef *PIDs) {
-  MotorCtrl_CalculateNextOutputByTargets(PIDs, Motor_TargetSpeed);
+void __STATIC_INLINE MotorCtrl_CalculateNextOutput(void) {
+  MotorCtrl_CalculateNextOutputByTargets(Motor_PID_Speed, Motor_TargetSpeed);
 }
 
 void __STATIC_INLINE MotorCtrl_SetPIDArguments(MotorOrdinal_t motor,
@@ -180,6 +185,22 @@ double __STATIC_INLINE MotorCtrl_GetPIDArguments(MotorOrdinal_t motor,
       /*TODO*/
       return 0;
   }
+}
+
+void __STATIC_INLINE MotorCtrl_PrintArguments(void) {
+  printf("Outputs:\r\n");
+  printf("%f -> %d\r\n", Motor_PID_Speed[0].Output, ((Motor_PID_Speed[0].Output > 0) ? (Motor_OutputFix(Motor_PID_Speed[0].Output)) : (Motor_OutputFix(-Motor_PID_Speed[0].Output))));
+  printf("%f -> %d\r\n", Motor_PID_Speed[1].Output, ((Motor_PID_Speed[1].Output > 0) ? (Motor_OutputFix(Motor_PID_Speed[1].Output)) : (Motor_OutputFix(-Motor_PID_Speed[1].Output))));
+  printf("%f -> %d\r\n", Motor_PID_Speed[2].Output, ((Motor_PID_Speed[2].Output > 0) ? (Motor_OutputFix(Motor_PID_Speed[2].Output)) : (Motor_OutputFix(-Motor_PID_Speed[2].Output))));
+  printf("%f -> %d\r\n", Motor_PID_Speed[3].Output, ((Motor_PID_Speed[3].Output > 0) ? (Motor_OutputFix(Motor_PID_Speed[3].Output)) : (Motor_OutputFix(-Motor_PID_Speed[3].Output))));
+  printf("speed %f\r\n", Motor_PID_Speed[0].Current);
+  printf("speed %f\r\n", Motor_PID_Speed[1].Current);
+  printf("speed %f\r\n", Motor_PID_Speed[2].Current);
+  printf("speed %f\r\n", Motor_PID_Speed[3].Current);
+}
+
+void __STATIC_INLINE MotorCtrl_SetTarget(MotorSpeed_t speed, uint8_t ord) {
+  Motor_TargetSpeed[ord] = speed;
 }
 
 void MotorCtrl_UpdateControlFlow(void);

@@ -27,6 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "debug.h"
+#include "stdio.h"
 #include "tim.h"
 #include "main_.h"
 
@@ -166,7 +167,7 @@ void StartMovement(void const * argument)
   for(;;)
   {
     osDelay(1000);
-    Debug_PutString("Running\r\n");
+    printf("Running\r\n");
   }
   /* USER CODE END StartMovement */
 }

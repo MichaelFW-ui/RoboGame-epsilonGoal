@@ -31,6 +31,8 @@
 /* USER CODE BEGIN Includes */
 #include "motor_feedback.h"
 #include "motor_ctrl.h"
+#include "stdio.h"
+#include "delay.h"
 
 /* USER CODE END Includes */
 
@@ -110,7 +112,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   MotorCtrl_Init();
-
+  Delay_Init();
 
 
   /* USER CODE END 2 */
@@ -204,6 +206,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 
   if (htim->Instance == TIM4) {
+    static int cnt = 0;
+    if (cnt++ == 2) {
+      cnt = 0;
+    MotorCtrl_CalculateNextOutput();
+    MotorCtrl_UpdateControlFlow();
+    }
   }
 
   /* USER CODE END Callback 1 */

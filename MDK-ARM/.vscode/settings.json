@@ -17,6 +17,7 @@
         "gpio.h": "c",
         "delay.h": "c",
         "cmsis_os.h": "c",
-        "main_.h": "c"
+        "main_.h": "c",
+        "stdio.h": "c"
     }
 }

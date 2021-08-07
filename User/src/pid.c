@@ -11,6 +11,7 @@
  */
 
 #include "pid.h"
+#include "stdio.h"
 
 /**
  * @brief PID参量结构默认初始化，全为零。
@@ -61,6 +62,7 @@ void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current) {
   // 迭代
   handle->Previous = handle->Current;
   handle->Current = current;
+  // printf("%f\r\n", handle->Output);
 }
 
 /**
@@ -120,7 +122,7 @@ void PID_Calculate_Incremental(PID_InformationTypeDef *handle,
   // 输出
   handle->Output +=
     handle->Kp * (error - handle->Previous) +
-    handle->Derivative * handle->Kd * handle->Integral * handle->Ki;
+    handle->Derivative * handle->Kd + handle->Integral * handle->Ki;
 
   // 迭代
   handle->prePrevious = handle->Previous;

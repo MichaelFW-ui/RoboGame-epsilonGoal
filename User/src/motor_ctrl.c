@@ -38,13 +38,14 @@
 
 #include "motor_ctrl.h"
 #include "motor_feedback.h"
+#include "stdio.h"
 #include "delay.h"
 
 
 PID_InformationTypeDef Motor_PID_Speed[4];
 MotorSpeed_t Motor_TargetSpeed[4];
 
-#if 1
+#if 0
 #define MOTOR_LOCATIONAL
 #else
 #define MOTOR_INCREMENTAL
@@ -65,7 +66,9 @@ void MotorCtrl_CalculateNextOutputByTargets(PID_InformationTypeDef *PIDs,
     PID_SetTarget(PIDs + i, target[i]);
 #ifdef MOTOR_LOCATIONAL
     PID_Calculate_Locational(PIDs + i, Info[i]);
-#elif MOTOR_INCREMENTAL
+#endif
+
+#ifdef MOTOR_INCREMENTAL
     PID_Calculate_Incremental(PIDs + i, Info[i]);
 #endif
   }
@@ -154,6 +157,7 @@ void MotorCtrl_UpdateControlFlow(void) {
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
                         Motor_OutputFix(-Motor_PID_Speed[0].Output));
   }
+
   if (Motor_PID_Speed[1].Output >= 0) {
     MotorCtrl_SetDirection(Motor_B, Motor_CW);
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
@@ -163,6 +167,7 @@ void MotorCtrl_UpdateControlFlow(void) {
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
                         Motor_OutputFix(-Motor_PID_Speed[1].Output));
   }
+
   if (Motor_PID_Speed[2].Output >= 0) {
     MotorCtrl_SetDirection(Motor_C, Motor_CW);
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
@@ -172,6 +177,7 @@ void MotorCtrl_UpdateControlFlow(void) {
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
                         Motor_OutputFix(-Motor_PID_Speed[2].Output));
   }
+
   if (Motor_PID_Speed[3].Output >= 0) {
     MotorCtrl_SetDirection(Motor_D, Motor_CW);
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,

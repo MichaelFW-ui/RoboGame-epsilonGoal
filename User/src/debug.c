@@ -103,18 +103,6 @@ int fputc(int ch, FILE *f) {
   return ch;
 }
 
-/**
- * @brief Debug module print the string.
- *  Use this to prevent include stdio.h
- * @param str string to print
- * @retval None
- */
-void Debug_PutString(uint8_t *str, ...) {
-  va_list args;
-  va_start(args, str);
-  vprintf((char *)str, args);
-  va_end(args);
-}
 
 /**
  * @brief 封装起来的，开启接收中断DMA函数
@@ -223,7 +211,7 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
             __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
                                   TemporaryMotorCompare[0] -= 50);
           }
-          Debug_PutString("A%d\r\n", TemporaryMotorCompare[0]);
+          printf("A%d\r\n", TemporaryMotorCompare[0]);
           break;
         case 'B':
           if (str[3] == 'U') {
@@ -233,7 +221,7 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
             __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
                                   TemporaryMotorCompare[1] -= 50);
           }
-          Debug_PutString("B%d\r\n", TemporaryMotorCompare[1]);
+          printf("B%d\r\n", TemporaryMotorCompare[1]);
           break;
         case 'C':
           if (str[3] == 'U') {
@@ -243,7 +231,7 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
             __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
                                   TemporaryMotorCompare[2] -= 50);
           }
-          Debug_PutString("C%d\r\n", TemporaryMotorCompare[2]);
+          printf("C%d\r\n", TemporaryMotorCompare[2]);
           break;
         case 'D':
           if (str[3] == 'U') {
@@ -253,7 +241,7 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
             __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,
                                   TemporaryMotorCompare[3] -= 50);
           }
-          Debug_PutString("D%d\r\n", TemporaryMotorCompare[3]);
+          printf("D%d\r\n", TemporaryMotorCompare[3]);
           break;
         default:
           /*TODO*/

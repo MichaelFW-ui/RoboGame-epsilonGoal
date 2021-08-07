@@ -10,24 +10,28 @@
  */
 
 #include "main_.h"
-#include "debug.h"
+#include "stdio.h"
 #include "stm32f1xx_hal.h"
 #include "motor_feedback.h"
+#include "motor_ctrl.h"
 
 
 void Main__Main(void) {
+  MotorFeedback_Init();
+  MotorCtrl_SetTarget(-100, 0);
+  MotorCtrl_SetTarget(100, 1);
+  MotorCtrl_SetTarget(-100, 2);
+  MotorCtrl_SetTarget(100, 3);
 
   for(;;) {
     /*CODE*/
-    MotorFeedback_Init();
     HAL_Delay(1000);
-    Debug_PutString(
-      "%d %d %d %d\r\n",
-      Motor_InformationInstance.TimeTicks[0] * (1000 - TIM3->CCR1),
-      Motor_InformationInstance.TimeTicks[1] * (1000 - TIM3->CCR2),
-      (1000 - TIM3->CCR1),
-      (1000 - TIM3->CCR2));
-    Debug_PutString("Running\r\n");
+    MotorCtrl_PrintArguments();
+    printf("A%u\r\n", Motor_InformationInstance.TimeTicks[0]);
+    printf("B%u\r\n", Motor_InformationInstance.TimeTicks[1]);
+    printf("C%u\r\n", Motor_InformationInstance.TimeTicks[2]);
+    printf("D%u\r\n", Motor_InformationInstance.TimeTicks[3]);
+    printf("Running\r\n");
   }
 }
 
