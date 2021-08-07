@@ -82,13 +82,10 @@ __STATIC_INLINE void MotorFeedback_Init(void) {
   do {                                                                        \
     Motor_InformationInstance.TimeTicks[arr] =                                \
       Motor_InformationInstance.ReloadTimes[arr] * MOTOR_TIM_COUNTER_PERIOD + \
-      (htim->Instance->CNT - MotorFeedback_LastTick[arr] +                    \
-       MOTOR_TIM_COUNTER_PERIOD) %                                            \
-        MOTOR_TIM_COUNTER_PERIOD;                                             \
+      htim->Instance->CNT - MotorFeedback_LastTick[arr];                      \
     Motor_InformationInstance.ReloadTimes[arr] = 0;                           \
     MotorFeedback_LastTick[arr]                = htim->Instance->CNT;         \
   } while (0u)
-
 
 /**
  * @brief 获取电机的反馈信息

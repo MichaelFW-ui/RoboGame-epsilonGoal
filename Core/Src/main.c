@@ -203,6 +203,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     MotorFeedback_TIM_PeriodElapsedCallback();
   }
 
+  if (htim->Instance == TIM4) {
+  }
+
   /* USER CODE END Callback 1 */
 }
 

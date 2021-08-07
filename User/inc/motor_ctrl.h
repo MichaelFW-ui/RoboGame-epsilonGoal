@@ -30,6 +30,12 @@ typedef enum {
   Motor_CW = 0, Motor_CCW = 1
 } MotorDirection_t;
 
+typedef enum {
+  Motor_PID_P = 0,
+  Motor_PID_I = 1,
+  Motor_PID_D = 2
+} MotorPIDTypeDef;
+
 typedef int16_t MotorSpeed_t;
 
 
@@ -64,7 +70,7 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @param feedback 原始反馈值
  * @retval 修正后的可用于PID的占空比
  */
-#define Motor_FeedbackFix(feedback) (int16_t)(feedback >> 3);
+#define Motor_FeedbackFix(feedback) (int16_t)((feedback));
 /*              Preoperation ends                                             */
 
 
@@ -110,6 +116,22 @@ __STATIC_INLINE void MotorCtrl_Init(void) {
     PID_InformationInit(&Motor_PID_Speed[i]);
   }
   /*TODO*/
+  /*
+  *   这里放置PID的调试后的完美参数
+  */
+
+  Motor_PID_Speed[0].Kp = 0.7;
+  Motor_PID_Speed[0].Ki = 0.03;
+  Motor_PID_Speed[0].Kd = 0;
+  Motor_PID_Speed[1].Kp = 0.7;
+  Motor_PID_Speed[1].Ki = 0.03;
+  Motor_PID_Speed[1].Kd = 0;
+  Motor_PID_Speed[2].Kp = 0.7;
+  Motor_PID_Speed[2].Ki = 0.03;
+  Motor_PID_Speed[2].Kd = 0;
+  Motor_PID_Speed[3].Kp = 0.7;
+  Motor_PID_Speed[3].Ki = 0.03;
+  Motor_PID_Speed[3].Kd = 0;
 }
 
 void MotorCtrl_CalculateNextOutputByTargets(PID_InformationTypeDef *PIDs,
@@ -122,12 +144,47 @@ void MotorCtrl_SetDirection(MotorOrdinal_t Motor, MotorDirection_t direction);
  *
  * @param PIDs PID数据类型
  */
-void __STATIC_INLINE Motor_CalculateNextOutput(PID_InformationTypeDef *PIDs) {
+void __STATIC_INLINE MotorCtrl_CalculateNextOutput(PID_InformationTypeDef *PIDs) {
   MotorCtrl_CalculateNextOutputByTargets(PIDs, Motor_TargetSpeed);
+}
+
+void __STATIC_INLINE MotorCtrl_SetPIDArguments(MotorOrdinal_t motor,
+                                               MotorPIDTypeDef pid,
+                                               double val) {
+  switch (pid) {
+    case Motor_PID_P:
+      Motor_PID_Speed[motor].Kp = val;
+      break;
+    case Motor_PID_I:
+      Motor_PID_Speed[motor].Ki = val;
+      break;
+    case Motor_PID_D:
+      Motor_PID_Speed[motor].Kd = val;
+      break;
+    default:
+      /*TODO*/
+      break;
+  }
+}
+
+double __STATIC_INLINE MotorCtrl_GetPIDArguments(MotorOrdinal_t motor,
+                                                 MotorPIDTypeDef pid) {
+  switch (pid) {
+    case Motor_PID_P:
+      return Motor_PID_Speed[motor].Kp;
+    case Motor_PID_I:
+      return Motor_PID_Speed[motor].Ki;
+    case Motor_PID_D:
+      return Motor_PID_Speed[motor].Kd;
+    default:
+      /*TODO*/
+      return 0;
+  }
 }
 
 void MotorCtrl_UpdateControlFlow(void);
 
 MotorSpeed_t *MotorCtrl_UpdateFeedback(MotorFeedback_InformationTypeDef *info);
+
 
 #endif        // !__MOTOR_CTRL_H

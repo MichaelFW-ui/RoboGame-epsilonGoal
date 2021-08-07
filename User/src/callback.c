@@ -12,7 +12,6 @@
 
 #include "callback.h"
 #include "motor_feedback.h"
-
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   if (htim->Instance == TIM2) {
     MotorFeedback_IC_CaptureCallback(htim);

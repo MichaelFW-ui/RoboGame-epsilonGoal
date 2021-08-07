@@ -337,7 +337,7 @@
               <MiscControls/>
               <Define>USE_HAL_DRIVER,STM32F103xE</Define>
               <Undefine/>
-              <IncludePath>../Core/Inc;                        ../Drivers/STM32F1xx_HAL_Driver/Inc;                        ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;                        ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;                        ../Drivers/CMSIS/Include;                        ..\User\inc;                    ../Middlewares/Third_Party/FreeRTOS/Source/include;                    ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;                    ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3</IncludePath>
+              <IncludePath>../Core/Inc;                          ../Drivers/STM32F1xx_HAL_Driver/Inc;                          ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;                          ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;                          ../Drivers/CMSIS/Include;                          ..\User\inc;                      ../Middlewares/Third_Party/FreeRTOS/Source/include;                      ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;                      ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1090,6 +1090,11 @@
               <FileName>callback.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\src\callback.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\src\delay.c</FilePath>
             </File>
           </Files>
         </Group>

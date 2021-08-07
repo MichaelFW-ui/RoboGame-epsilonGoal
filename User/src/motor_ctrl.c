@@ -38,6 +38,7 @@
 
 #include "motor_ctrl.h"
 #include "motor_feedback.h"
+#include "delay.h"
 
 
 PID_InformationTypeDef Motor_PID_Speed[4];
@@ -85,41 +86,49 @@ void MotorCtrl_CalculateNextOutputByTargets(PID_InformationTypeDef *PIDs,
     case Motor_Encode(Motor_A, Motor_CW):
       Motor_OutAN_GPIO_Port->IDR &= (~Motor_OutAN_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutAP_GPIO_Port->IDR &= Motor_OutAP_Pin;
       break;
     case Motor_Encode(Motor_A, Motor_CCW):
       Motor_OutAP_GPIO_Port->IDR &= (~Motor_OutAP_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutAN_GPIO_Port->IDR &= Motor_OutAN_Pin;
       break;
     case Motor_Encode(Motor_B, Motor_CW):
       Motor_OutBN_GPIO_Port->IDR &= (~Motor_OutBN_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutBP_GPIO_Port->IDR &= Motor_OutBP_Pin;
       break;
     case Motor_Encode(Motor_B, Motor_CCW):
       Motor_OutBP_GPIO_Port->IDR &= (~Motor_OutBP_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutBN_GPIO_Port->IDR &= Motor_OutBN_Pin;
       break;
     case Motor_Encode(Motor_C, Motor_CW):
       Motor_OutCN_GPIO_Port->IDR &= (~Motor_OutCN_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutCP_GPIO_Port->IDR &= Motor_OutCP_Pin;
       break;
     case Motor_Encode(Motor_C, Motor_CCW):
       Motor_OutCP_GPIO_Port->IDR &= (~Motor_OutCP_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutCN_GPIO_Port->IDR &= Motor_OutCN_Pin;
       break;
     case Motor_Encode(Motor_D, Motor_CW):
       Motor_OutDN_GPIO_Port->IDR &= (~Motor_OutDN_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutDP_GPIO_Port->IDR &= Motor_OutDP_Pin;
       break;
     case Motor_Encode(Motor_D, Motor_CCW):
       Motor_OutDP_GPIO_Port->IDR &= (~Motor_OutDP_Pin);
       // HAL_Delay(1);
+      Delay_us(5);
       Motor_OutDN_GPIO_Port->IDR &= Motor_OutDN_Pin;
       break;
     default:
@@ -147,29 +156,29 @@ void MotorCtrl_UpdateControlFlow(void) {
   }
   if (Motor_PID_Speed[1].Output >= 0) {
     MotorCtrl_SetDirection(Motor_B, Motor_CW);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
                         Motor_OutputFix(Motor_PID_Speed[1].Output));
   } else {
     MotorCtrl_SetDirection(Motor_B, Motor_CCW);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
                         Motor_OutputFix(-Motor_PID_Speed[1].Output));
   }
   if (Motor_PID_Speed[2].Output >= 0) {
     MotorCtrl_SetDirection(Motor_C, Motor_CW);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
                         Motor_OutputFix(Motor_PID_Speed[2].Output));
   } else {
     MotorCtrl_SetDirection(Motor_C, Motor_CCW);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
                         Motor_OutputFix(-Motor_PID_Speed[2].Output));
   }
   if (Motor_PID_Speed[3].Output >= 0) {
     MotorCtrl_SetDirection(Motor_D, Motor_CW);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,
                         Motor_OutputFix(Motor_PID_Speed[3].Output));
   } else {
     MotorCtrl_SetDirection(Motor_D, Motor_CCW);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,
                         Motor_OutputFix(-Motor_PID_Speed[3].Output));
   }
 }

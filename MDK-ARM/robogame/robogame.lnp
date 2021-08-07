@@ -51,6 +51,7 @@
 "robogame\flag.o"
 "robogame\pwm_generate.o"
 "robogame\callback.o"
+"robogame\delay.o"
 "robogame\croutine.o"
 "robogame\event_groups.o"
 "robogame\list.o"

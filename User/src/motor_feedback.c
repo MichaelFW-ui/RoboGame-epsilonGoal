@@ -30,6 +30,7 @@ MotorFeedback_InformationTypeDef Motor_InformationInstance;
 void MotorFeedback_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   static uint16_t MotorFeedback_LastTick[4];
 
+
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_1) {
     Temp_GetTicks(0);
     Motor_InformationInstance.Directions[0] =

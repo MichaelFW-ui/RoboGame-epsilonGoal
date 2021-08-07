@@ -29,6 +29,7 @@
 #include "freertos.h"
 #include "queue.h"
 #include "cmsis_os.h"
+#include "motor_ctrl.h"
 
 #include "tim.h"
 
@@ -50,7 +51,8 @@ void Debug_Main(void) {
   uint8_t cmd;
   while (1) {
     xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
-    if (cmd == Debug_OperationOnLoad) Debug_CommandHandler(Debug_USART_CommandBuffer);
+    if (cmd == Debug_OperationOnLoad)
+      Debug_CommandHandler(Debug_USART_CommandBuffer);
     else if (cmd == Debug_OperationHalt) {
       // TODO Completion
     } else {
@@ -130,23 +132,62 @@ void Debug_Receive_DMA(void) {
  * @brief 打印指令的控制
  *    TODO
  * 
+ *      遇到浮点数可以使用std库的sscanf方法哦
+ *      TODO
+ *      P{控制单元}{可选编号}{参数，如P/I/D}
+ * 
  * @param str 命令的字符串
  * @return None 
  */
 __STATIC_INLINE void Debug_PrintHandler(uint8_t *str) {
   /*TODO:COMPLETION*/
+  uint8_t cmd, unit, ord, arg;
+  double val;
+  switch(str[1]) {
+    case 'M':
+      sscanf((char *)str, "%c%c%c%c", &cmd, &unit, &ord, &arg);
+      // 设置成为枚举值
+      ord -= 'A';
+      arg = (arg == 'P') ? (Motor_PID_P)
+                         : ((arg == 'I') ? (Motor_PID_I) : (Motor_PID_D));
+      // 设置
+      val = MotorCtrl_GetPIDArguments((MotorOrdinal_t)ord, (MotorPIDTypeDef)arg);
+      printf("%lf\r\n", val);
+      break;
+    default:
+      /*TODO*/
+      break;
+  }
 }
 
 /**
  * @brief 设置函数的控制，主要用于PID调试
- *      遇到浮点数可以使用std库的string方法哦
+ *      遇到浮点数可以使用std库的sscanf方法哦
  *      TODO
+ *      S{控制单元}{可选编号}{参数，如P/I/D}{值}
+ *      SMAP0.5   设置Motor A 的 P 为 0.5
  * 
  * @param str 
  * @return None 
  */
 __STATIC_INLINE void Debug_SetArgumentHandler(uint8_t *str) {
   /*TODO:COMPLETION*/
+  uint8_t cmd, unit, ord, arg;
+  double val;
+  switch(str[1]) {
+    case 'M':
+      sscanf((char *)str, "%c%c%c%c%lf", &cmd, &unit, &ord, &arg, &val);
+      // 设置成为枚举值
+      ord -= 'A';
+      arg = (arg == 'P') ? (Motor_PID_P)
+                         : ((arg == 'I') ? (Motor_PID_I) : (Motor_PID_D));
+      // 设置
+      MotorCtrl_SetPIDArguments((MotorOrdinal_t)ord, (MotorPIDTypeDef)arg, val);
+      break;
+    default:
+      /*TODO*/
+      break;
+  }
 }
 
 

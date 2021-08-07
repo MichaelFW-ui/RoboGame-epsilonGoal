@@ -28,6 +28,7 @@
 /* USER CODE BEGIN Includes */
 #include "debug.h"
 #include "tim.h"
+#include "main_.h"
 
 /* USER CODE END Includes */
 
@@ -161,6 +162,7 @@ void StartMovement(void const * argument)
 {
   /* USER CODE BEGIN StartMovement */
   /* Infinite loop */
+  Main__Main();
   for(;;)
   {
     osDelay(1000);
