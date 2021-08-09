@@ -1,6 +1,6 @@
 Dependencies for Project 'robogame', Target 'robogame': (DO NOT MODIFY !)
 F (startup_stm32f103xe.s)(0x610E238E)(--cpu Cortex-M3 -g --apcs=interwork --pd "__MICROLIB SETA 1" -I ..\Core\Inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include--pd "__UVISION_VERSION SETA 526" --pd "_RTE_ SETA 1" --pd "STM32F10X_HD SETA 1"--list startup_stm32f103xe.lst --xref -o robogame\startup_stm32f103xe.o --depend robogame\startup_stm32f103xe.d)
-F (../Core/Src/main.c)(0x610E31E1)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE-o robogame\main.o --omf_browse robogame\main.crf --depend robogame\main.d)
+F (../Core/Src/main.c)(0x610E3235)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE-o robogame\main.o --omf_browse robogame\main.crf --depend robogame\main.d)
 I (../Core/Inc/main.h)(0x610E238C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60BDE0C5)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x610E238C)
@@ -52,7 +52,7 @@ I (../Core/Inc/tim.h)(0x610E238C)
 I (../Core/Inc/usart.h)(0x610E238C)
 I (../Core/Inc/gpio.h)(0x610E238A)
 I (..\User\inc\motor_feedback.h)(0x610D1CCC)
-I (..\User\inc\motor_ctrl.h)(0x610E2EF9)
+I (..\User\inc\motor_ctrl.h)(0x610F38D2)
 I (..\User\inc\pid.h)(0x60FFFA7C)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 I (..\User\inc\delay.h)(0x610D0828)
@@ -967,7 +967,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x60BDE0BF)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x60BDE0BF)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x60BDE0BF)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x60BDE0BF)
-I (..\User\inc\motor_ctrl.h)(0x610E2EF9)
+I (..\User\inc\motor_ctrl.h)(0x610F38D2)
 I (../Core/Inc/tim.h)(0x610E238C)
 I (..\User\inc\pid.h)(0x60FFFA7C)
 I (..\User\inc\motor_feedback.h)(0x610D1CCC)
@@ -1009,12 +1009,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x60BDE0C5)
 I (..\User\inc\motor_feedback.h)(0x610D1CCC)
 I (../Core/Inc/tim.h)(0x610E238C)
 I (../Core/Inc/main.h)(0x610E238C)
-I (..\User\inc\motor_ctrl.h)(0x610E2EF9)
+I (..\User\inc\motor_ctrl.h)(0x610F38D2)
 I (..\User\inc\pid.h)(0x60FFFA7C)
 F (..\User\src\motion.c)(0x60F51EB3)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE-o robogame\motion.o --omf_browse robogame\motion.crf --depend robogame\motion.d)
 F (..\User\src\motor.c)(0x60FA6B78)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE-o robogame\motor.o --omf_browse robogame\motor.crf --depend robogame\motor.d)
 F (..\User\src\motor_ctrl.c)(0x610E2266)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE-o robogame\motor_ctrl.o --omf_browse robogame\motor_ctrl.crf --depend robogame\motor_ctrl.d)
-I (..\User\inc\motor_ctrl.h)(0x610E2EF9)
+I (..\User\inc\motor_ctrl.h)(0x610F38D2)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60BDE0C5)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x610E238C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x60BDE0C5)

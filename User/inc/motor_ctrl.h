@@ -112,10 +112,10 @@ __STATIC_FORCEINLINE void MotorCtrl_SetDutyCycle(MotorOrdinal_t Motor,
  * @return None 
  */
 __STATIC_INLINE void MotorCtrl_Init(void) {
-  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   HAL_TIM_Base_Start_IT(&htim4);
   for (int i = 0; i < 4; ++i) {
     PID_InformationInit(&Motor_PID_Speed[i]);
