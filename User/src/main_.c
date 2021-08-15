@@ -14,14 +14,18 @@
 #include "stm32f1xx_hal.h"
 #include "motor_feedback.h"
 #include "motor_ctrl.h"
+#include "tim.h"
 
 
-void Main__Main(void) {
-  MotorFeedback_Init();
-  MotorCtrl_SetTarget(-100, 0);
-  MotorCtrl_SetTarget(100, 1);
-  MotorCtrl_SetTarget(-100, 2);
-  MotorCtrl_SetTarget(100, 3);
+void Main_(void) {
+  // MotorCtrl_SetTarget(-100, 0);
+  // MotorCtrl_SetTarget(100, 1);
+  // MotorCtrl_SetTarget(-100, 2);
+  // MotorCtrl_SetTarget(100, 3);
+  MotorCtrl_SetDirection(Motor_A, Motor_CW);
+  // MotorCtrl_SetDirection(Motor_B, Motor_CW);
+  MotorCtrl_SetDirection(Motor_C, Motor_CW);
+  MotorCtrl_SetDirection(Motor_D, Motor_CW);
 
   for(;;) {
     /*CODE*/

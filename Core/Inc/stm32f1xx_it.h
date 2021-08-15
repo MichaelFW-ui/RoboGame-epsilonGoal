@@ -55,6 +55,7 @@ void UsageFault_Handler(void);
 void DebugMon_Handler(void);
 void TIM2_IRQHandler(void);
 void TIM4_IRQHandler(void);
+void USART1_IRQHandler(void);
 void TIM8_UP_IRQHandler(void);
 void TIM5_IRQHandler(void);
 void UART4_IRQHandler(void);

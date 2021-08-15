@@ -63,10 +63,10 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @param output 原始PID计算的output
  * @retval 修正后的PWM占空比
  */
-#define Motor_OutputFix(output)                                            \
-  (((uint16_t)(M(output)) < 800)                                        \
-     ? (((uint16_t)(M(output)) > 300) ? (uint16_t)(M(output)) : 300) \
-     : 800)
+#define Motor_OutputFix(output)                                        \
+    (((uint16_t)(M(output)) < 800)                                     \
+         ? (((uint16_t)(M(output)) > 500) ? (uint16_t)(M(output)) : 0) \
+         : 800)
 
 /**
  * @brief 修正反馈值用于PID计算
@@ -199,6 +199,12 @@ void __STATIC_INLINE MotorCtrl_PrintArguments(void) {
   printf("speed %f\r\n", Motor_PID_Speed[3].Current);
 }
 
+/**
+ * @brief 唯一指定的接口
+ * 
+ * @param speed 
+ * @param ord 
+ */
 void __STATIC_INLINE MotorCtrl_SetTarget(MotorSpeed_t speed, uint8_t ord) {
   Motor_TargetSpeed[ord] = speed;
 }

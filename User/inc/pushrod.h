@@ -13,6 +13,7 @@
 
 #include "stm32f1xx_hal.h"
 #include "main.h"
+#include "delay.h"
 
 extern TIM_HandleTypeDef htim5;
 #define PUSHROD_TIM_HANDLE htim5
@@ -21,14 +22,14 @@ extern TIM_HandleTypeDef htim5;
 /*  BEGIN USER TYPEDEF                                                        */
 
 typedef enum { Pushrod_CW = 0, Pushrod_CCW = 1 } Pushrod_DirectionTypeDef;
-typedef uint16_t Pushrod_DistanceTypeDef;
+typedef uint16_t Pushrod_Distance_t;
 
 /*    END USER TYPEDEF                                                        */
 
 
 /*   BEGIN OF USER EXTERNAL VARIABLE                                          */
 extern Pushrod_DirectionTypeDef Pushrod_DirectionInstance;
-extern Pushrod_DistanceTypeDef Pushrod_DistanceInstance;
+extern Pushrod_Distance_t Pushrod_DistanceInstance;
 /*     END OF USER EXTERNAL VARIABLE                                          */
 
 
@@ -50,6 +51,7 @@ void Pushrod_TIM_UpdateHandler(void);
 __STATIC_INLINE void Pushrod_SetDirection(Pushrod_DirectionTypeDef dir) {
   HAL_GPIO_WritePin(Pushrod_Direction_GPIO_Port, Pushrod_Direction_Pin,
                     dir ? GPIO_PIN_SET : GPIO_PIN_RESET);
+  Delay_us(5);
 }
 
 /**
@@ -58,7 +60,7 @@ __STATIC_INLINE void Pushrod_SetDirection(Pushrod_DirectionTypeDef dir) {
  * @param distance  前进距离
  * @return None
  */
-__STATIC_INLINE void Pushrod_MoveForward(Pushrod_DistanceTypeDef distance) {
+__STATIC_INLINE void Pushrod_MoveForward(Pushrod_Distance_t distance) {
   Pushrod_DistanceInstance = distance;
   Pushrod_SetDirection(Pushrod_CW);
 }
@@ -68,7 +70,7 @@ __STATIC_INLINE void Pushrod_MoveForward(Pushrod_DistanceTypeDef distance) {
  * @param distance 后退距离
  * @return None 
  */
-__STATIC_INLINE void Pushrod_MoveBackward(Pushrod_DistanceTypeDef distance) {
+__STATIC_INLINE void Pushrod_MoveBackward(Pushrod_Distance_t distance) {
   Pushrod_DistanceInstance = distance;
   Pushrod_SetDirection(Pushrod_CCW);
 }

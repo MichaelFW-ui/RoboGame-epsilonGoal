@@ -18,6 +18,8 @@
         "delay.h": "c",
         "cmsis_os.h": "c",
         "main_.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "cannon.h": "c",
+        "motor.h": "c"
     }
 }

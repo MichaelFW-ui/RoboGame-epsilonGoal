@@ -125,6 +125,10 @@ void Error_Handler(void);
 #define NRF_IRQ_GPIO_Port GPIOG
 #define POWER_DETECT_Pin GPIO_PIN_9
 #define POWER_DETECT_GPIO_Port GPIOC
+#define Cannon_TX_Pin GPIO_PIN_9
+#define Cannon_TX_GPIO_Port GPIOA
+#define Cannon_RX_Pin GPIO_PIN_10
+#define Cannon_RX_GPIO_Port GPIOA
 #define Debug_TX_Pin GPIO_PIN_10
 #define Debug_TX_GPIO_Port GPIOC
 #define Debug_RX_Pin GPIO_PIN_11

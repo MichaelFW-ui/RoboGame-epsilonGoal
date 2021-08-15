@@ -33,6 +33,7 @@
 #include "motor_ctrl.h"
 #include "stdio.h"
 #include "delay.h"
+#include "pushrod.h"
 
 /* USER CODE END Includes */
 
@@ -100,7 +101,6 @@ int main(void)
   MX_TIM3_Init();
   MX_UART4_Init();
   MX_UART5_Init();
-  MX_I2C1_Init();
   MX_I2C2_Init();
   MX_SPI2_Init();
   MX_TIM2_Init();
@@ -109,10 +109,14 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM8_Init();
   MX_TIM4_Init();
+  MX_USART1_UART_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 
   MotorCtrl_Init();
   Delay_Init();
+  MotorFeedback_Init();
 
 
   /* USER CODE END 2 */
@@ -126,15 +130,11 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    HAL_Delay(2);
-    // HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
   }
   /* USER CODE END 3 */
 }
@@ -184,7 +184,7 @@ void SystemClock_Config(void)
 
 /* USER CODE END 4 */
 
- /**
+/**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM7 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
@@ -209,9 +209,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     static int cnt = 0;
     if (cnt++ == 2) {
       cnt = 0;
-    MotorCtrl_CalculateNextOutput();
-    MotorCtrl_UpdateControlFlow();
+    // MotorCtrl_CalculateNextOutput();
+    // MotorCtrl_UpdateControlFlow();
     }
+
+  }
+  if (htim->Instance == TIM5) {
+    Pushrod_TIM_UpdateHandler();
   }
 
   /* USER CODE END Callback 1 */

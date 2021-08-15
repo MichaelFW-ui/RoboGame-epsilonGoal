@@ -12,6 +12,6 @@
 #ifndef __MAIN__H
 #define __MAIN__H
 
-void Main__Main(void);
+void Main_(void);
 
 #endif // !__MAIN__H

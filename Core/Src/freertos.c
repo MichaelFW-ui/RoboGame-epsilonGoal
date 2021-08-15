@@ -163,7 +163,7 @@ void StartMovement(void const * argument)
 {
   /* USER CODE BEGIN StartMovement */
   /* Infinite loop */
-  Main__Main();
+  Main_();
   for(;;)
   {
     osDelay(1000);

@@ -14,7 +14,7 @@
 #include "main.h"
 
 Pushrod_DirectionTypeDef Pushrod_DirectionInstance;
-Pushrod_DistanceTypeDef Pushrod_DistanceInstance;
+Pushrod_Distance_t Pushrod_DistanceInstance;
 
 /**
  * @brief 推杆的主要处理代码

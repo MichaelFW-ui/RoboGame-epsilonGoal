@@ -15,6 +15,7 @@
  */
 
 #include "motor_feedback.h"
+#include "motor.h"
 
 MotorFeedback_InformationTypeDef Motor_InformationInstance;
 
@@ -31,28 +32,33 @@ void MotorFeedback_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   static uint16_t MotorFeedback_LastTick[4];
 
 
+
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_1) {
     Temp_GetTicks(0);
     Motor_InformationInstance.Directions[0] =
       ((Motor_InA_GPIO_Port->IDR & Motor_InA_Pin) ? MotorFeedback_CW
                                                   : MotorFeedback_CCW);
+    Motor_UpdateLocation(0, &Motor_InformationInstance);
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_2) {
     Temp_GetTicks(1);
     Motor_InformationInstance.Directions[1] =
       ((Motor_InB_GPIO_Port->IDR & Motor_InB_Pin) ? MotorFeedback_CW
                                                   : MotorFeedback_CCW);
+    Motor_UpdateLocation(1, &Motor_InformationInstance);
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_3) {
     Temp_GetTicks(2);
     Motor_InformationInstance.Directions[2] =
       ((Motor_InC_GPIO_Port->IDR & Motor_InC_Pin) ? MotorFeedback_CW
                                                   : MotorFeedback_CCW);
+    Motor_UpdateLocation(2, &Motor_InformationInstance);
   }
   if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_4) {
     Temp_GetTicks(3);
     Motor_InformationInstance.Directions[3] =
       ((Motor_InD_GPIO_Port->IDR & Motor_InD_Pin) ? MotorFeedback_CW
                                                   : MotorFeedback_CCW);
+    Motor_UpdateLocation(3, &Motor_InformationInstance);
   }
 }

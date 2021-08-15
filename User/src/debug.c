@@ -12,7 +12,6 @@
  *    Command 频率不能高于1kHz。
  * 
  * 
- *    未测试！！！
  * 
  * @version 0.1
  * @date 2021-07-19
@@ -30,6 +29,7 @@
 #include "queue.h"
 #include "cmsis_os.h"
 #include "motor_ctrl.h"
+#include "pushrod.h"
 
 #include "tim.h"
 
@@ -199,7 +199,11 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
   static uint16_t TemporaryMotorCompare[] = {500, 500, 500, 500};
   switch (str[1]) {
     case 'P':
-      /*TODO 处理信息*/
+      if (str[2] == 'U') {
+        Pushrod_MoveForward(500);
+      } else if (str[2] == 'B') {
+        Pushrod_MoveBackward(500);
+      }
       break;
     case 'M':
       switch (str[2]) {

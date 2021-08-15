@@ -9,7 +9,7 @@
  *    警告
  *    警告
  * @version 0.1
- * @date 2021-07-25
+ * @date 2021-08-10
  * 
  * @copyright Copyright (c) 2021
  * 
@@ -39,39 +39,33 @@ typedef uint8_t Steer_COMNumber_t;
 */
 
 
+
+/**
+ * @brief 预设舵机可以转动180度的前提下，根据端口号、角度设定占空比。
+ * 
+ * @param SteerNumber 端口号
+ * @param angle 角度值，[0, 180]
+ * @retval None
+ */
+void __STATIC_FORCEINLINE Steer_SetAngleByDegree(Steer_COMNumber_t SteerNumber,
+                                                 uint8_t angle) {
+  PWM_SetPWM_ByDutyCycle(SteerNumber, (uint16_t)(angle * 2.0 / 180 + 0.5) / 20 * 4096);
+}
+
 /**
  * @brief 舵机操作的初始化
  * 
  */
 void __STATIC_FORCEINLINE Steer_Init(void) {
   PWM_Reset();
-  PWM_SetFrequency(50);
-  //205 \approx 4096 / 20, 即占空比10%。
+  PWM_SetFrequencyAndStartUp(50);
   // 50Hz下，为1ms占空
-  PWM_SetPWM_s(ARM_A_STEER_A, 205, 0);
-  PWM_SetPWM_s(ARM_A_STEER_B, 205, 0);
-  PWM_SetPWM_s(ARM_A_STEER_C, 205, 0);
-  PWM_SetPWM_s(ARM_B_STEER_A, 205, 0);
-  PWM_SetPWM_s(ARM_B_STEER_B, 205, 0);
-  PWM_SetPWM_s(ARM_B_STEER_C, 205, 0);
-}
-
-/**
- * @brief 预设舵机可以转动180度的前提下，根据端口号、角度、占空比最小值和最大值设定占空比。
- * 
- * @param SteerNumber 端口号
- * @param angle 角度值，[0, 180]
- * @param DutyCycleMinimum 占空比最小值
- * @param DutyCycleMaximum 占空比最大值
- * @retval None
- */
-void __STATIC_FORCEINLINE Steer_SetAngleByDegree(Steer_COMNumber_t SteerNumber,
-                                                 uint8_t angle,
-                                                 uint16_t DutyCycleMinimum,
-                                                 uint16_t DutyCycleMaximum) {
-  PWM_SetPWM_s(
-    SteerNumber,
-    DutyCycleMinimum + angle * (DutyCycleMaximum - DutyCycleMinimum) / 180, 0);
+  Steer_SetAngleByDegree(ARM_A_STEER_A, 0);
+  Steer_SetAngleByDegree(ARM_A_STEER_B, 0);
+  Steer_SetAngleByDegree(ARM_A_STEER_C, 0);
+  Steer_SetAngleByDegree(ARM_B_STEER_A, 0);
+  Steer_SetAngleByDegree(ARM_B_STEER_B, 0);
+  Steer_SetAngleByDegree(ARM_B_STEER_C, 0);
 }
 
 #endif // !__STEER_CTRL_H
