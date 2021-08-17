@@ -52,6 +52,8 @@
 "robogame\pwm_generate.o"
 "robogame\callback.o"
 "robogame\delay.o"
+"robogame\iso15693.o"
+"robogame\pn5180.o"
 "robogame\croutine.o"
 "robogame\event_groups.o"
 "robogame\list.o"

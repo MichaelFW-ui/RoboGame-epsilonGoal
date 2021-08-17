@@ -65,3 +65,4 @@ void Motor_Decode(MotorInput_t x, MotorInput_t y, MotorInput_t w) {
                                                 Motor_InputInstance.Ky * y -
                                                 Motor_InputInstance.Kw * w);
 }
+

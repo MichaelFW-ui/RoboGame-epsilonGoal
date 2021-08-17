@@ -56,12 +56,15 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, LED1_Pin|HandspikeA_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(HandspikeB_GPIO_Port, HandspikeB_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, HandspikeB_Pin|PN5180_RST_A_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, Motor_OutAP_Pin|Motor_OutAN_Pin|Motor_OutBP_Pin|Motor_OutBN_Pin
                           |Motor_OutCP_Pin|Motor_OutCN_Pin|Pushrod_Pulse_Pin|Pushrod_Direction_Pin
                           |Motor_OutDP_Pin|Motor_OutDN_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(PN5180_RST_B_GPIO_Port, PN5180_RST_B_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, GY_CS_Pin|VA_CS_Pin|VB_CS_Pin|NRF_CE_Pin
@@ -102,6 +105,26 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = PN5180_RST_A_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(PN5180_RST_A_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PCPin PCPin */
+  GPIO_InitStruct.Pin = PN5180_BUSY_A_Pin|PN5180_BUSY_B_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = PN5180_RST_B_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(PN5180_RST_B_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = Motor_InA_Pin;

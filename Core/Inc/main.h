@@ -87,6 +87,10 @@ void Error_Handler(void);
 #define Pushrod_Pulse_GPIO_Port GPIOF
 #define Pushrod_Direction_Pin GPIO_PIN_8
 #define Pushrod_Direction_GPIO_Port GPIOF
+#define PN5180_RST_A_Pin GPIO_PIN_1
+#define PN5180_RST_A_GPIO_Port GPIOC
+#define PN5180_BUSY_A_Pin GPIO_PIN_3
+#define PN5180_BUSY_A_GPIO_Port GPIOC
 #define Motor_A_Pin GPIO_PIN_0
 #define Motor_A_GPIO_Port GPIOA
 #define Motor_B_Pin GPIO_PIN_1
@@ -95,6 +99,10 @@ void Error_Handler(void);
 #define Motor_C_GPIO_Port GPIOA
 #define Motor_D_Pin GPIO_PIN_3
 #define Motor_D_GPIO_Port GPIOA
+#define PN5180_RST_B_Pin GPIO_PIN_5
+#define PN5180_RST_B_GPIO_Port GPIOA
+#define PN5180_BUSY_B_Pin GPIO_PIN_5
+#define PN5180_BUSY_B_GPIO_Port GPIOC
 #define Motor_InA_Pin GPIO_PIN_2
 #define Motor_InA_GPIO_Port GPIOB
 #define Motor_OutDP_Pin GPIO_PIN_11

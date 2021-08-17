@@ -20,6 +20,10 @@
         "main_.h": "c",
         "stdio.h": "c",
         "cannon.h": "c",
-        "motor.h": "c"
+        "motor.h": "c",
+        "iso15693.h": "c",
+        "pn5180.h": "c",
+        "rfid.h": "c",
+        "phhalhw_pn5180_reg.h": "c"
     }
 }

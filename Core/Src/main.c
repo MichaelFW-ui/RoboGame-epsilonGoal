@@ -34,6 +34,8 @@
 #include "stdio.h"
 #include "delay.h"
 #include "pushrod.h"
+#include "pn5180.h"
+#include "iso15693.h"
 
 /* USER CODE END Includes */
 
@@ -117,6 +119,11 @@ int main(void)
   MotorCtrl_Init();
   Delay_Init();
   MotorFeedback_Init();
+
+  while (PN5180_Init(RFID_A) != 0)
+    ;
+  while (PN5180_Init(RFID_B) != 0)
+    ;
 
 
   /* USER CODE END 2 */

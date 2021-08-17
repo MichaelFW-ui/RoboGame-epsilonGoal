@@ -16,6 +16,7 @@
 #include "stm32f1xx_hal.h"
 #include "motor_ctrl.h"
 
+
 typedef int32_t MotorInput_t;
 
 typedef struct {
@@ -27,8 +28,19 @@ typedef struct {
     MotorInput_t Kw;
 } MotorInputTpyeDef;
 
+extern MotorInputTpyeDef Motor_InputInstance;
 
-#define MotorDncodeOutputFix(input) (input / 20)
+#define MotorDecodeOutputFix(input) (input / 20)
+
+
+__STATIC_INLINE void Motor_Init(void) {
+    Motor_InputInstance.Kx = 1;
+    Motor_InputInstance.Ky = 1;
+    Motor_InputInstance.Kw = 1;
+    Motor_InputInstance.x = 0;
+    Motor_InputInstance.y = 0;
+    Motor_InputInstance.w = 0;
+}
 
 void Motor_Decode(MotorInput_t x, MotorInput_t y, MotorInput_t w);
 
