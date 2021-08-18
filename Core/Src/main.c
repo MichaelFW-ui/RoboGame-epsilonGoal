@@ -120,10 +120,10 @@ int main(void)
   Delay_Init();
   MotorFeedback_Init();
 
-  while (PN5180_Init(RFID_A) != 0)
-    ;
-  while (PN5180_Init(RFID_B) != 0)
-    ;
+  // while (PN5180_Init(RFID_A) != 0)
+  //   ;
+  // while (PN5180_Init(RFID_B) != 0)
+  //   ;
 
 
   /* USER CODE END 2 */

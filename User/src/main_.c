@@ -23,7 +23,7 @@ void Main_(void) {
   // MotorCtrl_SetTarget(-100, 2);
   // MotorCtrl_SetTarget(100, 3);
   MotorCtrl_SetDirection(Motor_A, Motor_CW);
-  // MotorCtrl_SetDirection(Motor_B, Motor_CW);
+  MotorCtrl_SetDirection(Motor_B, Motor_CW);
   MotorCtrl_SetDirection(Motor_C, Motor_CW);
   MotorCtrl_SetDirection(Motor_D, Motor_CW);
 

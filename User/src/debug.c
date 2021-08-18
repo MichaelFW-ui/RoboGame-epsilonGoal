@@ -51,6 +51,7 @@ void Debug_Main(void) {
   uint8_t cmd;
   while (1) {
     xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
+    printf("Received\r\n");
     if (cmd == Debug_OperationOnLoad)
       Debug_CommandHandler(Debug_USART_CommandBuffer);
     else if (cmd == Debug_OperationHalt) {

@@ -24,6 +24,9 @@
         "iso15693.h": "c",
         "pn5180.h": "c",
         "rfid.h": "c",
-        "phhalhw_pn5180_reg.h": "c"
+        "phhalhw_pn5180_reg.h": "c",
+        "vl53l0x_platform.h": "c",
+        "vl53l0x_api.h": "c",
+        "vl53l0x_api_strings.h": "c"
     }
 }
