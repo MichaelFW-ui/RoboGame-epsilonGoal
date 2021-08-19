@@ -1,7 +1,7 @@
 /**
- * @file procedure.c
+ * @file sensor.c
  * @author Michael Francis Williams (GitHub:Michael-ui)
- * @brief 全局过程，进行当前过程
+ * @brief 所有传感器API
  * @version 0.1
  * @date 2021-08-19
  * 
@@ -9,6 +9,4 @@
  * 
  */
 
-
-#include "procedure.h"
-#include "position.h"
+#include "sensor.h"

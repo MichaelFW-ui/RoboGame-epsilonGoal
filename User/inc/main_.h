@@ -14,4 +14,5 @@
 
 void Main_(void);
 
+void FrequentlyCalledUpdate(void);
 #endif // !__MAIN__H

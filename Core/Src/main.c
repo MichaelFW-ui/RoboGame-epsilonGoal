@@ -29,13 +29,14 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "motor_feedback.h"
-#include "motor_ctrl.h"
-#include "stdio.h"
 #include "delay.h"
-#include "pushrod.h"
-#include "pn5180.h"
 #include "iso15693.h"
+#include "main_.h"
+#include "motor_ctrl.h"
+#include "motor_feedback.h"
+#include "pn5180.h"
+#include "pushrod.h"
+#include "stdio.h"
 
 /* USER CODE END Includes */
 
@@ -213,13 +214,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 
   if (htim->Instance == TIM4) {
-    static int cnt = 0;
-    if (cnt++ == 2) {
-      cnt = 0;
-    // MotorCtrl_CalculateNextOutput();
-    // MotorCtrl_UpdateControlFlow();
-    }
-
+    FrequentlyCalledUpdate();
   }
   if (htim->Instance == TIM5) {
     Pushrod_TIM_UpdateHandler();

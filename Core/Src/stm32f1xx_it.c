@@ -75,6 +75,7 @@ extern TIM_HandleTypeDef htim7;
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern DMA_HandleTypeDef hdma_uart4_tx;
 extern osMessageQId DebugCommandHandle;
+extern uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 
 /* USER CODE END EV */
 
@@ -260,10 +261,18 @@ void UART4_IRQHandler(void)
   if (tmp_flag != RESET) {
     __HAL_UART_CLEAR_IDLEFLAG(&huart4);
     HAL_UART_DMAStop(&huart4);
-    temp = 0x01;
+    temp = Debug_OperationOnLoad;
     /* pxHigherPriorityTaskWoken的取值并不清 */ 
     xQueueSendToBackFromISR(DebugCommandHandle, &temp, NULL);
     Debug_Receive_DMA();
+    uint8_t cmd = temp;
+    if (cmd == Debug_OperationOnLoad)
+      Debug_CommandHandler(Debug_USART_CommandBuffer);
+    else if (cmd == Debug_OperationHalt) {
+      // TODO Completion
+    } else {
+      Debug_BugCatcher(HAL_ERROR);
+    }
     
     // temp = __HAL_DMA_GET_COUNTER(&hdma_uart4_rx);
     /*

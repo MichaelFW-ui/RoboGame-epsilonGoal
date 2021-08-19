@@ -12,7 +12,6 @@
 #ifndef __PID_H
 #define __PID_H
 
-#endif // !__PID_H
 
 #include "stm32f1xx_hal.h"
 
@@ -62,3 +61,5 @@ void PID_Calculate_Locational_CounterOverflow(PID_InformationTypeDef *handle,
 
 void PID_Calculate_Incremental(PID_InformationTypeDef *handle, double current);
 
+
+#endif // !__PID_H

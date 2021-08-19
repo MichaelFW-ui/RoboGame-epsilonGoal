@@ -20,17 +20,16 @@
  * 
  */
 
-#include "main.h"
 #include "debug.h"
-#include "stdio.h"
-#include "stdarg.h"
 
-#include "freertos.h"
-#include "queue.h"
 #include "cmsis_os.h"
+#include "freertos.h"
+#include "main.h"
 #include "motor_ctrl.h"
 #include "pushrod.h"
-
+#include "queue.h"
+#include "stdarg.h"
+#include "stdio.h"
 #include "tim.h"
 
 uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
@@ -51,7 +50,13 @@ void Debug_Main(void) {
   uint8_t cmd;
   while (1) {
     xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
-    printf("Received\r\n");
+    // printf("Received\r\n");
+    /*
+    * 更新了FreeRTOS后，我发现xQueueReceive无法跳出了，这很不好。
+    * 所以可能不要了。
+    * 但是之后肯定还是需要多线程的，所以想办法克服一下吧！
+    */
+    continue;
     if (cmd == Debug_OperationOnLoad)
       Debug_CommandHandler(Debug_USART_CommandBuffer);
     else if (cmd == Debug_OperationHalt) {
@@ -59,20 +64,16 @@ void Debug_Main(void) {
     } else {
       Debug_BugCatcher(HAL_ERROR);
     }
-    /*
-      TODO: 现在是转发消息，今后可以实现更复杂的关系！
-    */
-    HAL_Delay(2);
+    osDelay(2);
   }
 }
 
 void Debug_BugCatcher(HAL_StatusTypeDef status) {
   /*
    *  TODO: 根据返回值判断是否成功，并记录
-  */
+   */
   return;
 }
-
 
 /**
  * @brief Debug模块初始化和产生请求
@@ -80,6 +81,7 @@ void Debug_BugCatcher(HAL_StatusTypeDef status) {
  * @retval None
  */
 void Debug_Init(void) {
+
   // 使用汉语作为输出时，注意使用如下指令压制对于多字节字符串的警告
 #pragma diag_suppress 870
   // uint8_t welcome[] = "目前程序运行正常。\r\n启动调试程序中...\r\n";
@@ -94,9 +96,6 @@ void Debug_Init(void) {
   __HAL_UART_ENABLE_IT(&Debug_Handle, UART_IT_IDLE);
   Debug_BugCatcher(HAL_UART_Receive_DMA(
     &Debug_Handle, Debug_USART_CommandBuffer, DEBUG_USART_BUFFER_SIZE));
-  /*
-    TODO: 完成这个函数
-  */
 }
 
 int fputc(int ch, FILE *f) {

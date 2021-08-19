@@ -27,6 +27,11 @@
         "phhalhw_pn5180_reg.h": "c",
         "vl53l0x_platform.h": "c",
         "vl53l0x_api.h": "c",
-        "vl53l0x_api_strings.h": "c"
+        "vl53l0x_api_strings.h": "c",
+        "freertosconfig.h": "c",
+        "motion.h": "c",
+        "sensor.h": "c",
+        "position.h": "c",
+        "procedure.h": "c"
     }
 }

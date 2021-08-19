@@ -1,5 +1,6 @@
 --cpu Cortex-M3
 "robogame\startup_stm32f103xe.o"
+"robogame\armlib_lock_glue.o"
 "robogame\main.o"
 "robogame\gpio.o"
 "robogame\freertos.o"
@@ -61,6 +62,7 @@
 "robogame\vl53l0x_api_strings.o"
 "robogame\vl53l0x_platform.o"
 "robogame\vl53l0x_platform_log.o"
+"robogame\sensor.o"
 "robogame\croutine.o"
 "robogame\event_groups.o"
 "robogame\list.o"

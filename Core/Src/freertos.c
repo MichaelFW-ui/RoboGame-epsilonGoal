@@ -120,11 +120,11 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of DebugTask */
-  osThreadDef(DebugTask, StartDebugTask, osPriorityNormal, 0, 128);
+  osThreadDef(DebugTask, StartDebugTask, osPriorityNormal, 0, 256);
   DebugTaskHandle = osThreadCreate(osThread(DebugTask), NULL);
 
   /* definition and creation of MovementTask */
-  osThreadDef(MovementTask, StartMovement, osPriorityIdle, 0, 128);
+  osThreadDef(MovementTask, StartMovement, osPriorityIdle, 0, 256);
   MovementTaskHandle = osThreadCreate(osThread(MovementTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -166,8 +166,7 @@ void StartMovement(void const * argument)
   Main_();
   for(;;)
   {
-    osDelay(1000);
-    printf("Running\r\n");
+    osDelay(1);
   }
   /* USER CODE END StartMovement */
 }

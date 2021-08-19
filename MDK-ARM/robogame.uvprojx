@@ -336,9 +336,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F103xE</Define>
+              <Define>USE_HAL_DRIVER,STM32F103xE,STM32_THREAD_SAFE_STRATEGY=4</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc; ../Drivers/STM32F1xx_HAL_Driver/Inc; ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy; ../Drivers/CMSIS/Device/ST/STM32F1xx/Include; ../Drivers/CMSIS/Include; ..\User\inc; ../Middlewares/Third_Party/FreeRTOS/Source/include; ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS; ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3; ..\User\VL53L0X\core\inc; ..\User\VL53L0X\platform\inc</IncludePath>
+              <IncludePath>../Core/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;    ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;    ../Drivers/CMSIS/Include;    ..\User\inc;    ../Middlewares/Third_Party/FreeRTOS/Source/include;    ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;    ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;    ..\User\VL53L0X\core\inc;    ..\User\VL53L0X\platform\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -386,6 +386,11 @@
               <FileName>startup_stm32f103xe.s</FileName>
               <FileType>2</FileType>
               <FilePath>startup_stm32f103xe.s</FilePath>
+            </File>
+            <File>
+              <FileName>armlib_lock_glue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>armlib_lock_glue.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1222,6 +1227,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\VL53L0X\platform\src\vl53l0x_platform_log.c</FilePath>
             </File>
+            <File>
+              <FileName>sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\src\sensor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1855,6 +1865,26 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Doc</GroupName>
+          <Files>
+            <File>
+              <FileName>plan.md</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\plan.md</FilePath>
+            </File>
+            <File>
+              <FileName>README.md</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\README.md</FilePath>
+            </File>
+            <File>
+              <FileName>img.png</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\img.png</FilePath>
             </File>
           </Files>
         </Group>
