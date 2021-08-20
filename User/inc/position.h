@@ -124,3 +124,4 @@ uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t *lowerbound, uint8_t *up
 // }
 
 #endif // !__POSITION_H
+

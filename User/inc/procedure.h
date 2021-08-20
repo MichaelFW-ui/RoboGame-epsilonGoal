@@ -19,4 +19,6 @@ typedef enum {
     Procedure_ = 0u,
 } Procedure_t;
 
+void Procedure_NewNodeUpdate(void);
+
 #endif //  __PROCEDURE_H

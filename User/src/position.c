@@ -29,7 +29,7 @@ void Position_SetProperVelocity() {
         // 四边边上点数合计
         uint8_t DotCnt = 0;
         for (uint8_t i = 0; i < 4; i++)
-            DotCnt += Position_GetOneActive(CurrentInfo[i], &cur[i << 2], &cur[(i << 2) + 1]);
+            DotCnt += Position_GetOneActive(CurrentInfo[i], &cur[i << 1], &cur[(i << 1) + 1]);
         if (DotCnt == 4) {
             // 十字式
             /*TODO*/
@@ -46,6 +46,7 @@ void Position_SetProperVelocity() {
 
 /**
  * @brief 得到一条边上的唯一一个黑点的两端坐标
+ *      复杂度O(n)
  * 
  * @param line 边信息
  * @param lowerbound 低端坐标
