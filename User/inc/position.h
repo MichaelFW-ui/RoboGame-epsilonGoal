@@ -36,7 +36,8 @@ typedef enum {
     Node_16 = 16u,
     Node_17 = 17u,
     Node_18 = 18u,
-    Node_19 = 19u
+    Node_19 = 19u,
+    Node_InValid = 20u
 } node_t;
 
 extern node_t CurrentNode;

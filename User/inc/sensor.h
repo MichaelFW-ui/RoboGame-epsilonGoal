@@ -40,13 +40,13 @@ __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentSpeedAtY(void) {
     return NULL_VALUE;
 }
 
-void Sensor_GetCurrentInfo(TraceInfo_t *info) {
+__STATIC_INLINE HAL_StatusTypeDef Sensor_GetCurrentInfo(TraceInfo_t *info) {
     /*TODO*/
     for (int i = 0; i < 10 * 4; ++i) {
         /*TODO*/
         *(info + i) = 0;
     }
-    return (void)HAL_ERROR;
+    return HAL_ERROR;
 }
 
 #endif // !__SENSOR_H

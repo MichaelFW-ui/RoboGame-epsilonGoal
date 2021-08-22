@@ -17,9 +17,9 @@
 
 #ifndef __STEER_CTRL_H
 #define __STEER_CTRL_H
-#include "stm32f1xx_hal.h"
-#include "pwm_generate.h"
 
+#include "pwm_generate.h"
+#include "stm32f1xx_hal.h"
 
 /*              Begin of Steer COM numbers                                    */
 
@@ -49,7 +49,7 @@ typedef uint8_t Steer_COMNumber_t;
  */
 void __STATIC_FORCEINLINE Steer_SetAngleByDegree(Steer_COMNumber_t SteerNumber,
                                                  uint8_t angle) {
-  PWM_SetPWM_ByDutyCycle(SteerNumber, (uint16_t)(angle * 2.0 / 180 + 0.5) / 20 * 4096);
+  PWM_SetPWM_ByDutyCycle(SteerNumber, (uint16_t)((angle * 2.0 / 180 + 0.5) / 20 * 4096));
 }
 
 /**
@@ -60,12 +60,12 @@ void __STATIC_FORCEINLINE Steer_Init(void) {
   PWM_Reset();
   PWM_SetFrequencyAndStartUp(50);
   // 50Hz下，为1ms占空
-  Steer_SetAngleByDegree(ARM_A_STEER_A, 0);
-  Steer_SetAngleByDegree(ARM_A_STEER_B, 0);
-  Steer_SetAngleByDegree(ARM_A_STEER_C, 0);
-  Steer_SetAngleByDegree(ARM_B_STEER_A, 0);
-  Steer_SetAngleByDegree(ARM_B_STEER_B, 0);
-  Steer_SetAngleByDegree(ARM_B_STEER_C, 0);
+  Steer_SetAngleByDegree(ARM_A_STEER_A, 90);
+  Steer_SetAngleByDegree(ARM_A_STEER_B, 90);
+  Steer_SetAngleByDegree(ARM_A_STEER_C, 90);
+  Steer_SetAngleByDegree(ARM_B_STEER_A, 90);
+  Steer_SetAngleByDegree(ARM_B_STEER_B, 90);
+  Steer_SetAngleByDegree(ARM_B_STEER_C, 90);
 }
 
 #endif // !__STEER_CTRL_H

@@ -10,6 +10,7 @@
  */
 
 #include "position.h"
+#include "sensor.h"
 
 node_t CurrentNode = Node_0;
 TraceInfo_t CurrentInfo[4];
@@ -35,6 +36,7 @@ void Position_SetProperVelocity() {
             /*TODO*/
         } else if (DotCnt == 2) {
             // 一字式
+            // 
             /*TODO*/
         } else {
             // 其他形式

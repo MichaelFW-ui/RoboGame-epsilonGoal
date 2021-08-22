@@ -30,8 +30,15 @@ PID_InformationTypeDef x_speed;
 PID_InformationTypeDef y_speed;
 PID_InformationTypeDef w_speed;
 PID_InformationTypeDef w_angle;
+PID_InformationTypeDef x_distance;
+PID_InformationTypeDef y_distance;
+
+volatile uint8_t EnableLocationPID = 0;
 
 volatile MotorInput_t Motion_TargetAtX, Motion_TargetAtY, Motion_TargetAngle;
+
+volatile MotorInput_t Motion_TargetAtXDistance;
+volatile MotorInput_t Motion_TargetAtYDistance;
 
 /*DO NOT CHANGE THIS VALUE!*/
 /*DO NOT CHANGE THIS VALUE!*/
@@ -45,10 +52,17 @@ volatile MotorInput_t Motion_TargetAngularVelocity;
  * 
  */
 void Motion_UpdateTargetInVelocity() {
-    x_speed.Target = Motion_TargetAtX;
-    y_speed.Target = Motion_TargetAtY;
     w_speed.Target = Motion_TargetAngularVelocity = w_angle.Output;
     w_angle.Target = Motion_TargetAngle;
+    if (EnableLocationPID) {
+        x_speed.Target = Motion_TargetAtX = x_distance.Output;
+        y_speed.Target = Motion_TargetAtY = y_distance.Output;
+        x_distance.Target = Motion_TargetAtXDistance;
+        y_distance.Target = Motion_TargetAtYDistance;
+    } else {
+        x_speed.Target = Motion_TargetAtX;
+        y_speed.Target = Motion_TargetAtY;
+    }
 }
 
 /**
@@ -58,7 +72,7 @@ void Motion_UpdateTargetInVelocity() {
 void Motion_PIDUpdateHighFrequency() {
     PID_Calculate_Incremental(&x_speed, Sensor_GetCurrentSpeedAtX());
     PID_Calculate_Incremental(&y_speed, Sensor_GetCurrentSpeedAtY());
-    PID_Calculate_Incremental(&w_angle, Sensor_GetCurrentAngle());
+    PID_Calculate_Incremental(&w_speed, Sensor_GetCurrentAngularVelocity());
 }
 
 /**
@@ -66,6 +80,9 @@ void Motion_PIDUpdateHighFrequency() {
  * 
  */
 void Motion_PIDUpdateLowFrequency() {
-    w_angle.Target = w_angle.Output;
-    PID_Calculate_Incremental(&w_angle, Sensor_GetCurrentAngularVelocity());
+    PID_Calculate_Incremental(&w_angle, Sensor_GetCurrentAngle());
+    if (EnableLocationPID) {
+        // PID_Calculate_Incremental(&x_distance, Sensor_GetCurrentDistanceAtX());
+        // PID_Calculate_Incremental(&y_distance, Sensor_GetCurrentDistanceAtY());
+    }
 }

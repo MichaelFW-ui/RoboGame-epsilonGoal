@@ -32,6 +32,7 @@
         "motion.h": "c",
         "sensor.h": "c",
         "position.h": "c",
-        "procedure.h": "c"
+        "procedure.h": "c",
+        "arm_ctrl.h": "c"
     }
 }

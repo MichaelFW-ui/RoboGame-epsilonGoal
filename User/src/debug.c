@@ -31,6 +31,7 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "tim.h"
+#include "arm_ctrl.h"
 
 uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 uint8_t Debug_USART_TransmitBuffer[DEBUG_USART_BUFFER_SIZE];
@@ -49,22 +50,39 @@ void Debug_Main(void) {
 
   uint8_t cmd;
   while (1) {
-    xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
-    // printf("Received\r\n");
-    /*
-    * 更新了FreeRTOS后，我发现xQueueReceive无法跳出了，这很不好。
-    * 所以可能不要了。
-    * 但是之后肯定还是需要多线程的，所以想办法克服一下吧！
-    */
-    continue;
-    if (cmd == Debug_OperationOnLoad)
-      Debug_CommandHandler(Debug_USART_CommandBuffer);
-    else if (cmd == Debug_OperationHalt) {
-      // TODO Completion
-    } else {
-      Debug_BugCatcher(HAL_ERROR);
-    }
-    osDelay(2);
+      while (1) {
+          osDelay(1000);
+          ARM_Backward_Raise();
+          osDelay(1000);
+          ARM_Backward_TalonOpen();
+          osDelay(1000);
+          ARM_Backward_TakeBall();
+          osDelay(1000);
+          ARM_Backward_TalonClose();
+          osDelay(1000);
+          ARM_Backward_Raise();
+          osDelay(1000);
+          ARM_Backward_PutDown();
+          osDelay(1000);
+          ARM_Backward_TalonOpen();
+          osDelay(1000);
+      }
+      xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
+      // printf("Received\r\n");
+      /*
+       * 更新了FreeRTOS后，我发现xQueueReceive无法跳出了，这很不好。
+       * 所以可能不要了。
+       * 但是之后肯定还是需要多线程的，所以想办法克服一下吧！
+       */
+      continue;
+      if (cmd == Debug_OperationOnLoad)
+          Debug_CommandHandler(Debug_USART_CommandBuffer);
+      else if (cmd == Debug_OperationHalt) {
+          // TODO Completion
+      } else {
+          Debug_BugCatcher(HAL_ERROR);
+      }
+      osDelay(2);
   }
 }
 
@@ -196,7 +214,7 @@ __STATIC_INLINE void Debug_SetArgumentHandler(uint8_t *str) {
  * @return None 
  */
 __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
-  static uint16_t TemporaryMotorCompare[] = {500, 500, 500, 500};
+  static uint16_t TemporaryMotorCompare[] = {500, 500, 500, 500, 300};
   switch (str[1]) {
     case 'P':
       if (str[2] == 'U') {
@@ -247,6 +265,21 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
           }
           printf("D%d\r\n", TemporaryMotorCompare[3]);
           break;
+        case 'M':
+          if (str[3] == 'U') {
+            TemporaryMotorCompare[4] += 50;
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, TemporaryMotorCompare[4]);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, TemporaryMotorCompare[4]);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, TemporaryMotorCompare[4]);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, TemporaryMotorCompare[4]);
+          } else {
+            TemporaryMotorCompare[4] -= 50;
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, TemporaryMotorCompare[4]);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, TemporaryMotorCompare[4]);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, TemporaryMotorCompare[4]);
+            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, TemporaryMotorCompare[4]);
+          }
+          printf("M%d\r\n", TemporaryMotorCompare[4]);
         default:
           /*TODO*/
           break;

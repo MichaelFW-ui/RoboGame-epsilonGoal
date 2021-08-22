@@ -63,6 +63,7 @@
 "robogame\vl53l0x_platform.o"
 "robogame\vl53l0x_platform_log.o"
 "robogame\sensor.o"
+"robogame\arm_ctrl.o"
 "robogame\croutine.o"
 "robogame\event_groups.o"
 "robogame\list.o"

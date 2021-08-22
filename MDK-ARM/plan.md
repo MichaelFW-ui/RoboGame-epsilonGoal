@@ -13,7 +13,7 @@
 | 底层     | pid.*            | 通用的PID使用库，手写    | PID & PID                      |
 | 底层     | callback.*       | 适配HAL库的Callback函数  | 无                             |
 | 底层     | cannon.*         | 摩擦轮电机驱动信号       | Cannon & CANNON                |
-| 底层     | pwm_generate.*   | PWM，PCA9650模块使用     | PWM & PWM                      |
+| 底层     | pwm_generate.*   | PWM，PCA9685模块使用     | PWM & PWM                      |
 | 底层     | delay.*          | 延时函数，慎用           | delay                          |
 | 底层     | iso15693.*       | 来源GitHub的协议代码     | ISO15693                       |
 | 底层     | pn5180.*         | 来源GitHub的协议代码     | PN5180                         |
