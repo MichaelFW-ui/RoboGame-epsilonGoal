@@ -44,6 +44,41 @@ __STATIC_INLINE void Motor_Init(void) {
 
 void Motor_Decode(MotorInput_t x, MotorInput_t y, MotorInput_t w);
 
+__STATIC_FORCEINLINE void Motor_SetX(MotorInput_t x) {
+    Motor_InputInstance.x = x;
+    Motor_Decode(Motor_InputInstance.x, Motor_InputInstance.y,
+                 Motor_InputInstance.w);
+}
+
+__STATIC_FORCEINLINE void Motor_SetY(MotorInput_t y) {
+    Motor_InputInstance.y = y;
+    Motor_Decode(Motor_InputInstance.x, Motor_InputInstance.y,
+                 Motor_InputInstance.w);
+}
+
+__STATIC_FORCEINLINE void Motor_SetW(MotorInput_t w) {
+    Motor_InputInstance.w = w;
+    Motor_Decode(Motor_InputInstance.x, Motor_InputInstance.y,
+                 Motor_InputInstance.w);
+}
+
+__STATIC_FORCEINLINE void Motor_AddX(MotorInput_t x) {
+    Motor_InputInstance.x += x;
+    Motor_Decode(Motor_InputInstance.x, Motor_InputInstance.y,
+                 Motor_InputInstance.w);
+}
+
+__STATIC_FORCEINLINE void Motor_AddY(MotorInput_t y) {
+    Motor_InputInstance.y += y;
+    Motor_Decode(Motor_InputInstance.x, Motor_InputInstance.y,
+                 Motor_InputInstance.w);
+}
+
+__STATIC_FORCEINLINE void Motor_AddW(MotorInput_t w) {
+    Motor_InputInstance.w += w;
+    Motor_Decode(Motor_InputInstance.x, Motor_InputInstance.y,
+                 Motor_InputInstance.w);
+}
 
 
 

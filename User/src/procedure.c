@@ -17,6 +17,9 @@
  * CrossOver_Overall, CrossOver, BareRun_Overall, BareRun.
  *  具体介绍下文有解释。
  * 
+ * 事实上，数组只是为了方便编程时参考，并没有实际作用。
+ * 数组的编号参考doc目录下面的一个图片。
+ * 
  * @version 0.1
  * @date 2021-08-19
  * 
@@ -27,6 +30,9 @@
 
 #include "procedure.h"
 #include "position.h"
+
+Procedure_t CurrentProcedure = eProcedure_Default;
+
 #define CROSSOVER_OVERALL
 /*
  *      CROSSOVER_OVERALL ：在取球区直接跑完全程，检测到全部的篮球；越障
@@ -39,6 +45,7 @@
 
 // 压制 enumerated type mixed with another type 188-D Warning。
 #pragma diag_suppress 188
+
 #ifdef CROSSOVER_OVERALL
 
 node_t ProcedureNodeInitial[]     = {0, 1,  2,  3,  4,  5,  6,  7, 8,
@@ -115,7 +122,7 @@ void Procedure_Default(void) {
     /*TODO*/
 }
 
-void ProcedureHeadForPickingArea(void) {
+void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 
@@ -148,7 +155,7 @@ void Procedure_Default(void) {
     /*TODO*/
 }
 
-void ProcedureHeadForPickingArea(void) {
+void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 
@@ -182,7 +189,7 @@ void Procedure_Default(void) {
     /*TODO*/
 }
 
-void ProcedureHeadForPickingArea(void) {
+void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 
@@ -215,7 +222,7 @@ void Procedure_Default(void) {
     /*TODO*/
 }
 
-void ProcedureHeadForPickingArea(void) {
+void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 

@@ -10,3 +10,5 @@
  */
 
 #include "sensor.h"
+
+TraceInfo_t CurrentTrace[4];

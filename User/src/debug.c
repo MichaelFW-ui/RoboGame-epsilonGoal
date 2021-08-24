@@ -50,23 +50,6 @@ void Debug_Main(void) {
 
   uint8_t cmd;
   while (1) {
-      while (1) {
-          osDelay(1000);
-          ARM_Backward_Raise();
-          osDelay(1000);
-          ARM_Backward_TalonOpen();
-          osDelay(1000);
-          ARM_Backward_TakeBall();
-          osDelay(1000);
-          ARM_Backward_TalonClose();
-          osDelay(1000);
-          ARM_Backward_Raise();
-          osDelay(1000);
-          ARM_Backward_PutDown();
-          osDelay(1000);
-          ARM_Backward_TalonOpen();
-          osDelay(1000);
-      }
       xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
       // printf("Received\r\n");
       /*

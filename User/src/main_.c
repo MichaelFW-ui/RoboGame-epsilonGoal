@@ -32,24 +32,51 @@ void Main_(void) {
   MotorCtrl_SetDirection(Motor_B, Motor_CCW);
   MotorCtrl_SetDirection(Motor_C, Motor_CCW);
   MotorCtrl_SetDirection(Motor_D, Motor_CW);
-  Pushrod_MoveForward(200);
 
-  Steer_Init();
+
+  // Steer_Init();
+  HAL_TIM_Base_Start_IT(&htim5);
+  while (1) {
+    Pushrod_MoveBackward(40000);
+    HAL_Delay(1000);
+    Pushrod_MoveForward(40000);
+    HAL_Delay(1000);
+    // HAL_GPIO_WritePin(Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin, GPIO_PIN_SET);
+    // HAL_Delay(1000);
+    // osDelay(50);
+    // HAL_GPIO_WritePin(Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin, GPIO_PIN_RESET);
+  }
+
   while (1) {
     ARM_Forward_Raise();
-    osDelay(1000);
+    HAL_Delay(1000);
     ARM_Forward_TalonOpen();
-    osDelay(1000);
+    HAL_Delay(1000);
     ARM_Forward_TakeBall();
-    osDelay(1000);
+    HAL_Delay(1000);
     ARM_Forward_TalonClose();
-    osDelay(1000);
+    HAL_Delay(1000);
     ARM_Forward_Raise();
-    osDelay(1000);
+    HAL_Delay(1000);
     ARM_Forward_PutDown();
-    osDelay(1000);
+    HAL_Delay(1000);
     ARM_Forward_TalonOpen();
-    osDelay(1000);
+    HAL_Delay(1000);
+
+    ARM_Backward_Raise();
+    HAL_Delay(1000);
+    ARM_Backward_TalonOpen();
+    HAL_Delay(1000);
+    ARM_Backward_TakeBall();
+    HAL_Delay(1000);
+    ARM_Backward_TalonClose();
+    HAL_Delay(1000);
+    ARM_Backward_Raise();
+    HAL_Delay(1000);
+    ARM_Backward_PutDown();
+    HAL_Delay(1000);
+    ARM_Backward_TalonOpen();
+    HAL_Delay(1000);
   }
 
 

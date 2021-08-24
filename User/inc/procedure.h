@@ -13,6 +13,8 @@
 #ifndef __PROCEDURE_H
 #define __PROCEDURE_H
 
+#include "motion.h"
+
 
 
 typedef enum {
@@ -25,6 +27,14 @@ typedef enum {
     eProcedure_HeadForPickingAreaSecondly = 6u
 } Procedure_t;
 
+extern Procedure_t CurrentProcedure;
+
+extern node_t ProcedureNodeInitial[];
+extern node_t ProcedureNodeInitialBack[];
+
+extern node_t ProcedureNodeSubprogress[];
+extern node_t ProcedureNodeSubprogressBack[];
+
 void Procedure_NewNodeUpdate(void);
 
 
@@ -33,7 +43,7 @@ void Procedure_NewNodeUpdate(void);
 
 void Procedure_Default(void);
 
-void ProcedureHeadForPickingArea(void);
+void Procedure_HeadForPickingArea(void);
 
 void Precedure_EnterPickingArea(void);
 

@@ -28,8 +28,8 @@ typedef uint16_t Pushrod_Distance_t;
 
 
 /*   BEGIN OF USER EXTERNAL VARIABLE                                          */
-extern Pushrod_DirectionTypeDef Pushrod_DirectionInstance;
-extern Pushrod_Distance_t Pushrod_DistanceInstance;
+extern volatile Pushrod_DirectionTypeDef Pushrod_DirectionInstance;
+extern volatile Pushrod_Distance_t Pushrod_DistanceInstance;
 /*     END OF USER EXTERNAL VARIABLE                                          */
 
 

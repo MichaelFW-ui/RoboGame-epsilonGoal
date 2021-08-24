@@ -27,6 +27,8 @@
  * 
  * Notice! Y and x  axises is fixed to the vehicle.
  * 
+ * 使用时调整MotorDecodeOutputFix()的具体参数
+ * 
  * @version 0.1
  * @date 2021-08-15
  * 

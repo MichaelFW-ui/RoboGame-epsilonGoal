@@ -1,9 +1,7 @@
 /**
  * @file position.h
  * @author Michael Francis Williams (GitHub:Michael-ui)
- * @brief 获得当前位置的算法
- * 
- * 在Doc文件中有Node的图形。
+ * @brief 红外对管typedef
  * @version 0.1
  * @date 2021-08-19
  * 
@@ -16,31 +14,6 @@
 
 #include "stm32f1xx_hal.h"
 
-typedef enum {
-    Node_0 = 0u,
-    Node_1 = 1u,
-    Node_2 = 2u,
-    Node_3 = 3u,
-    Node_4 = 4u,
-    Node_5 = 5u,
-    Node_6 = 6u,
-    Node_7 = 7u,
-    Node_8 = 8u,
-    Node_9 = 9u,
-    Node_10 = 10u,
-    Node_11 = 11u,
-    Node_12 = 12u,
-    Node_13 = 13u,
-    Node_14 = 14u,
-    Node_15 = 15u,
-    Node_16 = 16u,
-    Node_17 = 17u,
-    Node_18 = 18u,
-    Node_19 = 19u,
-    Node_InValid = 20u
-} node_t;
-
-extern node_t CurrentNode;
 
 typedef uint16_t TraceInfo_t;
 
@@ -50,11 +23,11 @@ typedef uint16_t TraceInfo_t;
  *       |         |
  *    1  |         |  2
  *       |         |
+ *       |         |
  *       +—————————+
  *            3
  */
 
-extern TraceInfo_t CurrentInfo[4];
 
 
 #define IsActive(info, cur) ((info & (1 << cur)) ? 1 : 0)
@@ -68,9 +41,7 @@ extern TraceInfo_t CurrentInfo[4];
 #define ClearLestActiveMask(info) (info & (info - 1))
 
 
-void Position_SetProperVelocity(void);
-
-uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t *lowerbound, uint8_t *upperbound);
+uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t len, uint8_t *lowerbound, uint8_t *upperbound);
 
 
 // 以下为组委会例程。我不使用。

@@ -16,7 +16,9 @@
 #include "stm32f1xx_hal.h"
 #include "motion.h"
 #include "position.h"
+#include "motor.h"
 
+extern TraceInfo_t CurrentTrace[4];
 #define NULL_VALUE 0
 
 __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentAngle(void) {
@@ -29,24 +31,15 @@ __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentAngularVelocity(void) {
     return NULL_VALUE;
 }
 
-__STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentSpeedAtX(void) {
-    /*TODO*/
-    return NULL_VALUE;
-}
 
 
-__STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentSpeedAtY(void) {
-    /*TODO*/
-    return NULL_VALUE;
-}
-
-__STATIC_INLINE HAL_StatusTypeDef Sensor_GetCurrentInfo(TraceInfo_t *info) {
+__STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
     /*TODO*/
     for (int i = 0; i < 10 * 4; ++i) {
         /*TODO*/
         *(info + i) = 0;
     }
-    return HAL_ERROR;
+    return CurrentTrace;
 }
 
 #endif // !__SENSOR_H

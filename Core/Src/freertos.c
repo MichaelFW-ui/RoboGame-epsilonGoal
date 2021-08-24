@@ -144,6 +144,7 @@ void StartDebugTask(void const * argument)
 {
   /* USER CODE BEGIN StartDebugTask */
   /* Infinite loop */
+  osDelay(1000);
   Debug_Main();
   for(;;)
   {
@@ -163,6 +164,7 @@ void StartMovement(void const * argument)
 {
   /* USER CODE BEGIN StartMovement */
   /* Infinite loop */
+  osDelay(1000);
   Main_();
   for(;;)
   {
