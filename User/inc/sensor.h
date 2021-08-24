@@ -37,7 +37,6 @@ __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
     /*TODO*/
     for (int i = 0; i < 10 * 4; ++i) {
         /*TODO*/
-        *(info + i) = 0;
     }
     return CurrentTrace;
 }

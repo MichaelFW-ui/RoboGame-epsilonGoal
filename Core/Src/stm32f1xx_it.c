@@ -24,8 +24,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usart.h"
-#include "FreeRTOS.h"
-#include "cmsis_os.h"
 #include "debug.h"
 #include "pushrod.h"
 /* USER CODE END Includes */
@@ -74,7 +72,6 @@ extern TIM_HandleTypeDef htim7;
 /* USER CODE BEGIN EV */
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern DMA_HandleTypeDef hdma_uart4_tx;
-extern osMessageQId DebugCommandHandle;
 extern uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 
 /* USER CODE END EV */
@@ -159,6 +156,19 @@ void UsageFault_Handler(void)
 }
 
 /**
+  * @brief This function handles System service call via SWI instruction.
+  */
+void SVC_Handler(void)
+{
+  /* USER CODE BEGIN SVCall_IRQn 0 */
+
+  /* USER CODE END SVCall_IRQn 0 */
+  /* USER CODE BEGIN SVCall_IRQn 1 */
+
+  /* USER CODE END SVCall_IRQn 1 */
+}
+
+/**
   * @brief This function handles Debug monitor.
   */
 void DebugMon_Handler(void)
@@ -169,6 +179,33 @@ void DebugMon_Handler(void)
   /* USER CODE BEGIN DebugMonitor_IRQn 1 */
 
   /* USER CODE END DebugMonitor_IRQn 1 */
+}
+
+/**
+  * @brief This function handles Pendable request for system service.
+  */
+void PendSV_Handler(void)
+{
+  /* USER CODE BEGIN PendSV_IRQn 0 */
+
+  /* USER CODE END PendSV_IRQn 0 */
+  /* USER CODE BEGIN PendSV_IRQn 1 */
+
+  /* USER CODE END PendSV_IRQn 1 */
+}
+
+/**
+  * @brief This function handles System tick timer.
+  */
+void SysTick_Handler(void)
+{
+  /* USER CODE BEGIN SysTick_IRQn 0 */
+
+  /* USER CODE END SysTick_IRQn 0 */
+
+  /* USER CODE BEGIN SysTick_IRQn 1 */
+
+  /* USER CODE END SysTick_IRQn 1 */
 }
 
 /******************************************************************************/
@@ -263,7 +300,6 @@ void UART4_IRQHandler(void)
     HAL_UART_DMAStop(&huart4);
     temp = Debug_OperationOnLoad;
     /* pxHigherPriorityTaskWoken的取值并不清 */ 
-    xQueueSendToBackFromISR(DebugCommandHandle, &temp, NULL);
     Debug_Receive_DMA();
     uint8_t cmd = temp;
     if (cmd == Debug_OperationOnLoad)

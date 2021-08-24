@@ -20,7 +20,7 @@
 typedef enum {
     eProcedure_Default = 0u,
     eProcedure_HeadForPickingArea = 1u,
-    eProcedure_EnterForPickingArea = 2u,
+    eProcedure_EnterPickingArea = 2u,
     eProcedure_ExitPickingArea = 3u,
     eProcedure_HeadForThrowingArea = 4u,
     eProcedure_StayInThrowingArea = 5u,

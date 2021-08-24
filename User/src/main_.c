@@ -12,8 +12,6 @@
 #include "main_.h"
 
 #include "arm_ctrl.h"
-#include "cmsis_os.h"
-#include "freertos.h"
 #include "motion.h"
 #include "motor_ctrl.h"
 #include "motor_feedback.h"

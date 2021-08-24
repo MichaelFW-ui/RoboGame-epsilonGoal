@@ -546,11 +546,11 @@ ARM Macro Assembler    Page 9
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=robogame\startup_stm32f103xe.d -orobogame\startup_stm32f103xe.o -I
-..\Core\Inc -I.\RTE\_robogame -ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\
-Include -ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include --predefi
-ne="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 526" --predefine="_R
-TE_ SETA 1" --predefine="STM32F10X_HD SETA 1" --list=startup_stm32f103xe.lst st
-artup_stm32f103xe.s
+.\RTE\_robogame -ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include -ID:\K
+eil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include --predefine="__MICROLIB
+ SETA 1" --predefine="__UVISION_VERSION SETA 526" --predefine="_RTE_ SETA 1" --
+predefine="STM32F10X_HD SETA 1" --list=startup_stm32f103xe.lst startup_stm32f10
+3xe.s
 
 
 

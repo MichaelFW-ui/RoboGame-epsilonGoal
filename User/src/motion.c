@@ -44,13 +44,34 @@ void Motion_CurrentNodeUpdate(void) {
         // Test only
         return;
     }
-    if (CurrentProcedure == eProcedure_HeadForPickingArea) {
+    if (CurrentProcedure == eProcedure_HeadForPickingArea ||
+        CurrentProcedure == eProcedure_EnterPickingArea) {
         static uint8_t i = 0;
         while (ProcedureNodeInitial[i] != CurrentNode)
             ++i;
         CurrentNode = ProcedureNodeInitial[++i];
-        
+        return;
     }
+
+    if (CurrentProcedure == eProcedure_ExitPickingArea ||
+        CurrentProcedure == eProcedure_HeadForThrowingArea) {
+        static uint8_t j = 0;
+        while (ProcedureNodeInitialBack[j] != CurrentNode) {
+            ++j;
+        }
+        CurrentNode = ProcedureNodeInitialBack[++j];
+        return;
+    }
+
+    if (CurrentProcedure == eProcedure_HeadForPickingAreaSecondly) {
+        static uint8_t k = 0;
+        while (ProcedureNodeSubprogress[k] != CurrentNode) {
+            ++k;
+        }
+        CurrentNode = ProcedureNodeSubprogress[++k];
+        return;
+    }
+
 }
 
 void Motion_MoveFromNodeToNode(node_t From, node_t To) {

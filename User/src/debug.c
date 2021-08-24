@@ -22,12 +22,9 @@
 
 #include "debug.h"
 
-#include "cmsis_os.h"
-#include "freertos.h"
 #include "main.h"
 #include "motor_ctrl.h"
 #include "pushrod.h"
-#include "queue.h"
 #include "stdarg.h"
 #include "stdio.h"
 #include "tim.h"
@@ -37,7 +34,6 @@ uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 uint8_t Debug_USART_TransmitBuffer[DEBUG_USART_BUFFER_SIZE];
 uint16_t Debug_USART_BufferCur = 0;
 
-extern osMessageQId DebugCommandHandle;
 
 /**
  * @brief 主函数，用于调试时期，随意发挥。
@@ -50,14 +46,11 @@ void Debug_Main(void) {
 
   uint8_t cmd;
   while (1) {
-      xQueueReceive(DebugCommandHandle, &cmd, portMAX_DELAY);
-      // printf("Received\r\n");
       /*
        * 更新了FreeRTOS后，我发现xQueueReceive无法跳出了，这很不好。
        * 所以可能不要了。
        * 但是之后肯定还是需要多线程的，所以想办法克服一下吧！
        */
-      continue;
       if (cmd == Debug_OperationOnLoad)
           Debug_CommandHandler(Debug_USART_CommandBuffer);
       else if (cmd == Debug_OperationHalt) {
@@ -65,7 +58,6 @@ void Debug_Main(void) {
       } else {
           Debug_BugCatcher(HAL_ERROR);
       }
-      osDelay(2);
   }
 }
 
