@@ -27,6 +27,13 @@ typedef enum {
     eProcedure_HeadForPickingAreaSecondly = 6u
 } Procedure_t;
 
+
+typedef enum {
+    isBasketball = 0u,
+    isNOTBasketball = 1u,
+    wasBasketball = 2u,
+    NotDetected = 3u
+} BallTypeDef;
 extern Procedure_t CurrentProcedure;
 
 extern node_t ProcedureNodeInitial[];

@@ -46,7 +46,7 @@ void Motion_CurrentNodeUpdate(void) {
     }
     if (CurrentProcedure == eProcedure_HeadForPickingArea ||
         CurrentProcedure == eProcedure_EnterPickingArea) {
-        static uint8_t i = 0;
+        uint8_t i = 0;
         while (ProcedureNodeInitial[i] != CurrentNode)
             ++i;
         CurrentNode = ProcedureNodeInitial[++i];
@@ -55,7 +55,7 @@ void Motion_CurrentNodeUpdate(void) {
 
     if (CurrentProcedure == eProcedure_ExitPickingArea ||
         CurrentProcedure == eProcedure_HeadForThrowingArea) {
-        static uint8_t j = 0;
+        uint8_t j = 0;
         while (ProcedureNodeInitialBack[j] != CurrentNode) {
             ++j;
         }
@@ -64,7 +64,7 @@ void Motion_CurrentNodeUpdate(void) {
     }
 
     if (CurrentProcedure == eProcedure_HeadForPickingAreaSecondly) {
-        static uint8_t k = 0;
+        uint8_t k = 0;
         while (ProcedureNodeSubprogress[k] != CurrentNode) {
             ++k;
         }
@@ -159,28 +159,31 @@ void Motion_CorrectAtCross(void) {
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
 
     uint8_t Begins[4], Ends[4];
-    // 拿激活点
-    Position_GetOneActive(ptr[0], 9, &Begins[0], &Ends[0]);
-    Position_GetOneActive(ptr[1], 11, &Begins[1], &Ends[1]);
-    Position_GetOneActive(ptr[2], 11, &Begins[2], &Ends[2]);
-    Position_GetOneActive(ptr[3], 9, &Begins[3], &Ends[3]);
+    for (int i = 0; i < 5; ++i) {
+        // 拿激活点
+        Position_GetOneActive(ptr[0], 9, &Begins[0], &Ends[0]);
+        Position_GetOneActive(ptr[1], 11, &Begins[1], &Ends[1]);
+        Position_GetOneActive(ptr[2], 11, &Begins[2], &Ends[2]);
+        Position_GetOneActive(ptr[3], 9, &Begins[3], &Ends[3]);
 
-    // 得到中点
-    uint8_t Middle[] = {
-        (Begins[0] + Ends[0]) >> 1,
-        (Begins[1] + Ends[1]) >> 1,
-        (Begins[2] + Ends[2]) >> 1,
-        (Begins[3] + Ends[3]) >> 1
-    };
+        // 得到中点
+        uint8_t Middle[] = {
+            (Begins[0] + Ends[0]) >> 1,
+            (Begins[1] + Ends[1]) >> 1,
+            (Begins[2] + Ends[2]) >> 1,
+            (Begins[3] + Ends[3]) >> 1
+        };
 
-    // 得到中心点
-    int16_t CenterX = (Middle[0] + Middle[3]) >> 1;
-    int16_t CenterY = (Middle[1] + Middle[2]) >> 1;
+        // 得到中心点
+        int16_t CenterX = (Middle[0] + Middle[3]) >> 1;
+        int16_t CenterY = (Middle[1] + Middle[2]) >> 1;
 
-    // 修正之
-    Motor_SetW((int16_t)((int16_t)Middle[0] - (int16_t)Middle[3]) * (20));
-    Motor_SetX((int16_t)((CenterX - 4) * (-20)));
-    Motor_SetY((int16_t)(CenterY - 5) * (-20));
+        // 修正之
+        Motor_SetW((int16_t)((int16_t)Middle[0] - (int16_t)Middle[3]) * (20));
+        Motor_SetX((int16_t)((CenterX - 4) * (-20)));
+        Motor_SetY((int16_t)(CenterY - 5) * (-20));
+        HAL_Delay(50);
+    }
     /*TODO*/
 }
 

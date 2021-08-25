@@ -71,6 +71,10 @@ void __STATIC_INLINE Motion_RotateCounterClockwise(MotorInput_t speed) {
     Motor_Decode(0, 0, -speed);
 }
 
+void Motion_CurrentNodeUpdate(void);
+
+void Motion_CurrentNodeDecreaseUpdate(void);
+
 void Motion_CorrectWhenMovingAtY(void);
 
 void Motion_CorrectWhenMovingAtX(void);
@@ -78,6 +82,9 @@ void Motion_CorrectWhenMovingAtX(void);
 void Motion_CorrectAtCross(void);
 
 void Motion_CorrectInPickingArea(void);
+
+void Motion_CorrectWhenThrowing(void);
+
 
 void Motion_MoveLeftStable(uint8_t num);
 
@@ -87,9 +94,22 @@ void Motion_MoveForwardStable(uint8_t num);
 
 void Motion_MoveBackwardStable(uint8_t num);
 
+
+
+void Motion_MoveForwardCrossing(uint8_t num);
+
+void Motion_MoveBackwardCrossing(uint8_t num);
+
+
 void Motion_MoveLeftStableInPickingArea(uint8_t num);
 
 void Motion_MoveRightStableInPickingArea(uint8_t num);
+
+
+
+uint8_t Motion_PickUpBallForward(void);
+
+uint8_t Motion_PickUpBallBackward(void);
 
 
 /*                    API                                                     */

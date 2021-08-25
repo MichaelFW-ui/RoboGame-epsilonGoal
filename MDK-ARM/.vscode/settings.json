@@ -33,6 +33,8 @@
         "sensor.h": "c",
         "position.h": "c",
         "procedure.h": "c",
-        "arm_ctrl.h": "c"
+        "arm_ctrl.h": "c",
+        "com.h": "c",
+        "usart.h": "c"
     }
 }
