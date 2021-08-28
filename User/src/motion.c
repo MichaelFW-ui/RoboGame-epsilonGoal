@@ -131,6 +131,14 @@ void Motion_MoveRightStableInPickingArea(uint8_t num) {
     /*TODO*/
 }
 
+void Motion_MoveForwardCrossing(uint8_t num) {
+    /*TODO*/
+}
+
+void Motion_MoveBackwardCrossing(uint8_t num) {
+    /*TODO*/
+}
+
 void Motion_CorrectWhenMovingAtY(void) {
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
     uint8_t FrontBegin, FrontEnd, BackBegin, BackEnd;
@@ -191,4 +199,15 @@ void Motion_CorrectInPickingArea(void) {
     /*TODO*/
 }
 
+void Motion_CorrectWhenThrowing(void) {
+    /*TODO*/
+}
+
+uint8_t Motion_PickUpBallForward(void) {
+    /*TODO*/
+}
+
+uint8_t Motion_PickUpBallBackward(void) {
+    /*TODO*/
+}
 

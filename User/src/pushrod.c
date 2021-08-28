@@ -28,9 +28,6 @@ void Pushrod_TIM_UpdateHandler(void) {
   */
   static int cnt = 0;
   cnt += 1;
-  if (cnt == 1000) {
-    cnt = 0; printf("Over\r\n");
-  }
   if (Pushrod_DistanceInstance) {
     HAL_GPIO_WritePin(Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin,
                       ((Pushrod_DistanceInstance & 0x0001) == 1)

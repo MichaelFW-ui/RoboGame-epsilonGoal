@@ -36,7 +36,7 @@ __STATIC_INLINE HAL_StatusTypeDef Com_SendWorkingCommand(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef Com_Receive(Com_DataTypeDef *cmd) {
-    return HAL_UART_Receive(&COM_HEADER, &cmd, sizeof(Com_DataTypeDef), 0xFFFE);
+    return HAL_UART_Receive(&COM_HEADER, (uint8_t*)cmd, sizeof(Com_DataTypeDef), 0xFFFE);
 }
 
 

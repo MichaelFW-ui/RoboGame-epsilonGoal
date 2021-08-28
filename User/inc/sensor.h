@@ -41,4 +41,9 @@ __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
     return CurrentTrace;
 }
 
+__STATIC_INLINE uint16_t Sensor_GetLeftDistance(void) {
+    /*TODO*/
+    return NULL_VALUE;
+}
+
 #endif // !__SENSOR_H

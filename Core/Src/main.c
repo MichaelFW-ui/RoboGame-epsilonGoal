@@ -115,8 +115,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 
-  MotorCtrl_Init();
   Delay_Init();
+  // 先delay init，再motorctrl init
+  MotorCtrl_Init();
   MotorFeedback_Init();
 
   // while (PN5180_Init(RFID_A) != 0)

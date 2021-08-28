@@ -63,9 +63,9 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @param output 原始PID计算的output
  * @retval 修正后的PWM占空比
  */
-#define Motor_OutputFix(output)                                        \
-    (((uint16_t)(M(output)) < 800)                                     \
-         ? (((uint16_t)(M(output)) > 500) ? (uint16_t)(M(output)) : 0) \
+#define Motor_OutputFix(output)                                      \
+    (((uint16_t)(M(output)) < 800)                                   \
+         ? (((uint16_t)(M(output)) > 0) ? (uint16_t)(M(output)) : 0) \
          : 800)
 
 /**
@@ -74,7 +74,7 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @param feedback 原始反馈值
  * @retval 修正后的可用于PID的占空比
  */
-#define Motor_FeedbackFix(feedback) ( 32000 / (int16_t)((feedback)))
+#define Motor_FeedbackFix(feedback) ( 32000 / (int32_t)((feedback)))
 /*              Preoperation ends                                             */
 
 

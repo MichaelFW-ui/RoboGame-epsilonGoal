@@ -302,7 +302,7 @@ void Precedure_ExitPickingArea(void) {
 
     // 特判返回Node_7
     Motion_MoveToRight(MOTION_HIGH_SPEED);
-    Delay(500);
+    HAL_Delay(500);
     Motion_MoveToLeft(0);
     Motion_CorrectAtCross();
 
@@ -313,12 +313,15 @@ void Precedure_ExitPickingArea(void) {
 void Precedure_HeadForThrowingArea(void) {
     CurrentProcedure = eProcedure_HeadForThrowingArea;
     Motion_MoveBackwardCrossing(3);
+
+    // 想办法停在一个不错的地方
     Motion_MoveToLeft(MOTION_LOW_SPEED);
     uint16_t distance;
     while ((distance = Sensor_GetLeftDistance()) >= 114514) {
         Motion_CorrectWhenMovingAtX();
     }
     Motion_MoveToLeft(0);
+    // 老规矩，修正
     Motion_CorrectWhenThrowing();
 
     /*TODO*/
@@ -332,11 +335,13 @@ void Precedure_StayInThrowingArea(void) {
     /*TODO*/
 
     HAL_Delay(1000);
+    // 老规矩，修正
     Motion_CorrectWhenThrowing();
     // 发射第二次
     /*TODO*/
     
     HAL_Delay(1000);
+    // 老规矩，修正
     Motion_CorrectWhenThrowing();
     // 步进电机归位
     /*TODO*/

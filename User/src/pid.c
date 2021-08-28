@@ -129,4 +129,14 @@ void PID_Calculate_Incremental(PID_InformationTypeDef *handle,
   handle->prePrevious = handle->Previous;
   handle->Previous = error;
   handle->Current = current;
+
+
+  if (handle->Output >= 250) handle->Output = 250;
+  if (handle->Output <= -250) handle->Output = -250;
+  if ((uint32_t)handle->Target == 0) {
+    handle->Output = 0;
+    handle->Current = 0;
+    handle->prePrevious = 0;
+    handle->Previous = 0;
+  }
 }

@@ -22,7 +22,7 @@ extern TIM_HandleTypeDef htim5;
 /*  BEGIN USER TYPEDEF                                                        */
 
 typedef enum { Pushrod_CW = 0, Pushrod_CCW = 1 } Pushrod_DirectionTypeDef;
-typedef uint16_t Pushrod_Distance_t;
+typedef uint32_t Pushrod_Distance_t;
 
 /*    END USER TYPEDEF                                                        */
 

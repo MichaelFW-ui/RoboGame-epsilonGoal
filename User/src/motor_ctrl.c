@@ -199,8 +199,12 @@ MotorSpeed_t *MotorCtrl_UpdateFeedback(MotorFeedback_InformationTypeDef *info) {
   for (int i = 0; i < 4; ++i) {
     if (info->Directions[i] == MotorFeedback_CW) {
       motorSpeed_data[i] = Motor_FeedbackFix(info->TimeTicks[i]);
+      if (motorSpeed_data[i] < 5)
+        motorSpeed_data[i] = 0;
     } else {
       motorSpeed_data[i] = -Motor_FeedbackFix(info->TimeTicks[i]);
+      if (motorSpeed_data[i] > -5)
+        motorSpeed_data[i] = 0;
     }
   }
   return motorSpeed_data;

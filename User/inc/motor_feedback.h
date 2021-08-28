@@ -29,7 +29,7 @@
 
 /*           Motor TypeDef Begins                                             */
 
-typedef uint32_t MotorFeedback_TimeTick_t;
+typedef int32_t MotorFeedback_TimeTick_t;
 typedef uint8_t MotorFeedback_ReloadTime_t;
 typedef enum {
   MotorFeedback_CW  = 0,
@@ -78,14 +78,19 @@ __STATIC_INLINE void MotorFeedback_Init(void) {
  *      根据ReloadTimes和计数器的值计算出实际周期的Tick数。
  * @param arr 第几个通道，取值[0, 3]
  */
-#define Temp_GetTicks(arr)                                                    \
-  do {                                                                        \
-    Motor_InformationInstance.TimeTicks[arr] =                                \
-      Motor_InformationInstance.ReloadTimes[arr] * MOTOR_TIM_COUNTER_PERIOD + \
-      htim->Instance->CNT - MotorFeedback_LastTick[arr];                      \
-    Motor_InformationInstance.ReloadTimes[arr] = 0;                           \
-    MotorFeedback_LastTick[arr]                = htim->Instance->CNT;         \
-  } while (0u)
+#define Temp_GetTicks(arr)                                \
+    do {                                                  \
+        int32_t cnt = htim->Instance->CNT;                \
+        Motor_InformationInstance.TimeTicks[arr] =        \
+            Motor_InformationInstance.ReloadTimes[arr] *  \
+                MOTOR_TIM_COUNTER_PERIOD +                \
+            ((cnt - MotorFeedback_LastTick[arr] > 0)      \
+                 ? (cnt - MotorFeedback_LastTick[arr])    \
+                 : ((cnt - MotorFeedback_LastTick[arr]) + \
+                    MOTOR_TIM_COUNTER_PERIOD));           \
+        Motor_InformationInstance.ReloadTimes[arr] = 0;   \
+        MotorFeedback_LastTick[arr]                = cnt; \
+    } while (0u)
 
 /**
  * @brief 获取电机的反馈信息
