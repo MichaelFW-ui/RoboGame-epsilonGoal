@@ -36,5 +36,6 @@
         "arm_ctrl.h": "c",
         "com.h": "c",
         "usart.h": "c"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

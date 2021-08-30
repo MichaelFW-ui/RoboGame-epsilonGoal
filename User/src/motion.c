@@ -32,6 +32,7 @@
 #include "motion.h"
 #include "sensor.h"
 #include "procedure.h"
+#include "motor.h"
 
 
 node_t CurrentNode = Node_InValid;
@@ -152,7 +153,7 @@ void Motion_CorrectWhenMovingAtY(void) {
     uint8_t Front = (FrontBegin + FrontEnd) >> 1;
     uint8_t Back = (BackBegin + BackEnd) >> 1;
     // 反馈调节
-    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (20));
+    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-20));
     Motor_SetX((int16_t)((int8_t)Front + (int8_t)Back - 8) * (-20));
      
 
@@ -160,14 +161,29 @@ void Motion_CorrectWhenMovingAtY(void) {
 }
 
 void Motion_CorrectWhenMovingAtX(void) {
-    /*TODO*/
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    uint8_t LeftBegin, LeftEnd, RightBegin, RightEnd;
+    // 得到左右的点位
+    Position_GetOneActive(ptr[1], 11, &LeftBegin, &LeftEnd);
+    Position_GetOneActive(ptr[2], 11, &RightBegin, &RightEnd);
+
+    if (LeftBegin == 0 && LeftEnd == 11 - 1) {
+        // 这一刻，它重叠了
+        return;
+    }
+    uint8_t Left = (LeftEnd + LeftBegin) >> 1;
+    uint8_t Right = (RightEnd + RightBegin) >> 1;
+    // 反馈调节
+    Motor_SetY(((int16_t)((int8_t)Left + (int8_t)Right) - 8) * (-20));
+    Motor_SetW(((int16_t)((int8_t)Left - (int8_t)Right)) * (20));
 }
 
 void Motion_CorrectAtCross(void) {
-    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    TraceInfo_t *ptr;
 
     uint8_t Begins[4], Ends[4];
     for (int i = 0; i < 5; ++i) {
+        ptr = Sensor_GetCurrentInfo();
         // 拿激活点
         Position_GetOneActive(ptr[0], 9, &Begins[0], &Ends[0]);
         Position_GetOneActive(ptr[1], 11, &Begins[1], &Ends[1]);
@@ -196,7 +212,37 @@ void Motion_CorrectAtCross(void) {
 }
 
 void Motion_CorrectInPickingArea(void) {
+    TraceInfo_t *ptr;
+    uint8_t Begins[4], Ends[4];
     /*TODO*/
+    for (int i = 0; i < 5; ++i) {
+        Motion_CorrectWhenMovingAtX();
+        HAL_Delay(50);
+    }
+    Motion_MoveToLeft(0);
+    for (int i = 0; i < 5; ++i) {
+        ptr = Sensor_GetCurrentInfo();
+        Begins[0] = Ends[0] = 4;
+        Begins[3] = Ends[3] = 4;
+        while (!IsActive(ptr[0], Begins[0]))
+            --Begins[0];
+        while (!IsActive(ptr[0], Ends[0]))
+            ++Ends[0];
+        if (Ends[0] - 4 >= 4 - Begins[0]) {
+            Motion_SetX(10);
+            // 直到差一点到达正确位置
+            while (!IsActive(Sensor_GetCurrentInfo()[0], 3))
+                Motion_CorrectWhenMovingAtX();
+            Motion_SetX(0);
+        } else {
+            Motion_SetX(-10);
+            // 直到差一点到达正确位置
+            while (!IsActive(Sensor_GetCurrentInfo()[0], 5))
+                Motion_CorrectWhenMovingAtX();
+            Motion_SetX(0);
+        }
+
+    }
 }
 
 void Motion_CorrectWhenThrowing(void) {

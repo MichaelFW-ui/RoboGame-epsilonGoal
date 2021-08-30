@@ -17,9 +17,12 @@
 #include "motion.h"
 #include "position.h"
 #include "motor.h"
+#include "usart.h"
 
 extern TraceInfo_t CurrentTrace[4];
 #define NULL_VALUE 0
+#define SWAP(a, b) (a ^= b ^= a ^= b)
+#define REBUILD(x) (x = ((x & 0x00FF) << 8) | ((x & 0xFF00) >> 8))
 
 __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentAngle(void) {
     /*TODO*/
@@ -34,10 +37,15 @@ __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentAngularVelocity(void) {
 
 
 __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
+    HAL_UART_Receive(&huart5, CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0xFFFF);
+    SWAP(CurrentTrace[1], CurrentTrace[3]);
     /*TODO*/
-    for (int i = 0; i < 10 * 4; ++i) {
-        /*TODO*/
-    }
+    /*
+    SWAP FOR A BETTER ALGINMENT
+    */
+   for (int i = 0; i < 4; ++i) {
+       REBUILD(CurrentTrace[i]);
+   }
     return CurrentTrace;
 }
 

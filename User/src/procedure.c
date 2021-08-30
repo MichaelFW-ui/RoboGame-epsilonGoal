@@ -35,9 +35,11 @@
 #include "sensor.h"
 
 Procedure_t CurrentProcedure = eProcedure_Default;
+uint8_t CurrentBallCnt = 0;
+BallTypeDef BallStatus[40];
 
 // #define CROSSOVER_OVERALL
-#define CROSSOVER
+#define CROSSOVER_OVERALL
 /*
  *      CROSSOVER_OVERALL ：在取球区直接跑完全程，检测到全部的篮球；越障
  *      CROSSOVER         ：在取球区随遇取球，取到即返回；越障
@@ -54,10 +56,10 @@ Procedure_t CurrentProcedure = eProcedure_Default;
 
 node_t ProcedureNodeInitial[]     = {0, 1,  2,  3,  4,  5,  6,  7, 8,
                                  9, 10, 11, 12, 13, 14, 15, 16};
-node_t ProcedureNodeInitialBack[] = {15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4};
+node_t ProcedureNodeInitialBack[] = {16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4};
 
 node_t ProcedureNodeSubprogress[] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-node_t ProcedureNodeSubprogressBack[] = {15, 14, 13, 12, 11, 10,
+node_t ProcedureNodeSubprogressBack[] = {16, 15, 14, 13, 12, 11, 10,
                                          9,  8,  7,  6,  5,  4};
 
 #endif // CROSSOVER_OVERALL
@@ -70,7 +72,7 @@ node_t ProcedureNodeInitial[]     = {0, 1,  2,  3,  4,  5,  6,  7, 8,
 node_t ProcedureNodeInitialBack[] = {16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4};
 
 node_t ProcedureNodeSubprogress[] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-node_t ProcedureNodeSubprogressBack[] = {15, 14, 13, 12, 11, 10,
+node_t ProcedureNodeSubprogressBack[] = {16, 15, 14, 13, 12, 11, 10,
                                          9,  8,  7,  6,  5,  4};
 // node_t ProcedureNodeInitial[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 // // 进入取球区后轨迹不确定
@@ -129,6 +131,8 @@ node_t Procedure_CurrentNode = Node_InValid;
 /*             CrossOver Overall Implementation                               */
 #ifdef CROSSOVER_OVERALL
 
+
+
 /**
  * @brief 启动。走到第一个结点处
  * 
@@ -145,9 +149,11 @@ void Procedure_Default(void) {
             // 压到黑线了
             break;
         }
+    }
     Motion_MoveForward(MOTION_LOW_SPEED);
     Motion_CorrectWhenMovingAtY();
-    }
+    // 不停，直接进入下一阶段
+
     /*TODO*/
 }
 
@@ -164,33 +170,264 @@ void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 
+#define MASK(n) ((1 << (n)))
+#define READ(a, mask) ((a) & (mask))
+#define SET(a, mask) ((a) = ((a) | (mask)))
+#define RESET(a, mask) ((a) = ((a) & ~(mask)))
+
 void Precedure_EnterPickingArea(void) {
     CurrentProcedure = eProcedure_EnterPickingArea;
     // 进入取球区
+    static uint8_t CurrentBallCnt = 0;
+
+    /**
+     * @brief 
+     * 
+     * 取球区编号方法：
+     * 当前结点编号 * 2， 在结点上方
+     * 当前结点编号 * 2 + 1，在节点下方
+     * 
+     */
+    for (uint8_t i = 0; i < 40; ++i) {
+        BallStatus[i] = NotDetected;
+    }
+    // 到达结点8
+    Motion_MoveToLeft(MOTION_HIGH_SPEED);
+    HAL_Delay(500);
+    Motion_MoveToLeft(0);
+    Motion_CorrectInPickingArea();
+    Motion_CurrentNodeUpdate();
+
+    // To node 9
+    Motion_MoveLeftStableInPickingArea(1);
+
+    Com_SendWorkingCommand();
+    Com_DataTypeDef info;
+    Com_Receive(&info);
+
+    for (int i = 0; i < 6; ++i) {
+        /*
+                    4 2 0
+                    + + +
+                    +-+-+
+                    + + +
+                    5 3 1
+        */
+        if (READ(info.info, MASK(i))) {
+            BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
+        } else {
+            BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
+        }
+    }
+
+    // To node 12
+    Motion_MoveLeftStableInPickingArea(3);
+
+    Com_SendWorkingCommand();
+    Com_Receive(&info);
+
+    for (int i = 0; i < 6; ++i) {
+        /*
+                    4 2 0
+                    + + +
+                    +-+-+
+                    + + +
+                    5 3 1
+        */
+        if (READ(info.info, MASK(i))) {
+            BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
+        } else {
+            BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
+        }
+    }
+
+    // To node 15
+    Motion_MoveLeftStableInPickingArea(3);
+
+    Com_SendWorkingCommand();
+    Com_Receive(&info);
+
+    for (int i = 0; i < 6; ++i) {
+        /*
+                    4 2 0
+                    + + +
+                    +-+-+
+                    + + +
+                    5 3 1
+        */
+        if (READ(info.info, MASK(i))) {
+            BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
+        } else {
+            BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
+        }
+    }
+
+
+    // 捡球
+    if (BallStatus[16 * 2] == isBasketball || BallStatus[16 * 2 + 1] == isBasketball) {
+        Motion_MoveLeftStableInPickingArea(1);
+        Motion_CorrectInPickingArea();
+        if (BallStatus[16 * 2] == isBasketball) {
+            BallStatus[16 * 2] = wasBasketball;
+            CurrentBallCnt += Motion_PickUpBallForward();
+        }
+        if (BallStatus[16 * 2 + 1] == isBasketball) {
+            BallStatus[16 * 2 + 1] = wasBasketball;
+            CurrentBallCnt += Motion_PickUpBallBackward();
+        }
+        Motion_MoveRightStableInPickingArea(1);
+        Motion_CorrectInPickingArea();
+    } 
+    // 够了？
+    if (CurrentBallCnt == 2)
+        return;
+    while (1) {
+        uint8_t beg = CurrentNode;
+        while (BallStatus[beg * 2] != isBasketball &&
+            BallStatus[beg * 2 + 1] != isBasketball) {
+            --beg;
+        }
+        if (beg != CurrentNode) {
+            Motion_MoveRightStableInPickingArea(CurrentNode - beg);
+            Motion_CorrectInPickingArea();
+        }
+        if (BallStatus[CurrentNode * 2] == isBasketball) {
+            BallStatus[CurrentNode * 2] = wasBasketball;
+            CurrentBallCnt += Motion_PickUpBallForward();
+            Motion_CorrectInPickingArea();
+        }
+        if (CurrentBallCnt == 2)
+            return;
+        if (BallStatus[CurrentNode * 2 + 1] == isBasketball) {
+            BallStatus[CurrentNode * 2 + 1] = wasBasketball;
+            CurrentBallCnt += Motion_PickUpBallBackward();
+            Motion_CorrectInPickingArea();
+        }
+        if (CurrentBallCnt == 2)
+            return;
+    }
     /*TODO*/
 }
 
 void Precedure_ExitPickingArea(void) {
     CurrentProcedure = eProcedure_ExitPickingArea;
+    // 返回
+    // while (CurrentNode != Node_8) {
+    //     Motion_MoveRightStableInPickingArea(1);
+    // }
+
+    if (CurrentNode != Node_8) {
+        Motion_MoveRightStableInPickingArea(CurrentNode - Node_8);
+    }
+
+    // 特判返回Node_7
+    Motion_MoveToRight(MOTION_HIGH_SPEED);
+    HAL_Delay(500);
+    Motion_MoveToRight(0);
+    Motion_CorrectAtCross();
+    CurrentNode = Node_7;
+
+
     /*TODO*/
 }
 
 void Precedure_HeadForThrowingArea(void) {
     CurrentProcedure = eProcedure_HeadForThrowingArea;
+    Motion_MoveBackwardCrossing(3);
+
+    // 想办法停在一个不错的地方
+    Motion_MoveToLeft(MOTION_LOW_SPEED);
+    uint16_t distance;
+    while ((distance = Sensor_GetLeftDistance()) >= 114514) {
+        Motion_CorrectWhenMovingAtX();
+    }
+    Motion_MoveToLeft(0);
+    // 老规矩，修正
+    Motion_CorrectWhenThrowing();
+
     /*TODO*/
 }
 
 void Precedure_StayInThrowingArea(void) {
     CurrentProcedure = eProcedure_StayInThrowingArea;
     /*TODO*/
+    // 发射第一次
+    /*TODO*/
+
+    HAL_Delay(1000);
+    // 老规矩，修正
+    Motion_CorrectWhenThrowing();
+    // 发射第二次
+    /*TODO*/
+    
+    HAL_Delay(1000);
+    // 老规矩，修正
+    Motion_CorrectWhenThrowing();
+    // 步进电机归位
+    /*TODO*/
+
 }
 
 void Precedure_HeadForPickingAreaSecondly(void) {
     CurrentProcedure = eProcedure_HeadForPickingAreaSecondly;
+    // 特判返回Node 4
+    Motion_MoveToRight(MOTION_LOW_SPEED);
+    HAL_Delay(500);
+    Motion_MoveToRight(0);
+    Motion_CorrectAtCross();
+
+    // To Node 7
+    Motion_MoveForwardCrossing(3);
+    Motion_CorrectAtCross();
+    
+    // To Node 8
+    Motion_MoveToLeft(MOTION_LOW_SPEED);
+    HAL_Delay(500);
+    Motion_MoveToLeft(0);
+    Motion_CorrectInPickingArea();
+
+    node_t beg = Node_8;
+    // 找最右边的一个篮球
+    while (BallStatus[beg * 2] != isBasketball && BallStatus[beg * 2 + 1] != isBasketball) {
+        ++beg;
+    }
+    if (beg != CurrentNode) {
+        Motion_MoveLeftStableInPickingArea(beg - CurrentNode);
+    }
+
+    while (CurrentBallCnt != 2) {
+        if (BallStatus[CurrentNode * 2] == isBasketball) {
+            CurrentBallCnt += Motion_PickUpBallForward();
+            BallStatus[CurrentNode * 2] = wasBasketball;
+        }
+        if (CurrentBallCnt == 2)
+            return;
+        if (BallStatus[CurrentNode * 2 + 1] == isBasketball) {
+            CurrentBallCnt += Motion_PickUpBallForward();
+            BallStatus[CurrentNode * 2 + 1] = wasBasketball;
+        }
+        if (CurrentBallCnt == 2)
+            return;
+
+        //   向左找
+        beg = CurrentNode + 1;
+        while (BallStatus[beg * 2] != isBasketball &&
+               BallStatus[beg * 2 + 1] != isBasketball) {
+            ++beg;
+        }
+        if (beg != CurrentNode)
+            Motion_MoveLeftStableInPickingArea(beg - CurrentNode);
+    }
+
+
+
+
     /*TODO*/
 }
 
+
 #endif // CROSSOVER_OVERALL
+
 
 /*             CrossOver Implementation                                       */
 #ifdef CROSSOVER

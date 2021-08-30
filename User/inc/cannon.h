@@ -26,7 +26,7 @@ __STATIC_INLINE void Caonnon_SetTargetSpeed(int16_t speed) {
   Cannon_CommunicationTypeDef sent;
   sent.speed = speed;
   sent.header = (uint16_t)speed >> 2;
-  HAL_UART_Transmit_DMA(&CANNON_HANDLE, (uint8_t *)&sent, sizeof(sent));
+  HAL_UART_Transmit_DMA(&CANNON_HANDLE, (uint8_t *)&sent.speed, sizeof(sent.speed));
 }
 
 #endif // !__CANNON_H
