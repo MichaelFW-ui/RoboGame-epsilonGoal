@@ -71,4 +71,6 @@ void Debug_BugCatcher(HAL_StatusTypeDef status);
 
 void Debug_Receive_DMA(void);
 
+void Debug_MotionControlHandler(uint8_t * str);
+
 #endif // !__DEBUG_H

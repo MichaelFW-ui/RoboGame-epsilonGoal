@@ -15,6 +15,7 @@
 #include "stm32f1xx_hal.h"
 #include "usart.h"
 
+
 typedef struct {
     uint8_t header;
     uint8_t info;
@@ -22,13 +23,30 @@ typedef struct {
 
 /*
 *          info:
-*       0xF0        Front有篮球
-*       0x0F        Back有篮球
-*       0xFF        前后有篮球
-*       0x00        无篮球
+*       00xxxxxxb
+*       00543210
+*       2 1 0
+*       + + +
+*        -+-
+*       + + +
+*       5 4 3
+*       需要交换几位数字才行
+*       目标
+*       4 2 0
+*       + + +
+*        -+-
+*       + + +
+*       5 3 1
 */
 
 #define COM_HEADER huart5
+
+#define SWAP_BIT(x, a, b)                             \
+    do {                                              \
+        uint8_t ax = x & (1 << a), bx = x & (1 << b); \
+        x -= a + b;                                   \
+        x += ((ax >> a) << b) + ((bx >> b) << a);     \
+    } while (0)
 
 __STATIC_INLINE HAL_StatusTypeDef Com_SendWorkingCommand(void) {
     uint8_t cmd = 0xf0;
@@ -36,7 +54,17 @@ __STATIC_INLINE HAL_StatusTypeDef Com_SendWorkingCommand(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef Com_Receive(Com_DataTypeDef *cmd) {
-    return HAL_UART_Receive(&COM_HEADER, (uint8_t*)cmd, sizeof(Com_DataTypeDef), 0xFFFE);
+    HAL_StatusTypeDef ret;
+    ret = HAL_UART_Receive(&COM_HEADER, (uint8_t*)cmd, sizeof(Com_DataTypeDef), 0xFFFE);
+
+    if (cmd->info != cmd->header)
+        return HAL_ERROR;
+
+    SWAP_BIT(cmd->info, 1, 4);
+    SWAP_BIT(cmd->info, 1, 2);
+    SWAP_BIT(cmd->info, 3, 4);
+
+    return ret;
 }
 
 

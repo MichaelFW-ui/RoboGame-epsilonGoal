@@ -37,8 +37,7 @@ __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentAngularVelocity(void) {
 
 
 __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
-    HAL_UART_Receive(&huart5, CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0xFFFF);
-    SWAP(CurrentTrace[1], CurrentTrace[3]);
+    HAL_UART_Receive(&huart5, (uint8_t*)CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0xFFFF);
     /*TODO*/
     /*
     SWAP FOR A BETTER ALGINMENT

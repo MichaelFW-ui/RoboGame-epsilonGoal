@@ -105,4 +105,6 @@ __STATIC_INLINE MotorFeedback_InformationTypeDef* MotorFeedback_GetInformation(
 
 void MotorFeedback_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 
+void MotorFeedback_TimeCallback(void);
+
 #endif // !__MOTOR_FEEDBACK_H

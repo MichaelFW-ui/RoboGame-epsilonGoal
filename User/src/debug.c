@@ -24,6 +24,7 @@
 
 #include "main.h"
 #include "motor_ctrl.h"
+#include "motor.h"
 #include "pushrod.h"
 #include "stdarg.h"
 #include "stdio.h"
@@ -33,6 +34,8 @@
 uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 uint8_t Debug_USART_TransmitBuffer[DEBUG_USART_BUFFER_SIZE];
 uint16_t Debug_USART_BufferCur = 0;
+
+extern MotorSpeed_t Motor_X, Motor_Y, Motor_W;
 
 
 /**
@@ -282,6 +285,7 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
  * @param str 命令；要求：不长于50字节；以"\r\n"结尾。
  */
 void Debug_CommandHandler(uint8_t *str) {
+  printf("Received\r\n");
   switch (str[0]) {
     case 'P':
       /*    TODO      */
@@ -293,9 +297,20 @@ void Debug_CommandHandler(uint8_t *str) {
     case 'M':
       Debug_MotionHandler(str);
       break;
+    case 'L':
+      Motor_Decode(0, 0, 0);
+      Motor_X = Motor_Y = Motor_W = 0;
+    case 'D':
+      Debug_MotionControlHandler(str);
     default:
       /*TODO 错误处理*/
       break;
   }
 }
 
+
+void Debug_MotionControlHandler(uint8_t * str) {
+  sscanf(str, "D%d,%d,%d\r\n", &Motor_X, &Motor_Y, &Motor_W);
+  Motor_Decode(Motor_X, Motor_Y, Motor_W);
+  printf("D Set To: %d,%d,%d\r\n", Motor_X, Motor_Y, Motor_W);
+}

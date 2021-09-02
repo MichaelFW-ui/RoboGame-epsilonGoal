@@ -12,6 +12,7 @@
 #include "main_.h"
 
 #include "arm_ctrl.h"
+#include "debug.h"
 #include "motion.h"
 #include "motor_ctrl.h"
 #include "motor_feedback.h"
@@ -22,9 +23,11 @@
 #include "tim.h"
 #include "usart.h"
 
+MotorSpeed_t Motor_X, Motor_Y, Motor_W;
+
 void Main_(void) {
   Motor_Init();
-
+  Debug_Init();
   // MotorCtrl_SetTarget(40, 0);
   // MotorCtrl_SetTarget(40, 1);
   // MotorCtrl_SetTarget(40, 2);
@@ -55,13 +58,23 @@ void Main_(void) {
   //   Pushrod_MoveForward(480000);
   //   HAL_Delay(5000);
   // }
+  for(;;) {
+    HAL_Delay(1000);
+    printf("A%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[0] * ((Motor_InformationInstance.Directions[0] == Motor_CW) ? 1 : -1));
+    printf("B%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[1] * ((Motor_InformationInstance.Directions[1] == Motor_CW) ? 1 : -1));
+    printf("C%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[2] * ((Motor_InformationInstance.Directions[2] == Motor_CW) ? 1 : -1));
+    printf("D%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[3] * ((Motor_InformationInstance.Directions[3] == Motor_CW) ? 1 : -1));
+    printf("Running\r\n");
+  }
 
 
   for(;;) {
     /*CODE*/
-    Motor_SetX(MOTION_LOW_SPEED);
-    HAL_Delay(10000);
-    Motor_SetX(0);
+    // Motor_SetW(MOTION_HIGH_SPEED * 10);
+    // Motor_Decode(MOTION_LOW_SPEED, 0, 100);
+    Motor_Decode(Motor_X, Motor_Y, Motor_W);
+    HAL_Delay(5000);
+    Motor_Decode(0, 0, 0);
     HAL_Delay(5000);
     // MotorCtrl_PrintArguments();
 
@@ -85,7 +98,7 @@ void Main_(void) {
     // MotorCtrl_SetTarget(0, 2);
     // MotorCtrl_SetTarget(0, 3);
     // HAL_Delay(5000);
-    printf("A%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[0] * ((Motor_InformationInstance.Directions[0] == Motor_CW) ? 1 : -1));
+    printf("\r\nA%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[0] * ((Motor_InformationInstance.Directions[0] == Motor_CW) ? 1 : -1));
     printf("B%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[1] * ((Motor_InformationInstance.Directions[1] == Motor_CW) ? 1 : -1));
     printf("C%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[2] * ((Motor_InformationInstance.Directions[2] == Motor_CW) ? 1 : -1));
     printf("D%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[3] * ((Motor_InformationInstance.Directions[3] == Motor_CW) ? 1 : -1));
@@ -155,5 +168,8 @@ void FrequentlyCalledUpdate() {
         // Motion_UpdateTargetsInVelocity();
         // Motion_PIDUpdateHighFrequency();
     }
-    cnt = (cnt + 1) % 3;
+    if (!(cnt % 20)) {
+      // MotorFeedback_TimeCallback();
+    }
+    cnt = (cnt + 1) % 4;
 }

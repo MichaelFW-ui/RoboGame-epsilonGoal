@@ -17,7 +17,6 @@
  *    使用方法：
  *    手动设定方向和速度(TimeTick)的值，然后周期调用Calculate 和 Update.
  *    建议新开个计时器，如果其他部件不需要计时器的话。
- *    也可以使用freeRTOS的软件计时器，具体的可以在motor.c里实现呐。
  *    需要周期进行的工作：
  *    - PID计算，求得新的占空比
  *    - 设置新的占空比
@@ -35,10 +34,10 @@
  */
 
 #include "motor_ctrl.h"
+
+#include "delay.h"
 #include "motor_feedback.h"
 #include "stdio.h"
-#include "delay.h"
-
 
 PID_InformationTypeDef Motor_PID_Speed[4];
 MotorSpeed_t Motor_TargetSpeed[4];

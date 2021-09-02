@@ -55,7 +55,7 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  */
 #define Motor_Encode(Motor, Direction) (uint8_t)((Motor << 1) | Direction)
 
-#define M(output) (output * 4)
+#define M(output) (output * 5)
 
 /**
  * @brief 修正output用于PWM占空比设置
@@ -64,9 +64,9 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @retval 修正后的PWM占空比
  */
 #define Motor_OutputFix(output)                                      \
-    (((uint16_t)(M(output)) < 800)                                   \
+    (((uint16_t)(M(output)) < 900)                                   \
          ? (((uint16_t)(M(output)) > 0) ? (uint16_t)(M(output)) : 0) \
-         : 800)
+         : 900)
 
 /**
  * @brief 修正反馈值用于PID计算

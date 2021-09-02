@@ -133,6 +133,7 @@ void PID_Calculate_Incremental(PID_InformationTypeDef *handle,
 
   if (handle->Output >= 250) handle->Output = 250;
   if (handle->Output <= -250) handle->Output = -250;
+
   if ((uint32_t)handle->Target == 0) {
     handle->Output = 0;
     handle->Current = 0;

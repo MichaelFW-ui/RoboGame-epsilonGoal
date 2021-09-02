@@ -72,6 +72,44 @@ void Motion_CurrentNodeUpdate(void) {
         CurrentNode = ProcedureNodeSubprogress[++k];
         return;
     }
+}
+
+
+void Motion_CurrentNodeDecreaseUpdate(void) {
+    /*TODO*/
+    // 根据porcedure中的枚举判断Node如何变化
+    if (CurrentProcedure == eProcedure_Default) {
+        /*TODO*/
+        // Test only
+        return;
+    }
+    if (CurrentProcedure == eProcedure_HeadForPickingArea ||
+        CurrentProcedure == eProcedure_EnterPickingArea) {
+        uint8_t i = 0;
+        while (ProcedureNodeInitial[i] != CurrentNode)
+            ++i;
+        CurrentNode = ProcedureNodeInitial[--i];
+        return;
+    }
+
+    if (CurrentProcedure == eProcedure_ExitPickingArea ||
+        CurrentProcedure == eProcedure_HeadForThrowingArea) {
+        uint8_t j = 0;
+        while (ProcedureNodeInitialBack[j] != CurrentNode) {
+            ++j;
+        }
+        CurrentNode = ProcedureNodeInitialBack[--j];
+        return;
+    }
+
+    if (CurrentProcedure == eProcedure_HeadForPickingAreaSecondly) {
+        uint8_t k = 0;
+        while (ProcedureNodeSubprogress[k] != CurrentNode) {
+            ++k;
+        }
+        CurrentNode = ProcedureNodeSubprogress[--k];
+        return;
+    }
 
 }
 
@@ -229,17 +267,17 @@ void Motion_CorrectInPickingArea(void) {
         while (!IsActive(ptr[0], Ends[0]))
             ++Ends[0];
         if (Ends[0] - 4 >= 4 - Begins[0]) {
-            Motion_SetX(10);
+            Motor_SetX(10);
             // 直到差一点到达正确位置
             while (!IsActive(Sensor_GetCurrentInfo()[0], 3))
                 Motion_CorrectWhenMovingAtX();
-            Motion_SetX(0);
+            Motor_SetX(0);
         } else {
-            Motion_SetX(-10);
+            Motor_SetX(-10);
             // 直到差一点到达正确位置
             while (!IsActive(Sensor_GetCurrentInfo()[0], 5))
                 Motion_CorrectWhenMovingAtX();
-            Motion_SetX(0);
+            Motor_SetX(0);
         }
 
     }

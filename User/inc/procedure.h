@@ -42,7 +42,7 @@ extern node_t ProcedureNodeInitialBack[];
 extern node_t ProcedureNodeSubprogress[];
 extern node_t ProcedureNodeSubprogressBack[];
 
-void Procedure_NewNodeUpdate(void);
+// void Procedure_NewNodeUpdate(void);
 
 
 
