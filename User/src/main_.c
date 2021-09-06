@@ -13,6 +13,7 @@
 
 #include "arm_ctrl.h"
 #include "debug.h"
+#include "motor.h"
 #include "motion.h"
 #include "motor_ctrl.h"
 #include "motor_feedback.h"
@@ -22,6 +23,8 @@
 #include "stm32f1xx_hal.h"
 #include "tim.h"
 #include "usart.h"
+#include "sensor.h"
+#include "position.h"
 
 MotorSpeed_t Motor_X, Motor_Y, Motor_W;
 
@@ -58,24 +61,51 @@ void Main_(void) {
   //   Pushrod_MoveForward(480000);
   //   HAL_Delay(5000);
   // }
-  for(;;) {
-    HAL_Delay(1000);
-    printf("A%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[0] * ((Motor_InformationInstance.Directions[0] == Motor_CW) ? 1 : -1));
-    printf("B%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[1] * ((Motor_InformationInstance.Directions[1] == Motor_CW) ? 1 : -1));
-    printf("C%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[2] * ((Motor_InformationInstance.Directions[2] == Motor_CW) ? 1 : -1));
-    printf("D%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[3] * ((Motor_InformationInstance.Directions[3] == Motor_CW) ? 1 : -1));
-    printf("Running\r\n");
+  // for(;;) {
+  //   /*CODE*/
+  //   Motor_Decode(Motor_X, Motor_Y, Motor_W);
+  //   HAL_Delay(20);
+  //   // printf("Running\r\n");
+  // }
+  for (;;) {
+    Motion_MoveToLeft(15);
+    while (1) {
+      Motion_CorrectWhenMovingAtX();
+      // Motor_Decode(20, 4, 0);
+      static int cnt = 0;
+      
+      HAL_Delay(100);
+      cnt = (cnt + 1) % 10;
+#define ISHIGH(x, n) (!!(x & (1 << n)))
+
+      if (!cnt) {
+          TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+          printf("X:%dY%dW%d\r\n", Motor_InputInstance.x, Motor_InputInstance.y, Motor_InputInstance.w);
+          printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+          printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+          printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+      }
+    }
   }
-
-
   for(;;) {
     /*CODE*/
     // Motor_SetW(MOTION_HIGH_SPEED * 10);
     // Motor_Decode(MOTION_LOW_SPEED, 0, 100);
     Motor_Decode(Motor_X, Motor_Y, Motor_W);
-    HAL_Delay(5000);
-    Motor_Decode(0, 0, 0);
-    HAL_Delay(5000);
+    HAL_Delay(20);
+    // Motor_Decode(0, 0, 0);
+    // HAL_Delay(5000);
     // MotorCtrl_PrintArguments();
 
     // MotorCtrl_SetTarget(50, 0);
@@ -119,6 +149,71 @@ void Main_(void) {
     // HAL_UART_Transmit(&huart5, rec, 2, 0x0fff);
     // HAL_UART_Transmit(&huart5, ret, 2, 0xFFFF);
   }
+
+  for(;;) {
+    HAL_Delay(1000);
+    Motion_MoveForward(20);
+    while (1) {
+      // TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+      // uint8_t beg, end;
+      // Position_GetOneActive(ptr[0], 9, &beg, &end);
+      // if (end - beg > 4) {
+      //     HAL_Delay(200);
+      //     Motor_Decode(0, 0, 0);
+      //     while (1) {
+      //         ;
+      //     }
+      // }
+      Motion_CorrectWhenMovingAtY();
+      HAL_Delay(50);
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+#define ISHIGH(x, n) (!!(x & (1 << n)))
+
+    printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+    }
+  }
+
+  for(;;) {
+    HAL_Delay(1000);
+    printf("A%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[0] * ((Motor_InformationInstance.Directions[0] == Motor_CW) ? 1 : -1));
+    printf("B%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[1] * ((Motor_InformationInstance.Directions[1] == Motor_CW) ? 1 : -1));
+    printf("C%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[2] * ((Motor_InformationInstance.Directions[2] == Motor_CW) ? 1 : -1));
+    printf("D%d\r\n", 32000 / Motor_InformationInstance.TimeTicks[3] * ((Motor_InformationInstance.Directions[3] == Motor_CW) ? 1 : -1));
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+#define ISHIGH(x, n) (!!(x & (1 << n)))
+
+    printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+
+    printf("Running\r\n");
+  }
+
+
 
   Steer_Init();
   while (1) {

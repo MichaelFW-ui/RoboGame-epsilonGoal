@@ -172,7 +172,7 @@ void Precedure_HeadForPickingAreaSecondly(void);
 
 在函数的具体实现中，主要调用了`motion.c`中的函数。
 
-#### motion.c
+### motion.c
 
 该文件实现了主要的运动流程。
 
@@ -256,7 +256,145 @@ void Motion_MoveRightStableInPickingArea(uint8_t num);
 这些函数用于稳定移动，其中相比简单的设置速度，增加了反馈调节的方案，可以小幅度修正，较为稳定。
 
 ```c
+uint8_t Motion_PickUpBallForward(void);
+uint8_t Motion_PickUpBallBackward(void);
 ```
 
+这些函数用于两个捡球的动作，返回值是捡到的球的个数，即0或者1。
+
+该文件事实上留出了两个API，为
+
+```c
+void Motion_MoveFromNodeToNode(node_t from, node_t to);
+void Motion_MoveFromBeginningArea(node_t to);
+```
+
+用于结点之间的移动。目前看来是没有实现的。可能删除。
+
+### motor.c
+
+该文件提供了底盘电机的运动解析，主要是参照麦克纳姆轮的特性构造的。文件在明显的位置上规定了小车的种种正方向。
+
+文件中规定了
+
+```c
+typedef int32_t MotorInput_t;
+
+typedef struct {
+    MotorInput_t x;
+    MotorInput_t Kx;
+    MotorInput_t y;
+    MotorInput_t Ky;
+    MotorInput_t w;
+    MotorInput_t Kw;
+} MotorInputTpyeDef;
+
+extern MotorInputTpyeDef Motor_InputInstance;
+```
+
+用于电机速度控制，和电机的三轴运动解析。 `MotorInputTypeDef`中包括三轴的目标速度和运动解析时的系数。事实上为了方便起见，系数都是1。
+
+```c
+__STATIC_FORCEINLINE void Motor_SetX(MotorInput_t x);
+__STATIC_FORCEINLINE void Motor_SetY(MotorInput_t y);
+__STATIC_FORCEINLINE void Motor_SetW(MotorInput_t w);
+__STATIC_FORCEINLINE void Motor_AddX(MotorInput_t x);
+__STATIC_FORCEINLINE void Motor_AddY(MotorInput_t y);
+__STATIC_FORCEINLINE void Motor_AddW(MotorInput_t w);
+```
+
+这里是电机三轴运动的API，可以直接设定速度，或者设定速度的增加量。
+
+```c
+__STATIC_INLINE void Motor_Init(void);
+void Motor_Decode(MotorInput_t x, MotorInput_t y, MotorInput_t w);
+```
+
+是电机解算的初始化函数和电机解算的API。在`Motor_Decode()`中写入期望的三轴速度即可。
+
+### motor_ctrl.c
+
+该文件是电机控制的实现区域。其中包括如下内容
+
+```c
+typedef enum {
+  Motor_A = 0,
+  Motor_B = 1,
+  Motor_C = 2,
+  Motor_D = 3
+} MotorOrdinal_t;
+
+typedef enum {
+  Motor_CW = 0, Motor_CCW = 1
+} MotorDirection_t;
+
+typedef enum {
+  Motor_PID_P = 0,
+  Motor_PID_I = 1,
+  Motor_PID_D = 2
+} MotorPIDTypeDef;
+
+typedef int16_t MotorSpeed_t;
+```
+
+定义了三个枚举量，用于控制具体的方向和电机编号。`MotorPIDTypeDef`在别的地方有所用到。`MotorSpeed_t`是电机速度的类型，有符号说明电机是可以进行不同方向的运作的。
+
+```c
+#define Motor_Encode(Motor, Direction) (uint8_t)((Motor << 1) | Direction)
+```
+
+该宏定义用于编码不同电机和方向，相当于Python语言中的元组。
+
+```c
+#define Motor_OutputFix ...
+#define Motor_FeedbackFix ...
+```
+
+宏定义了两个`Fix`函数，主要作用是完成(编码器信号 -> PID 计算 -> 输出电压信号)的转换过程。
+
+```c
+__STATIC_INLINE void MotorCtrl_Init(void);
+```
+
+初始化函数，调用即可，别管太多。
+
+```c
+__STATIC_FORCEINLINE void MotorCtrl_SetDutyCycle(MotorOrdinal_t Motor, uint16_t DutyCycle);
+void MotorCtrl_SetDirection(MotorOrdinal_t Motor, MotorDirection_t direction);
+void __STATIC_INLINE MotorCtrl_SetPIDArguments(MotorOrdinal_t motor, MotorPIDTypeDef pid, double val);
+double __STATIC_INLINE MotorCtrl_GetPIDArguments(MotorOrdinal_t motor, MotorPIDTypeDef pid);
+void __STATIC_INLINE MotorCtrl_PrintArguments(void) {
+void __STATIC_INLINE MotorCtrl_SetTarget(MotorSpeed_t speed, uint8_t ord) {
+```
+
+十分OOP的Set,Get函数，字面意思理解即可。
+
+```c
+void MotorCtrl_UpdateControlFlow(void);
+MotorSpeed_t *MotorCtrl_UpdateFeedback(MotorFeedback_InformationTypeDef *info);
+```
+
+Update函数，顾名思义，周期调用即可。前者负责控制流的周期更新，后者负责反馈信息的周期更新。后者调用后会返回一个数组表示当前电机的实际速度。函数的具体实现需要理解`motor_feedback.c`文件，接下来会有所介绍。
+
+```c
+void __STATIC_INLINE MotorCtrl_CalculateNextOutput(void);
+void MotorCtrl_CalculateNextOutputByTargets(PID_InformationTypeDef *PIDs, MotorSpeed_t *target);
+```
+
+API，计算下一次的PID或者根据新的target计算下一次的PID。一般地，我们是周期调用前者即可。Target取值取决于一个全局变量。
+
+### motor_feedback.c
+
+```c
+typedef enum {
+  MotorFeedback_CW  = 0,
+  MotorFeedback_CCW = 1
+} MotorFeedback_Direction_t;
+typedef struct {
+  MotorFeedback_TimeTick_t TimeTicks[4];
+  MotorFeedback_ReloadTime_t ReloadTimes[4];
+  MotorFeedback_Direction_t Directions[4];
+} MotorFeedback_InformationTypeDef;
+```
 
 ## 重点函数实现介绍

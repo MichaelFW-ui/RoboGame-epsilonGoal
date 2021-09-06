@@ -151,6 +151,13 @@ void MotorCtrl_SetDirection(MotorOrdinal_t Motor, MotorDirection_t direction);
  */
 void __STATIC_INLINE MotorCtrl_CalculateNextOutput(void) {
   MotorCtrl_CalculateNextOutputByTargets(Motor_PID_Speed, Motor_TargetSpeed);
+  if (Motor_InformationInstance.ReloadTimes[0] > 1) Motor_PID_Speed[0].Current = 0;
+  if (Motor_InformationInstance.ReloadTimes[1] > 1) Motor_PID_Speed[1].Current = 0;
+  if (Motor_InformationInstance.ReloadTimes[2] > 1) Motor_PID_Speed[2].Current = 0;
+  if (Motor_InformationInstance.ReloadTimes[3] > 1) Motor_PID_Speed[3].Current = 0;
+  // if (Motor_PID_Speed[2].Current < 28 || Motor_PID_Speed[2].Current > 32) {
+  //     printf("Error %f \r\n", Motor_PID_Speed[2].Current);
+  // }
 }
 
 void __STATIC_INLINE MotorCtrl_SetPIDArguments(MotorOrdinal_t motor,

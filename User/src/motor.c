@@ -41,15 +41,13 @@
 
 
 
-MotorInputTpyeDef Motor_InputInstance;
+volatile MotorInputTpyeDef Motor_InputInstance;
 
 // Externed from motor_ctrl.c
 extern MotorSpeed_t Motor_TargetSpeed[4];
 
 void Motor_Decode(MotorInput_t x, MotorInput_t y, MotorInput_t w) {
     // static MotorSpeed_t Motor_TargetSpeed[4] = {0};
-    x = -x;
-    y = -y;
     // 保存速度结果，便于调试运动状态
     Motor_InputInstance.x = x;
     Motor_InputInstance.y = y;

@@ -28,7 +28,7 @@ typedef struct {
     MotorInput_t Kw;
 } MotorInputTpyeDef;
 
-extern MotorInputTpyeDef Motor_InputInstance;
+extern volatile MotorInputTpyeDef Motor_InputInstance;
 
 #define MotorDecodeOutputFix(input) (input / 20)
 

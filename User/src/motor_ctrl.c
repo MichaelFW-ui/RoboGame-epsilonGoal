@@ -195,15 +195,23 @@ void MotorCtrl_UpdateControlFlow(void) {
 MotorSpeed_t *MotorCtrl_UpdateFeedback(MotorFeedback_InformationTypeDef *info) {
   // 终于忍不住使用了静态变量（
   static MotorSpeed_t motorSpeed_data[4];
+  static MotorSpeed_t PreSpeed[4];
   for (int i = 0; i < 4; ++i) {
+#define MAX_INC 20
     if (info->Directions[i] == MotorFeedback_CW) {
-      motorSpeed_data[i] = Motor_FeedbackFix(info->TimeTicks[i]);
+      MotorSpeed_t cur = Motor_FeedbackFix(info->TimeTicks[i]);
+      if (cur - PreSpeed[i] > -MAX_INC && cur - PreSpeed[i] < MAX_INC)
+        motorSpeed_data[i] = cur;
       if (motorSpeed_data[i] < 5)
         motorSpeed_data[i] = 0;
+      PreSpeed[i] = cur;
     } else {
-      motorSpeed_data[i] = -Motor_FeedbackFix(info->TimeTicks[i]);
+      MotorSpeed_t cur = Motor_FeedbackFix(info->TimeTicks[i]);
+      if (cur - PreSpeed[i] > -MAX_INC && cur - PreSpeed[i] < MAX_INC)
+        motorSpeed_data[i] = -cur;
       if (motorSpeed_data[i] > -5)
         motorSpeed_data[i] = 0;
+      PreSpeed[i] = cur;
     }
   }
   return motorSpeed_data;

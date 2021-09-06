@@ -55,7 +55,43 @@
  * @return uint8_t 找到的点数，取值0或1
  */
 uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t len, uint8_t *lowerbound, uint8_t *upperbound) {
+    // for (i = 0, j = len - 1;
+    //      i <= j && (!IsActive(line, i) || !IsActive(line, j));) {
+    //     if (!IsActive(line, i)) ++i;
+    //     if (!IsActive(line, j)) --j;
+    // }
+    // uint8_t cnt = 0;
+
+
+    // uint8_t i;
+    // static uint8_t last = 0;
+    // uint8_t lastLength = 0;
+    // uint8_t beg, end;
+
+    // line <<= 1;
+    // for (i = 0; i < len; ++i) {
+    //     if (IsActive(line, i + 1) && !IsActive(line, i)) {
+    //         // ++cnt;
+    //         beg = i;
+    //     } else if (!IsActive(line, i + 1) && IsActive(line, i + 2)) {
+    //         end = i;
+    //         if ((((beg + end) >> 1) - last) <= lastLength ||
+    //             (last - ((beg + end) >> 1)) <= lastLength) {
+    //             *lowerbound = beg;
+    //             *upperbound = end;
+    //             lastLength =
+    //                 (((beg + end) >> 1) > last ? ((beg + end) >> 1) - last
+    //                                            : last - ((beg + end) >> 1));
+    //             last = (beg + end) >> 1;
+    //         }
+    //     }
+    // }
+    // return *lowerbound < *upperbound;
+
+    uint16_t mask = 0x1f << (((len - 1) >> 1) - 2);
+    line &= mask;
     uint8_t i, j;
+
     for (i = 0, j = len - 1;
          i <= j && (!IsActive(line, i) || !IsActive(line, j));) {
         if (!IsActive(line, i)) ++i;
@@ -63,5 +99,7 @@ uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t len, uint8_t *lowerbound
     }
     *lowerbound = i;
     *upperbound = j;
-    return i <= j;
+
+    return *lowerbound < *upperbound;
+    
 }

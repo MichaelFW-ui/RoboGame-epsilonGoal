@@ -33,6 +33,7 @@
 #include "sensor.h"
 #include "procedure.h"
 #include "motor.h"
+#include "pid.h"
 
 
 node_t CurrentNode = Node_InValid;
@@ -191,8 +192,16 @@ void Motion_CorrectWhenMovingAtY(void) {
     uint8_t Front = (FrontBegin + FrontEnd) >> 1;
     uint8_t Back = (BackBegin + BackEnd) >> 1;
     // 反馈调节
-    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-20));
-    Motor_SetX((int16_t)((int8_t)Front + (int8_t)Back - 8) * (-20));
+    // static PID_InformationTypeDef pid;
+    // PID_InformationInit(&pid);
+    // pid.Kp = -60;
+    // pid.Ki = -18;
+    // PID_Calculate_Locational_CounterOverflow(&pid, (int16_t)((int8_t)Front - (int8_t)Back), -400, 400);
+    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-50));
+    // Motor_SetW((int16_t)pid.Output);
+    Motor_SetX((int16_t)((int8_t)Front + (int8_t)Back - 8) * (3));
+    // HAL_Delay(100);
+    // Motor_SetW(0);
      
 
     /*TODO*/
@@ -212,8 +221,18 @@ void Motion_CorrectWhenMovingAtX(void) {
     uint8_t Left = (LeftEnd + LeftBegin) >> 1;
     uint8_t Right = (RightEnd + RightBegin) >> 1;
     // 反馈调节
-    Motor_SetY(((int16_t)((int8_t)Left + (int8_t)Right) - 8) * (-20));
-    Motor_SetW(((int16_t)((int8_t)Left - (int8_t)Right)) * (20));
+    int16_t Front = (((int16_t)((int8_t)Left + (int8_t)Right) - 10) * (-2));
+    Motor_SetY(Front);
+    static int cht = 0;
+    ++cht;
+    if (cht == 10) {
+        // printf("sssssssss%d, %d\r\n", Left, Right);
+        cht = 0;
+    }
+    // if (Front > 0) {
+    // }
+    // printf("TTT%d\r\n", Front);
+    Motor_SetW(((int16_t)((int8_t)Left - (int8_t)Right)) * (7));
 }
 
 void Motion_CorrectAtCross(void) {
