@@ -53,16 +53,16 @@ void Motor_Decode(MotorInput_t x, MotorInput_t y, MotorInput_t w) {
     Motor_InputInstance.y = y;
     Motor_InputInstance.w = w;
 
-    Motor_TargetSpeed[0] = MotorDecodeOutputFix(Motor_InputInstance.Kx * x +
+    Motor_TargetSpeed[0] = MotorDecodeOutputFix(-Motor_InputInstance.Kx * x +
                                                 Motor_InputInstance.Ky * y +
                                                 Motor_InputInstance.Kw * w);
-    Motor_TargetSpeed[1] = MotorDecodeOutputFix(-Motor_InputInstance.Kx * x +
+    Motor_TargetSpeed[1] = MotorDecodeOutputFix(Motor_InputInstance.Kx * x +
                                                 Motor_InputInstance.Ky * y -
                                                 Motor_InputInstance.Kw * w);
-    Motor_TargetSpeed[2] = MotorDecodeOutputFix(-Motor_InputInstance.Kx * x +
+    Motor_TargetSpeed[2] = MotorDecodeOutputFix(Motor_InputInstance.Kx * x +
                                                 Motor_InputInstance.Ky * y +
                                                 Motor_InputInstance.Kw * w);
-    Motor_TargetSpeed[3] = MotorDecodeOutputFix(Motor_InputInstance.Kx * x +
+    Motor_TargetSpeed[3] = MotorDecodeOutputFix(-Motor_InputInstance.Kx * x +
                                                 Motor_InputInstance.Ky * y -
                                                 Motor_InputInstance.Kw * w);
 }

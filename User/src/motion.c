@@ -197,7 +197,7 @@ void Motion_CorrectWhenMovingAtY(void) {
     // pid.Kp = -60;
     // pid.Ki = -18;
     // PID_Calculate_Locational_CounterOverflow(&pid, (int16_t)((int8_t)Front - (int8_t)Back), -400, 400);
-    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-42));
+    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-49));
     // Motor_SetW((int16_t)pid.Output);
     Motor_SetX((int16_t)((int8_t)Front + (int8_t)Back - 8) * (3));
     // HAL_Delay(100);

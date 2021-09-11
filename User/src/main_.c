@@ -137,14 +137,79 @@ void Main_(void) {
 //     }
 //   }
 
+  for(;;) {
+    /*CODE*/
+    Motor_Decode(Motor_X, Motor_Y, Motor_W);
+    HAL_Delay(20);
+  }
   for (;;) {
-    Motor_SetY(30);
+    Motor_SetX(50);
     for (;;) {
-        TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+      TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+      static int cnt = 0;
+      cnt = (cnt + 1) % 10;
+#define ISHIGH(x, n) (!!(x & (1 << n)))
+
+      if (!cnt) {
+          TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+          printf("X:%dY%dW%d\r\n", Motor_InputInstance.x, Motor_InputInstance.y, Motor_InputInstance.w);
+          printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+          printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+          printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+      }
+        uint8_t beg, end;
+        Position_GetOneActive(ptr[1], 11, &beg, &end);
+        if (count_bits(ptr[1]) >= 5) {
+            Motor_SetX(-100);
+            HAL_Delay(250);
+            Motor_SetX(0);
+        }
+        Motion_CorrectWhenMovingAtX();
+        HAL_Delay(20);
+    }
+  }
+  for (;;) {
+    Motor_SetY(50);
+    for (;;) {
+      TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+      static int cnt = 0;
+      cnt = (cnt + 1) % 10;
+#define ISHIGH(x, n) (!!(x & (1 << n)))
+
+      if (!cnt) {
+          TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+          printf("X:%dY%dW%d\r\n", Motor_InputInstance.x, Motor_InputInstance.y, Motor_InputInstance.w);
+          printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+          printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+          printf("%d           %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+          printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+      }
         uint8_t beg, end;
         Position_GetOneActive(ptr[0], 9, &beg, &end);
         if (count_bits(ptr[0]) >= 5) {
-            HAL_Delay(500);
+            Motor_SetY(-80);
+            HAL_Delay(150);
             Motor_SetY(0);
         }
         Motion_CorrectWhenMovingAtY();
