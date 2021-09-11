@@ -88,7 +88,7 @@ uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t len, uint8_t *lowerbound
     // }
     // return *lowerbound < *upperbound;
 
-    uint16_t mask = 0x1f << (((len - 1) >> 1) - 2);
+    uint16_t mask = 0x7f << (((len - 1) >> 1) - 3);
     line &= mask;
     uint8_t i, j;
 

@@ -14,6 +14,7 @@
 
 #include "stm32f1xx_hal.h"
 #include "usart.h"
+#include "stdio.h"
 
 
 typedef struct {
@@ -44,25 +45,37 @@ typedef struct {
 #define SWAP_BIT(x, a, b)                             \
     do {                                              \
         uint8_t ax = x & (1 << a), bx = x & (1 << b); \
-        x -= a + b;                                   \
+        x -= ax + bx;                                   \
         x += ((ax >> a) << b) + ((bx >> b) << a);     \
     } while (0)
 
+#define READ(x, n) (!!((x & (1 << n))))
+
 __STATIC_INLINE HAL_StatusTypeDef Com_SendWorkingCommand(void) {
     uint8_t cmd = 0xf0;
-    return HAL_UART_Transmit_DMA(&COM_HEADER, &cmd, 1);
+    return HAL_UART_Transmit(&COM_HEADER, &cmd, 1, 0x00ff);
 }
 
 __STATIC_INLINE HAL_StatusTypeDef Com_Receive(Com_DataTypeDef *cmd) {
     HAL_StatusTypeDef ret;
-    ret = HAL_UART_Receive(&COM_HEADER, (uint8_t*)cmd, sizeof(Com_DataTypeDef), 0xFFFE);
+    cmd->info = 0;
+    ret = HAL_UART_Receive(&COM_HEADER, (uint8_t*)cmd, sizeof(Com_DataTypeDef), 0x0FFF);
+    printf("Tried to receive, and\r\n");
+    if (ret != HAL_OK) {
+        return HAL_ERROR;
+    }
 
     if (cmd->info != cmd->header)
         return HAL_ERROR;
 
-    SWAP_BIT(cmd->info, 1, 4);
-    SWAP_BIT(cmd->info, 1, 2);
-    SWAP_BIT(cmd->info, 3, 4);
+    printf("Received Information %d\r\n", cmd->info);
+    // printf("%d, %d, %d\r\n", READ(cmd->info, 2), READ(cmd->info, 1), READ(cmd->info, 0));
+    // printf("%d, %d, %d\r\n", READ(cmd->info, 5), READ(cmd->info, 4), READ(cmd->info, 3));
+    // SWAP_BIT(cmd->info, 1, 4);
+    // SWAP_BIT(cmd->info, 1, 2);
+    // SWAP_BIT(cmd->info, 3, 4);
+    printf("%d, %d, %d\r\n", READ(cmd->info, 4), READ(cmd->info, 2), READ(cmd->info, 0));
+    printf("%d, %d, %d\r\n", READ(cmd->info, 5), READ(cmd->info, 3), READ(cmd->info, 1));
 
     return ret;
 }

@@ -34,17 +34,23 @@ extern TraceInfo_t CurrentTrace[4];
 //     return NULL_VALUE;
 // }
 
+__STATIC_INLINE void Sensor_RefreshUART(UART_HandleTypeDef *hd) {
+  MX_USART1_UART_Init();
+}
+
 
 
 __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
     uint16_t cmd = 0x8000;
     HAL_StatusTypeDef ret = HAL_UART_Transmit(&huart1, (uint8_t *)&cmd, 2, 0x05ff);
     if (ret != HAL_OK) {
-        printf("Not transmitted\r\n");
+        printf("Failed to transmit\r\n");
+        Sensor_RefreshUART(&huart1);
     }
     ret = HAL_UART_Receive(&huart1, (uint8_t*)CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0x06FF);
     if (ret != HAL_OK) {
-        printf("Not received\r\n");
+        printf("Failed to receive\r\n");
+        Sensor_RefreshUART(&huart1);
     } else {
         // printf("Received\r\n");
     }
@@ -61,6 +67,16 @@ __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
 __STATIC_INLINE uint16_t Sensor_GetLeftDistance(void) {
     /*TODO*/
     return NULL_VALUE;
+}
+
+__STATIC_INLINE int count_bits(int x) {
+    // From zhihu
+    int xx = x;
+    xx = xx - ((xx >> 1) & 0x55555555);
+    xx = (xx & 0x33333333) + ((xx >> 2) & 0x33333333);
+    xx = (xx + (xx >> 4)) & 0x0f0f0f0f;
+    xx = xx + (xx >> 8);
+    return (xx + (xx >> 16)) & 0xff;
 }
 
 #endif // !__SENSOR_H

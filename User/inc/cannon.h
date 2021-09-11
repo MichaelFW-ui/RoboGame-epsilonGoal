@@ -14,6 +14,7 @@
 #define __CANNON_H
 #include "stm32f1xx_hal.h"
 #include "usart.h"
+#include "stdio.h"
 
 
 #define CANNON_HANDLE huart1
@@ -22,11 +23,17 @@ typedef struct {
   int16_t speed;
 } Cannon_CommunicationTypeDef;
 
-__STATIC_INLINE void Caonnon_SetTargetSpeed(int16_t speed) {
+__STATIC_INLINE void Cannon_SetTargetSpeed(int16_t speed) {
   Cannon_CommunicationTypeDef sent;
   sent.speed = speed;
   sent.header = (uint16_t)speed >> 2;
-  HAL_UART_Transmit_DMA(&CANNON_HANDLE, (uint8_t *)&sent.speed, sizeof(sent.speed));
+  // DMA 和阻塞不能混用
+  HAL_StatusTypeDef ret = HAL_UART_Transmit(&CANNON_HANDLE, (uint8_t *)&sent.speed, sizeof(sent.speed), 0x00FF);
+  if (ret != HAL_OK) {
+    printf("Failed to set\r\n");
+  } else {
+    printf("Set target%d\r\n", speed);
+  }
 }
 
 #endif // !__CANNON_H

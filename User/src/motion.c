@@ -197,7 +197,7 @@ void Motion_CorrectWhenMovingAtY(void) {
     // pid.Kp = -60;
     // pid.Ki = -18;
     // PID_Calculate_Locational_CounterOverflow(&pid, (int16_t)((int8_t)Front - (int8_t)Back), -400, 400);
-    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-50));
+    Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-42));
     // Motor_SetW((int16_t)pid.Output);
     Motor_SetX((int16_t)((int8_t)Front + (int8_t)Back - 8) * (3));
     // HAL_Delay(100);
@@ -218,21 +218,34 @@ void Motion_CorrectWhenMovingAtX(void) {
         // 这一刻，它重叠了
         return;
     }
-    uint8_t Left = (LeftEnd + LeftBegin) >> 1;
-    uint8_t Right = (RightEnd + RightBegin) >> 1;
+    uint8_t Left = (LeftEnd + LeftBegin);
+    uint8_t Right = (RightEnd + RightBegin);
     // 反馈调节
-    int16_t Front = (((int16_t)((int8_t)Left + (int8_t)Right) - 10) * (-2));
-    Motor_SetY(Front);
-    static int cht = 0;
-    ++cht;
-    if (cht == 10) {
-        // printf("sssssssss%d, %d\r\n", Left, Right);
-        cht = 0;
-    }
-    // if (Front > 0) {
+
+    // static int cht = 0;
+    // ++cht;
+    // if (cht == 10) {
+    //     printf("TEST%d, %d\r\n", Left, Right);
+    //     cht = 0;
     // }
+
     // printf("TTT%d\r\n", Front);
-    Motor_SetW(((int16_t)((int8_t)Left - (int8_t)Right)) * (7));
+
+    int16_t Front = (((int16_t)((int8_t)Left + (int8_t)Right) - 20) * (-2));
+    Motor_SetY(Front);
+    Motor_SetW(((int16_t)((int8_t)Left - (int8_t)Right)) * (45));
+
+    // if (IsActive(ptr[0], 4) && IsActive(ptr[0], 6) && IsActive(ptr[3], 4) &&
+    //     IsActive(ptr[3], 6)) {
+    //     Motor_SetW(0);
+    // } else {
+    //     if (IsActive(ptr[0], 4) || IsActive(ptr[3], 6)) {
+    //         Motor_SetW(60);
+    //     }
+    //     if (IsActive(ptr[0], 6) || IsActive(ptr[3], 4)) {
+    //         Motor_SetW(-60);
+    //     }
+    // }
 }
 
 void Motion_CorrectAtCross(void) {

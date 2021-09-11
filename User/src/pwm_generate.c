@@ -11,6 +11,7 @@
 
 
 #include "pwm_generate.h"
+#include "stdio.h"
 
 
 /**
@@ -27,19 +28,40 @@ void PWM_SetFrequencyAndStartUp(double frequency) {
   uint8_t Prescale = (uint8_t)(PrescaleValue + 0.5);
 
   uint8_t oldMode;
-  PWM_ReadRegister(PCA9685_MODE1, &oldMode);
+  HAL_StatusTypeDef ret;
+  ret = PWM_ReadRegister(PCA9685_MODE1, &oldMode);
+  if (ret != HAL_OK) {
+    printf("Failed at the beginning of PCA9685\r\n");
+  }
   uint8_t newMode = (oldMode & 0x7F) | 0x10;              // Set to sleep;
-  PWM_WriteRegister(PCA9685_MODE1, &newMode);
-  PWM_WriteRegister(PCA9685_PRESCALE, &Prescale);
-  PWM_WriteRegister(PCA9685_MODE1, &oldMode);
+  ret = PWM_WriteRegister(PCA9685_MODE1, &newMode);
+  if (ret != HAL_OK) {
+    printf("Failed at the 2 beginning of PCA9685\r\n");
+  }
+  ret = PWM_WriteRegister(PCA9685_PRESCALE, &Prescale);
+  if (ret != HAL_OK) {
+    printf("Failed at the 3 beginning of PCA9685\r\n");
+  }
+  ret = PWM_WriteRegister(PCA9685_MODE1, &oldMode);
+  if (ret != HAL_OK) {
+    printf("Failed at the 4 beginning of PCA9685\r\n");
+  }
   HAL_Delay(5);
   oldMode = oldMode | 0xA1;                               // Set auto increment.
-  PWM_WriteRegister(PCA9685_MODE1, &oldMode);             // And clear bit of restart.
+  ret = PWM_WriteRegister(PCA9685_MODE1, &oldMode);             // And clear bit of restart.
+  if (ret != HAL_OK) {
+    printf("Failed at the 5 beginning of PCA9685\r\n");
+  }
 
   uint8_t read;
   oldMode &= 0x7F;
-  PWM_ReadRegister(PCA9685_MODE1, &read);
+  read = 0xf0;
+  ret = PWM_ReadRegister(PCA9685_MODE1, &read);
+  if (ret != HAL_OK) {
+    printf("Failed at the 6 beginning of PCA9685\r\n");
+  }
   if (read != oldMode) {
+    printf("Failed to initialize the PCA9685 module.\r\n");
     while (1)
       ;
   }

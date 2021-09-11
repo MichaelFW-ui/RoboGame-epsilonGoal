@@ -21,6 +21,7 @@
 #include "stdio.h"
 #include "steer_ctrl.h"
 #include "stm32f1xx_hal.h"
+#include "cannon.c"
 #include "tim.h"
 #include "usart.h"
 #include "sensor.h"
@@ -61,12 +62,136 @@ void Main_(void) {
   //   Pushrod_MoveForward(480000);
   //   HAL_Delay(5000);
   // }
-  // for(;;) {
-  //   /*CODE*/
-  //   Motor_Decode(Motor_X, Motor_Y, Motor_W);
-  //   HAL_Delay(20);
-  //   // printf("Running\r\n");
+
+  // for (;;) {
+    // Pushrod_MoveBackward(300000);
+    // HAL_Delay(8000);
+    // Pushrod_MoveForward(300000);
+  //   HAL_Delay(8000);
   // }
+  // Cannon_SetTargetSpeed(2000);
+//   for (;;) {
+//     Motion_MoveForward(25);
+//     while (1) {
+//       Motion_CorrectWhenMovingAtY();
+//       // Motor_Decode(20, 4, 0);
+//       static int cnt = 0;
+      
+//       HAL_Delay(100);
+//       cnt = (cnt + 1) % 10;
+// #define ISHIGH(x, n) (!!(x & (1 << n)))
+
+//       if (!cnt) {
+//           TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+//           printf("X:%dY%dW%d\r\n", Motor_InputInstance.x, Motor_InputInstance.y, Motor_InputInstance.w);
+//           printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+//           printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+//           printf("%d           %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+//           printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+//       }
+//     }
+//   }
+//   for(;;) {
+//     HAL_Delay(1000);
+//     Motion_MoveForward(20);
+//     while (1) {
+//       // TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+//       // uint8_t beg, end;
+//       // Position_GetOneActive(ptr[0], 9, &beg, &end);
+//       // if (end - beg > 4) {
+//       //     HAL_Delay(200);
+//       //     Motor_Decode(0, 0, 0);
+//       //     while (1) {
+//       //         ;
+//       //     }
+//       // }
+//       Motion_CorrectWhenMovingAtY();
+//       HAL_Delay(50);
+//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+// #define ISHIGH(x, n) (!!(x & (1 << n)))
+
+//     printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+//     printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+//     printf("%d                    %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+//     printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+//     }
+//   }
+
+  for (;;) {
+    Motor_SetY(30);
+    for (;;) {
+        TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+        uint8_t beg, end;
+        Position_GetOneActive(ptr[0], 9, &beg, &end);
+        if (count_bits(ptr[0]) >= 5) {
+            HAL_Delay(500);
+            Motor_SetY(0);
+        }
+        Motion_CorrectWhenMovingAtY();
+        HAL_Delay(20);
+    }
+  }
+  Steer_Init();
+  ARM_Forward_TakeBall();
+  ARM_Backward_TakeBall();
+  ARM_Forward_TakeBall();
+  ARM_Backward_TakeBall();
+  while (1) {
+    ARM_Forward_Raise();
+    HAL_Delay(1000);
+    ARM_Forward_TalonOpen();
+    HAL_Delay(1000);
+    ARM_Forward_TakeBall();
+    HAL_Delay(1000);
+    ARM_Forward_TalonClose();
+    HAL_Delay(1000);
+    ARM_Forward_Raise();
+    HAL_Delay(1000);
+    ARM_Forward_PutDown();
+    HAL_Delay(1000);
+    ARM_Forward_TalonOpen();
+    HAL_Delay(1000);
+
+    ARM_Backward_Raise();
+    HAL_Delay(1000);
+    ARM_Backward_TalonOpen();
+    HAL_Delay(1000);
+    ARM_Backward_TakeBall();
+    HAL_Delay(1000);
+    ARM_Backward_TalonClose();
+    HAL_Delay(1000);
+    ARM_Backward_Raise();
+    HAL_Delay(1000);
+    ARM_Backward_PutDown();
+    HAL_Delay(1000);
+    ARM_Backward_TalonOpen();
+    HAL_Delay(1000);
+  }
+  for(;;) {
+    /*CODE*/
+    Motor_Decode(Motor_X, Motor_Y, Motor_W);
+    HAL_Delay(20);
+  }
   for (;;) {
     Motion_MoveToLeft(15);
     while (1) {
@@ -150,41 +275,6 @@ void Main_(void) {
     // HAL_UART_Transmit(&huart5, ret, 2, 0xFFFF);
   }
 
-  for(;;) {
-    HAL_Delay(1000);
-    Motion_MoveForward(20);
-    while (1) {
-      // TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-      // uint8_t beg, end;
-      // Position_GetOneActive(ptr[0], 9, &beg, &end);
-      // if (end - beg > 4) {
-      //     HAL_Delay(200);
-      //     Motor_Decode(0, 0, 0);
-      //     while (1) {
-      //         ;
-      //     }
-      // }
-      Motion_CorrectWhenMovingAtY();
-      HAL_Delay(50);
-    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-#define ISHIGH(x, n) (!!(x & (1 << n)))
-
-    printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
-    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
-    printf("%d                    %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
-    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
-    }
-  }
 
   for(;;) {
     HAL_Delay(1000);
@@ -215,38 +305,6 @@ void Main_(void) {
 
 
 
-  Steer_Init();
-  while (1) {
-    ARM_Forward_Raise();
-    HAL_Delay(1000);
-    ARM_Forward_TalonOpen();
-    HAL_Delay(1000);
-    ARM_Forward_TakeBall();
-    HAL_Delay(1000);
-    ARM_Forward_TalonClose();
-    HAL_Delay(1000);
-    ARM_Forward_Raise();
-    HAL_Delay(1000);
-    ARM_Forward_PutDown();
-    HAL_Delay(1000);
-    ARM_Forward_TalonOpen();
-    HAL_Delay(1000);
-
-    ARM_Backward_Raise();
-    HAL_Delay(1000);
-    ARM_Backward_TalonOpen();
-    HAL_Delay(1000);
-    ARM_Backward_TakeBall();
-    HAL_Delay(1000);
-    ARM_Backward_TalonClose();
-    HAL_Delay(1000);
-    ARM_Backward_Raise();
-    HAL_Delay(1000);
-    ARM_Backward_PutDown();
-    HAL_Delay(1000);
-    ARM_Backward_TalonOpen();
-    HAL_Delay(1000);
-  }
 }
 
 /**

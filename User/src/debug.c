@@ -23,13 +23,16 @@
 #include "debug.h"
 
 #include "main.h"
+#include "stdio.h"
 #include "motor_ctrl.h"
 #include "motor.h"
 #include "pushrod.h"
 #include "stdarg.h"
 #include "stdio.h"
+#include "com.h"
 #include "tim.h"
 #include "arm_ctrl.h"
+#include "cannon.h"
 
 uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 uint8_t Debug_USART_TransmitBuffer[DEBUG_USART_BUFFER_SIZE];
@@ -196,9 +199,9 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
   switch (str[1]) {
     case 'P':
       if (str[2] == 'U') {
-        Pushrod_MoveForward(500);
+        Pushrod_MoveForward(100000);
       } else if (str[2] == 'B') {
-        Pushrod_MoveBackward(500);
+        Pushrod_MoveBackward(100000);
       }
       break;
     case 'M':
@@ -286,6 +289,8 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
  */
 void Debug_CommandHandler(uint8_t *str) {
   printf("Received\r\n");
+  int n = 0;
+  Com_DataTypeDef info;
   switch (str[0]) {
     case 'P':
       /*    TODO      */
@@ -300,8 +305,23 @@ void Debug_CommandHandler(uint8_t *str) {
     case 'L':
       Motor_Decode(0, 0, 0);
       Motor_X = Motor_Y = Motor_W = 0;
+      break;
+    case 'Z':
+      sscanf(str, "Z%d\r\n", &n);
+      Cannon_SetTargetSpeed(n);
+      break;
     case 'D':
       Debug_MotionControlHandler(str);
+      break;
+    case 'W':
+      Com_SendWorkingCommand();
+      printf("Command sent\r\n");
+      if (HAL_OK == Com_Receive(&info)) {
+        printf("Verified ok\r\n");
+      } else {
+        printf("Failed to receive new information\r\n");
+      }
+      break;
     default:
       /*TODO 错误处理*/
       break;

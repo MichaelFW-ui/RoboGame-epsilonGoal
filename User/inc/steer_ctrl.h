@@ -20,6 +20,7 @@
 
 #include "pwm_generate.h"
 #include "stm32f1xx_hal.h"
+#include "stdio.h"
 
 /*              Begin of Steer COM numbers                                    */
 
@@ -66,6 +67,7 @@ void __STATIC_FORCEINLINE Steer_Init(void) {
   Steer_SetAngleByDegree(ARM_B_STEER_A, 90);
   Steer_SetAngleByDegree(ARM_B_STEER_B, 90);
   Steer_SetAngleByDegree(ARM_B_STEER_C, 90);
+  printf("Successfully initialized the Steers\r\n");
 }
 
 #endif // !__STEER_CTRL_H

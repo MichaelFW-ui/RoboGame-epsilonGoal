@@ -22,7 +22,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonClose(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonOpen(void) {
-    Steer_SetAngleByDegree(5, 40);
+    Steer_SetAngleByDegree(5, 60);
     return HAL_OK;
 }
 
@@ -56,7 +56,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonClose(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonOpen(void) {
-    Steer_SetAngleByDegree(2, 40);
+    Steer_SetAngleByDegree(2, 60);
     return HAL_OK;
 }
 
