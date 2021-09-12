@@ -15,4 +15,6 @@
 void Main_(void);
 
 void FrequentlyCalledUpdate(void);
+
+void TEST_MAIN_FUNCTION(void);
 #endif // !__MAIN__H

@@ -61,11 +61,11 @@ void __STATIC_FORCEINLINE Steer_Init(void) {
   PWM_Reset();
   PWM_SetFrequencyAndStartUp(50);
   // 50Hz下，为1ms占空
-  Steer_SetAngleByDegree(ARM_A_STEER_A, 90);
-  Steer_SetAngleByDegree(ARM_A_STEER_B, 90);
+  Steer_SetAngleByDegree(ARM_A_STEER_A, 60);
+  Steer_SetAngleByDegree(ARM_A_STEER_B, 0);
   Steer_SetAngleByDegree(ARM_A_STEER_C, 90);
-  Steer_SetAngleByDegree(ARM_B_STEER_A, 90);
-  Steer_SetAngleByDegree(ARM_B_STEER_B, 90);
+  Steer_SetAngleByDegree(ARM_B_STEER_A, 50);
+  Steer_SetAngleByDegree(ARM_B_STEER_B, 0);
   Steer_SetAngleByDegree(ARM_B_STEER_C, 90);
   printf("Successfully initialized the Steers\r\n");
 }

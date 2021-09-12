@@ -12,23 +12,218 @@
 #include "main_.h"
 
 #include "arm_ctrl.h"
+#include "cannon.c"
+#include "com.h"
 #include "debug.h"
-#include "motor.h"
 #include "motion.h"
+#include "motor.h"
 #include "motor_ctrl.h"
 #include "motor_feedback.h"
+#include "position.h"
 #include "pushrod.h"
+#include "sensor.h"
 #include "stdio.h"
 #include "steer_ctrl.h"
 #include "stm32f1xx_hal.h"
-#include "cannon.c"
 #include "tim.h"
 #include "usart.h"
-#include "sensor.h"
-#include "position.h"
 
 MotorSpeed_t Motor_X, Motor_Y, Motor_W;
 
+void TEST_MAIN_FUNCTION(void) {
+  Steer_Init();
+
+  Com_DataTypeDef info;
+
+  for (int k = 0; k < 2; ++k) {
+      Motor_SetX(-25);
+      while (1) {
+          Motion_CorrectWhenMovingAtX();
+          TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+          if (count_bits(ptr[1]) >= 5) {
+              while (1) {
+                  ptr = Sensor_GetCurrentInfo();
+                  if (ptr[3] & (1 << 4) || ptr[0] & (1 << 4)) {
+                      break;
+                  }
+              }
+              break;
+          }
+      }
+
+      Motor_Decode(0, 0, 0);
+      // ????
+      HAL_Delay(1000);
+      Com_SendWorkingCommand();
+      printf("Command sent\r\n");
+      if (HAL_OK == Com_Receive(&info)) {
+          printf("Verified ok\r\n");
+      } else {
+          printf("Failed to receive new information\r\n");
+      }
+
+      if (info.info & (1 << 3)) {
+          ARM_Backward_TalonOpen();
+          ARM_Backward_TakeBall();
+          HAL_Delay(1000);
+          ARM_Backward_TalonClose();
+          HAL_Delay(1000);
+          ARM_Backward_Raise();
+          HAL_Delay(1000);
+          ARM_Backward_PutDown();
+          HAL_Delay(1000);
+          ARM_Backward_TalonOpen();
+          HAL_Delay(1000);
+          Steer_Init();
+      }
+  }
+  Motor_SetX(-25);
+
+  while (1) {
+    Motion_CorrectWhenMovingAtX();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[1]) >= 5) {
+      while (1) {
+        ptr = Sensor_GetCurrentInfo();
+        if (ptr[3] & (1 << 4) || ptr[0] & (1 << 4)) {
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+
+  Motor_SetY(25);
+  while (1) {
+    Motion_CorrectWhenMovingAtY();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[3]) >= 5) {
+      while (1) {
+        ptr = Sensor_GetCurrentInfo();
+        if (ptr[1] & (1 << 5) || ptr[2] & (1 << 5)) {
+          break;
+        }
+      }
+      break;
+    }
+  }
+  Motor_SetY(-25);
+  while (1) {
+    Motion_CorrectWhenMovingAtY();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[0]) >= 5) {
+      while (1) {
+        ptr = Sensor_GetCurrentInfo();
+        if (ptr[1] & (1 << 5) || ptr[2] & (1 << 5)) {
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  Motor_SetX(-25);
+  while (1) {
+    Motion_CorrectWhenMovingAtX();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[1]) >= 5) {
+      while (1) {
+        ptr = Sensor_GetCurrentInfo();
+        if (ptr[3] & (1 << 4) || ptr[0] & (1 << 4)) {
+          break;
+        }
+      }
+      // Motor_SetX(-30);
+      // HAL_Delay(200);
+      // Motor_SetX(0);
+      break;
+    }
+  }
+  Motor_Decode(0, 0, 0);
+  Cannon_SetTargetSpeed(4700);
+  while (1) {
+    ;
+  }
+
+}
+// void TEST_MAIN_FUNCTION(void) {
+//   Steer_Init();
+
+//   Motor_SetY(20);
+//   while (1) {
+//     Motion_CorrectWhenMovingAtY();
+//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+//     if (count_bits(ptr[3]) >= 5) {
+//         while (1) {
+//             ptr = Sensor_GetCurrentInfo();
+//             if (ptr[1] & (1 << 5)) {
+//                 break;
+//             }
+//         }
+//       break;
+//     }
+//   }
+
+//   Motor_SetX(20);
+//   while (1) {
+//     Motion_CorrectWhenMovingAtX();
+//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+//     if (count_bits(ptr[2]) >= 7) {
+//       while (1) {
+//         ptr = Sensor_GetCurrentInfo();
+//         if (ptr[3] & (1 << 4)) {
+//           break;
+//         }
+//       }
+//       // Motor_SetX(-30);
+//       // HAL_Delay(200);
+//       // Motor_SetX(0);
+//       break;
+//     }
+//   }
+
+//   Motor_SetX(-20);
+//   while (1) {
+//     Motion_CorrectWhenMovingAtX();
+//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+//     if (count_bits(ptr[1]) >= 7) {
+//       while (1) {
+//         ptr = Sensor_GetCurrentInfo();
+//         if (ptr[0] & (1 << 4)) {
+//           break;
+//         }
+//       }
+//       // Motor_SetX(30);
+//       // HAL_Delay(200);
+//       // Motor_SetX(0);
+//       break;
+//     }
+//   }
+
+//   Motor_SetY(20);
+//   while (1) {
+//     Motion_CorrectWhenMovingAtY();
+//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+//     if (count_bits(ptr[3]) >= 5) {
+//       while (1) {
+//         ptr = Sensor_GetCurrentInfo();
+//         if (ptr[1] & (1 << 5)) {
+//           break;
+//         }
+//       }
+//       // Motor_SetY(-30);
+//       // HAL_Delay(200);
+//       // Motor_SetY(0);
+//       break;
+//     }
+//   }
+//   Motor_Decode(0, 0, 0);
+//   while (1) {
+//     ;
+//   }
+
+// }
 void Main_(void) {
   Motor_Init();
   Debug_Init();
@@ -54,6 +249,8 @@ void Main_(void) {
   // Pushrod_MoveForward(20000);
  
   HAL_Delay(2000);
+
+  TEST_MAIN_FUNCTION();
   // Pushrod_MoveBackward(20000);
 
   // while (1) {
@@ -148,6 +345,7 @@ void Main_(void) {
       TraceInfo_t *ptr = Sensor_GetCurrentInfo();
       static int cnt = 0;
       cnt = (cnt + 1) % 10;
+
 #define ISHIGH(x, n) (!!(x & (1 << n)))
 
       if (!cnt) {
@@ -266,7 +464,7 @@ void Main_(void) {
       
       HAL_Delay(100);
       cnt = (cnt + 1) % 10;
-#define ISHIGH(x, n) (!!(x & (1 << n)))
+// #define ISHIGH(x, n) (!!(x & (1 << n)))
 
       if (!cnt) {
           TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -391,3 +589,4 @@ void FrequentlyCalledUpdate() {
     }
     cnt = (cnt + 1) % 4;
 }
+

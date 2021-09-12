@@ -33,6 +33,7 @@
 #include "tim.h"
 #include "arm_ctrl.h"
 #include "cannon.h"
+#include "steer_ctrl.h"
 
 uint8_t Debug_USART_CommandBuffer[DEBUG_USART_BUFFER_SIZE];
 uint8_t Debug_USART_TransmitBuffer[DEBUG_USART_BUFFER_SIZE];
@@ -322,6 +323,11 @@ void Debug_CommandHandler(uint8_t *str) {
         printf("Failed to receive new information\r\n");
       }
       break;
+    case 'K':
+      int ret = 0, n = 0;
+      sscanf(str, "K%d,%d\r\n", &n, &ret);
+      Steer_SetAngleByDegree(n, ret);
+
     default:
       /*TODO 错误处理*/
       break;

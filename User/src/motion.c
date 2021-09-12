@@ -189,8 +189,8 @@ void Motion_CorrectWhenMovingAtY(void) {
         // 这一刻，它重叠了
         return;
     }
-    uint8_t Front = (FrontBegin + FrontEnd) >> 1;
-    uint8_t Back = (BackBegin + BackEnd) >> 1;
+    uint8_t Front = (FrontBegin + FrontEnd);
+    uint8_t Back = (BackBegin + BackEnd);
     // 反馈调节
     // static PID_InformationTypeDef pid;
     // PID_InformationInit(&pid);
@@ -199,7 +199,7 @@ void Motion_CorrectWhenMovingAtY(void) {
     // PID_Calculate_Locational_CounterOverflow(&pid, (int16_t)((int8_t)Front - (int8_t)Back), -400, 400);
     Motor_SetW((int16_t)((int8_t)Front - (int8_t)Back) * (-49));
     // Motor_SetW((int16_t)pid.Output);
-    Motor_SetX((int16_t)((int8_t)Front + (int8_t)Back - 8) * (3));
+    Motor_SetX((int16_t)((int8_t)Front + (int8_t)Back - 16) * (-3));
     // HAL_Delay(100);
     // Motor_SetW(0);
      
