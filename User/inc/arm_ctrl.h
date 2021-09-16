@@ -46,7 +46,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TakeBall(void) {
     Steer_SetAngleByDegree(4, 80);
     for (int i = 105; i <= 180; i += 10) {
         Steer_SetAngleByDegree(3, i + 15);
-        HAL_Delay(100);
+        HAL_Delay(80);
     }
     return HAL_OK;
 }
@@ -82,7 +82,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TakeBall(void) {
     Steer_SetAngleByDegree(1, 90);
     for (int i = 90; i <= 190; i += 10) {
         Steer_SetAngleByDegree(0, i);
-        HAL_Delay(100);
+        HAL_Delay(80);
     }
     return HAL_OK;
 }

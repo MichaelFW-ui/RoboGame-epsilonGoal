@@ -35,7 +35,8 @@ extern TraceInfo_t CurrentTrace[4];
 // }
 
 __STATIC_INLINE void Sensor_RefreshUART(UART_HandleTypeDef *hd) {
-  MX_USART1_UART_Init();
+    UNUSED(hd);
+    MX_USART1_UART_Init();
 }
 
 
@@ -44,23 +45,16 @@ __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
     uint16_t cmd = 0x8000;
     HAL_StatusTypeDef ret = HAL_UART_Transmit(&huart1, (uint8_t *)&cmd, 2, 0x05ff);
     if (ret != HAL_OK) {
-        printf("Failed to transmit\r\n");
+        printf("Failed to transmit 'Get Trace' command\r\n");
         Sensor_RefreshUART(&huart1);
     }
     ret = HAL_UART_Receive(&huart1, (uint8_t*)CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0x06FF);
     if (ret != HAL_OK) {
-        printf("Failed to receive\r\n");
+        printf("Failed to receive trace information\r\n");
         Sensor_RefreshUART(&huart1);
     } else {
         // printf("Received\r\n");
     }
-    /*TODO*/
-    /*
-    SWAP FOR A BETTER ALGINMENT
-    */
-//    for (int i = 0; i < 4; ++i) {
-//        REBUILD(CurrentTrace[i]);
-//    }
     return CurrentTrace;
 }
 

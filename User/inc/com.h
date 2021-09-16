@@ -45,7 +45,7 @@ typedef struct {
 #define SWAP_BIT(x, a, b)                             \
     do {                                              \
         uint8_t ax = x & (1 << a), bx = x & (1 << b); \
-        x -= ax + bx;                                   \
+        x -= ax + bx;                                 \
         x += ((ax >> a) << b) + ((bx >> b) << a);     \
     } while (0)
 
@@ -80,6 +80,20 @@ __STATIC_INLINE HAL_StatusTypeDef Com_Receive(Com_DataTypeDef *cmd) {
     return ret;
 }
 
+__STATIC_INLINE Com_DataTypeDef *Com_WorkAndReceive(void) {
+    static Com_DataTypeDef info;
+    info.info = 0;
+    Com_SendWorkingCommand();
+    printf("Command sent\r\n");
+    if (HAL_OK == Com_Receive(&info)) {
+        printf("Verified ok\r\n");
+    } else {
+        printf("Failed to receive new information\r\n");
+        info.info = 0;
+        info.header = 0;
+    }
+    return &info;
+}
 
 #endif // !__COM_H
 

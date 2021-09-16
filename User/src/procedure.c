@@ -38,7 +38,6 @@ Procedure_t CurrentProcedure = eProcedure_Default;
 uint8_t CurrentBallCnt = 0;
 BallTypeDef BallStatus[40];
 
-// #define CROSSOVER_OVERALL
 #define CROSSOVER_OVERALL
 /*
  *      CROSSOVER_OVERALL ：在取球区直接跑完全程，检测到全部的篮球；越障
@@ -138,8 +137,7 @@ node_t Procedure_CurrentNode = Node_InValid;
  * 
  */
 void Procedure_Default(void) {
-    CurrentProcedure = eProcedure_Default;
-    // 手动接管启动阶段的结点控制
+    CurrentProcedure = eProcedure_Default; // 手动接管启动阶段的结点控制
     CurrentNode = Node_0;
     Motion_MoveForward(MOTION_HIGH_SPEED);
     while (1) {
@@ -171,11 +169,14 @@ void Procedure_HeadForPickingArea(void) {
 }
 
 #define MASK(n) ((1 << (n)))
+#ifdef READ
+#undef READ
 #define READ(a, mask) ((a) & (mask))
+#endif
 #define SET(a, mask) ((a) = ((a) | (mask)))
 #define RESET(a, mask) ((a) = ((a) & ~(mask)))
 
-void Precedure_EnterPickingArea(void) {
+void Procedure_EnterPickingArea(void) {
     CurrentProcedure = eProcedure_EnterPickingArea;
     // 进入取球区
     static uint8_t CurrentBallCnt = 0;
@@ -192,10 +193,16 @@ void Precedure_EnterPickingArea(void) {
         BallStatus[i] = NotDetected;
     }
     // 到达结点8
-    Motion_MoveToLeft(MOTION_HIGH_SPEED);
-    HAL_Delay(500);
+    Motion_MoveToLeft(MOTION_LOW_SPEED);
+    while (1) {
+        Motion_CorrectWhenMovingAtX();
+        TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+        if (count_bits(ptr[2]) >= 5) {
+            break;
+        }
+    }
     Motion_MoveToLeft(0);
-    Motion_CorrectInPickingArea();
+    // Motion_CorrectInPickingArea();
     Motion_CurrentNodeUpdate();
 
     // To node 9
@@ -309,7 +316,7 @@ void Precedure_EnterPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_ExitPickingArea(void) {
+void Procedure_ExitPickingArea(void) {
     CurrentProcedure = eProcedure_ExitPickingArea;
     // 返回
     // while (CurrentNode != Node_8) {
@@ -331,7 +338,7 @@ void Precedure_ExitPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_HeadForThrowingArea(void) {
+void Procedure_HeadForThrowingArea(void) {
     CurrentProcedure = eProcedure_HeadForThrowingArea;
     Motion_MoveBackwardCrossing(3);
 
@@ -348,7 +355,7 @@ void Precedure_HeadForThrowingArea(void) {
     /*TODO*/
 }
 
-void Precedure_StayInThrowingArea(void) {
+void Procedure_StayInThrowingArea(void) {
     CurrentProcedure = eProcedure_StayInThrowingArea;
     /*TODO*/
     // 发射第一次
@@ -368,7 +375,7 @@ void Precedure_StayInThrowingArea(void) {
 
 }
 
-void Precedure_HeadForPickingAreaSecondly(void) {
+void Procedure_HeadForPickingAreaSecondly(void) {
     CurrentProcedure = eProcedure_HeadForPickingAreaSecondly;
     // 特判返回Node 4
     Motion_MoveToRight(MOTION_LOW_SPEED);
@@ -469,7 +476,7 @@ void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_EnterPickingArea(void) {
+void Procedure_EnterPickingArea(void) {
     CurrentProcedure = eProcedure_EnterPickingArea;
     // 进入取球区
     static BallTypeDef BallStatus[40];
@@ -530,7 +537,7 @@ void Precedure_EnterPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_ExitPickingArea(void) {
+void Procedure_ExitPickingArea(void) {
     CurrentProcedure = eProcedure_ExitPickingArea;
     // 返回
     while (CurrentNode != Node_8) {
@@ -547,7 +554,7 @@ void Precedure_ExitPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_HeadForThrowingArea(void) {
+void Procedure_HeadForThrowingArea(void) {
     CurrentProcedure = eProcedure_HeadForThrowingArea;
     Motion_MoveBackwardCrossing(3);
 
@@ -565,7 +572,7 @@ void Precedure_HeadForThrowingArea(void) {
     /*TODO*/
 }
 
-void Precedure_StayInThrowingArea(void) {
+void Procedure_StayInThrowingArea(void) {
     CurrentProcedure = eProcedure_StayInThrowingArea;
     /*TODO*/
     // 发射第一次
@@ -585,7 +592,7 @@ void Precedure_StayInThrowingArea(void) {
 
 }
 
-void Precedure_HeadForPickingAreaSecondly(void) {
+void Procedure_HeadForPickingAreaSecondly(void) {
     CurrentProcedure = eProcedure_HeadForPickingAreaSecondly;
     /*TODO*/
 }
@@ -606,23 +613,23 @@ void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_EnterPickingArea(void) {
+void Procedure_EnterPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_ExitPickingArea(void) {
+void Procedure_ExitPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_HeadForThrowingArea(void) {
+void Procedure_HeadForThrowingArea(void) {
     /*TODO*/
 }
 
-void Precedure_StayInThrowingArea(void) {
+void Procedure_StayInThrowingArea(void) {
     /*TODO*/
 }
 
-void Precedure_HeadForPickingAreaSecondly(void) {
+void Procedure_HeadForPickingAreaSecondly(void) {
     /*TODO*/
 }
 
@@ -639,23 +646,23 @@ void Procedure_HeadForPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_EnterPickingArea(void) {
+void Procedure_EnterPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_ExitPickingArea(void) {
+void Procedure_ExitPickingArea(void) {
     /*TODO*/
 }
 
-void Precedure_HeadForThrowingArea(void) {
+void Procedure_HeadForThrowingArea(void) {
     /*TODO*/
 }
 
-void Precedure_StayInThrowingArea(void) {
+void Procedure_StayInThrowingArea(void) {
     /*TODO*/
 }
 
-void Precedure_HeadForPickingAreaSecondly(void) {
+void Procedure_HeadForPickingAreaSecondly(void) {
     /*TODO*/
 }
 

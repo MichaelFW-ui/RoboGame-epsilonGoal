@@ -12,7 +12,7 @@
 #include "main_.h"
 
 #include "arm_ctrl.h"
-#include "cannon.c"
+#include "cannon.h"
 #include "com.h"
 #include "debug.h"
 #include "motion.h"
@@ -20,6 +20,7 @@
 #include "motor_ctrl.h"
 #include "motor_feedback.h"
 #include "position.h"
+#include "procedure.h"
 #include "pushrod.h"
 #include "sensor.h"
 #include "stdio.h"
@@ -31,9 +32,149 @@
 MotorSpeed_t Motor_X, Motor_Y, Motor_W;
 
 void TEST_MAIN_FUNCTION(void) {
+  Com_DataTypeDef info;
+
+  Motion_MoveForwardStable(3);
+  Motion_MoveLeftStable(2);
+  // Motor_Decode(0, 0, 0);
+  // Motion_CorrectAtCross();
+  Motion_MoveForwardStable(1);
+  Motion_MoveForwardCrossing(1);
+  Motion_MoveForward(0);
+
+  while (1) {
+
+  }
+}
+
+
+void Main_(void) {
+  Motor_Init();
+  Debug_Init();
+  Steer_Init();
+  HAL_TIM_Base_Start_IT(&htim5);
+  HAL_Delay(2000);
+
+  TEST_MAIN_FUNCTION();
+
+  Procedure_Default();
+  Procedure_HeadForPickingArea();
+  Procedure_ExitPickingArea();
+  Procedure_HeadForThrowingArea();
+  Procedure_HeadForPickingAreaSecondly();
+  Procedure_ExitPickingArea();
+  Procedure_HeadForThrowingArea();
+  Procedure_HeadForPickingAreaSecondly();
+  Procedure_ExitPickingArea();
+  Procedure_HeadForThrowingArea();
+  Procedure_HeadForPickingAreaSecondly();
+  Procedure_ExitPickingArea();
+  Procedure_HeadForThrowingArea();
+
+  printf("Seems to have accomplished the tasks\r\n");
+
+  while (1) {
+    ;
+  }
+}
+
+/**
+ * @brief 函数调用频率为1000Hz
+ * 自行调整对应时间
+ * 
+ */
+void FrequentlyCalledUpdate() {
+    static uint16_t cnt = 0;
+
+    if (!cnt) {
+        MotorCtrl_CalculateNextOutput();
+        MotorCtrl_UpdateControlFlow();
+        // Motion_UpdateTargetsInVelocity();
+        // Motion_PIDUpdateHighFrequency();
+    }
+    if (!(cnt % 20)) {
+      // MotorFeedback_TimeCallback();
+    }
+    cnt = (cnt + 1) % 4;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+
+
+void TEST_MAIN_FUNCTION___(void) {
   Steer_Init();
 
   Com_DataTypeDef info;
+
+  while (1) {
+
+  }
 
   for (int k = 0; k < 2; ++k) {
       Motor_SetX(-25);
@@ -147,84 +288,86 @@ void TEST_MAIN_FUNCTION(void) {
   }
 
 }
-// void TEST_MAIN_FUNCTION(void) {
-//   Steer_Init();
 
-//   Motor_SetY(20);
-//   while (1) {
-//     Motion_CorrectWhenMovingAtY();
-//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-//     if (count_bits(ptr[3]) >= 5) {
-//         while (1) {
-//             ptr = Sensor_GetCurrentInfo();
-//             if (ptr[1] & (1 << 5)) {
-//                 break;
-//             }
-//         }
-//       break;
-//     }
-//   }
 
-//   Motor_SetX(20);
-//   while (1) {
-//     Motion_CorrectWhenMovingAtX();
-//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-//     if (count_bits(ptr[2]) >= 7) {
-//       while (1) {
-//         ptr = Sensor_GetCurrentInfo();
-//         if (ptr[3] & (1 << 4)) {
-//           break;
-//         }
-//       }
-//       // Motor_SetX(-30);
-//       // HAL_Delay(200);
-//       // Motor_SetX(0);
-//       break;
-//     }
-//   }
+void TEST_MAIN_FUNCTION_____(void) {
+  Steer_Init();
 
-//   Motor_SetX(-20);
-//   while (1) {
-//     Motion_CorrectWhenMovingAtX();
-//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-//     if (count_bits(ptr[1]) >= 7) {
-//       while (1) {
-//         ptr = Sensor_GetCurrentInfo();
-//         if (ptr[0] & (1 << 4)) {
-//           break;
-//         }
-//       }
-//       // Motor_SetX(30);
-//       // HAL_Delay(200);
-//       // Motor_SetX(0);
-//       break;
-//     }
-//   }
+  Motor_SetY(20);
+  while (1) {
+    Motion_CorrectWhenMovingAtY();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[3]) >= 5) {
+        while (1) {
+            ptr = Sensor_GetCurrentInfo();
+            if (ptr[1] & (1 << 5)) {
+                break;
+            }
+        }
+      break;
+    }
+  }
 
-//   Motor_SetY(20);
-//   while (1) {
-//     Motion_CorrectWhenMovingAtY();
-//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-//     if (count_bits(ptr[3]) >= 5) {
-//       while (1) {
-//         ptr = Sensor_GetCurrentInfo();
-//         if (ptr[1] & (1 << 5)) {
-//           break;
-//         }
-//       }
-//       // Motor_SetY(-30);
-//       // HAL_Delay(200);
-//       // Motor_SetY(0);
-//       break;
-//     }
-//   }
-//   Motor_Decode(0, 0, 0);
-//   while (1) {
-//     ;
-//   }
+  Motor_SetX(20);
+  while (1) {
+    Motion_CorrectWhenMovingAtX();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[2]) >= 7) {
+      while (1) {
+        ptr = Sensor_GetCurrentInfo();
+        if (ptr[3] & (1 << 4)) {
+          break;
+        }
+      }
+      // Motor_SetX(-30);
+      // HAL_Delay(200);
+      // Motor_SetX(0);
+      break;
+    }
+  }
 
-// }
-void Main_(void) {
+  Motor_SetX(-20);
+  while (1) {
+    Motion_CorrectWhenMovingAtX();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[1]) >= 7) {
+      while (1) {
+        ptr = Sensor_GetCurrentInfo();
+        if (ptr[0] & (1 << 4)) {
+          break;
+        }
+      }
+      // Motor_SetX(30);
+      // HAL_Delay(200);
+      // Motor_SetX(0);
+      break;
+    }
+  }
+
+  Motor_SetY(20);
+  while (1) {
+    Motion_CorrectWhenMovingAtY();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    if (count_bits(ptr[3]) >= 5) {
+      while (1) {
+        ptr = Sensor_GetCurrentInfo();
+        if (ptr[1] & (1 << 5)) {
+          break;
+        }
+      }
+      // Motor_SetY(-30);
+      // HAL_Delay(200);
+      // Motor_SetY(0);
+      break;
+    }
+  }
+  Motor_Decode(0, 0, 0);
+  while (1) {
+    ;
+  }
+}
+
+void Main_XXX(void) {
   Motor_Init();
   Debug_Init();
   // MotorCtrl_SetTarget(40, 0);
@@ -569,24 +712,3 @@ void Main_(void) {
 
 
 }
-
-/**
- * @brief 函数调用频率为1000Hz
- * 自行调整对应时间
- * 
- */
-void FrequentlyCalledUpdate() {
-    static uint16_t cnt = 0;
-
-    if (!cnt) {
-        MotorCtrl_CalculateNextOutput();
-        MotorCtrl_UpdateControlFlow();
-        // Motion_UpdateTargetsInVelocity();
-        // Motion_PIDUpdateHighFrequency();
-    }
-    if (!(cnt % 20)) {
-      // MotorFeedback_TimeCallback();
-    }
-    cnt = (cnt + 1) % 4;
-}
-

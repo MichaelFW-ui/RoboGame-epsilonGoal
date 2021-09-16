@@ -52,15 +52,15 @@ void Procedure_Default(void);
 
 void Procedure_HeadForPickingArea(void);
 
-void Precedure_EnterPickingArea(void);
+void Procedure_EnterPickingArea(void);
 
-void Precedure_ExitPickingArea(void);
+void Procedure_ExitPickingArea(void);
 
-void Precedure_HeadForThrowingArea(void);
+void Procedure_HeadForThrowingArea(void);
 
-void Precedure_StayInThrowingArea(void);
+void Procedure_StayInThrowingArea(void);
 
-void Precedure_HeadForPickingAreaSecondly(void);
+void Procedure_HeadForPickingAreaSecondly(void);
 
 
 /*            Procedures during the competition end here.                     */

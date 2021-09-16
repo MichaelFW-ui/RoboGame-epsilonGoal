@@ -291,6 +291,7 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
 void Debug_CommandHandler(uint8_t *str) {
   printf("Received\r\n");
   int n = 0;
+  int ret = 0;
   Com_DataTypeDef info;
   switch (str[0]) {
     case 'P':
@@ -308,7 +309,7 @@ void Debug_CommandHandler(uint8_t *str) {
       Motor_X = Motor_Y = Motor_W = 0;
       break;
     case 'Z':
-      sscanf(str, "Z%d\r\n", &n);
+      sscanf((char *)str, "Z%d\r\n", &n);
       Cannon_SetTargetSpeed(n);
       break;
     case 'D':
@@ -324,19 +325,29 @@ void Debug_CommandHandler(uint8_t *str) {
       }
       break;
     case 'K':
-      int ret = 0, n = 0;
-      sscanf(str, "K%d,%d\r\n", &n, &ret);
+      sscanf((char *)str, "K%d,%d\r\n", &n, &ret);
       Steer_SetAngleByDegree(n, ret);
+    case 'X':
+      printf("X: List all the commands\r\n");
+      printf("L: Stop the engine, not preventing correcting\r\n");
+      printf("W: Send working command to Pi\r\n");
+      printf("K: Set steer angles\r\n");
+      printf("D: Set motions\r\n");
+      printf("Z: Set cannon speed\r\n");
+      printf("M: Set some motors, but not useful always\r\n");
+      printf("P, S: Not used anylonger\r\n");
+      break;
 
     default:
       /*TODO 错误处理*/
+      printf("Not supported command\r\n");
       break;
   }
 }
 
 
 void Debug_MotionControlHandler(uint8_t * str) {
-  sscanf(str, "D%d,%d,%d\r\n", &Motor_X, &Motor_Y, &Motor_W);
+  sscanf((char *)str, "D%d,%d,%d\r\n", &Motor_X, &Motor_Y, &Motor_W);
   Motor_Decode(Motor_X, Motor_Y, Motor_W);
   printf("D Set To: %d,%d,%d\r\n", Motor_X, Motor_Y, Motor_W);
 }
