@@ -17,9 +17,9 @@
 
 #include "motor.h"
 
-#define MOTION_HIGH_SPEED 57
+#define MOTION_HIGH_SPEED 58
 
-#define MOTION_LOW_SPEED 28
+#define MOTION_LOW_SPEED 29
 
 typedef enum {
     Node_0 = 0u,

@@ -34,16 +34,44 @@ MotorSpeed_t Motor_X, Motor_Y, Motor_W;
 void TEST_MAIN_FUNCTION(void) {
   Com_DataTypeDef info;
 
-  Motion_MoveForwardStable(3);
-  Motion_MoveLeftStable(2);
-  // Motor_Decode(0, 0, 0);
-  // Motion_CorrectAtCross();
-  Motion_MoveForwardStable(1);
-  Motion_MoveForwardCrossing(1);
-  Motion_MoveForward(0);
+  // Procedure_Default();
+  // Procedure_HeadForPickingArea();
+  CurrentNode = Node_7;
+  // Procedure_EnterPickingArea();
+  // Procedure_ExitPickingArea();
+  // Procedure_HeadForThrowingArea();
+  Motor_Decode(0, 0, 0);
+  while (1) {
+    ;
+  }
+  // Motion_MoveForwardStable(3);
+  // Motion_MoveLeftStable(2);
+  // // Motor_Decode(0, 0, 0);
+  // // Motion_CorrectAtCross();
+  // Motion_MoveForwardStable(1);
+  // Motion_MoveForwardCrossing(1);
+  // Motion_MoveForwardStable(1);
+  // Motion_MoveForward(0);
 
   while (1) {
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+#define ISHIGH(x, n) (!!(x & (1 << n)))
 
+    printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);
+    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[0], 8), ISHIGH(ptr[0], 7), ISHIGH(ptr[0], 6), ISHIGH(ptr[0], 5), ISHIGH(ptr[0], 4), ISHIGH(ptr[0], 3), ISHIGH(ptr[0], 2), ISHIGH(ptr[0], 1), ISHIGH(ptr[0], 0));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 10), ISHIGH(ptr[2], 10));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 9), ISHIGH(ptr[2], 9));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 8), ISHIGH(ptr[2], 8));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 7), ISHIGH(ptr[2], 7));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 6), ISHIGH(ptr[2], 6));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 5), ISHIGH(ptr[2], 5));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 4), ISHIGH(ptr[2], 4));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 3), ISHIGH(ptr[2], 3));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 2), ISHIGH(ptr[2], 2));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
+    printf("%d                    %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
+    printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
+    HAL_Delay(200);
   }
 }
 
@@ -59,6 +87,7 @@ void Main_(void) {
 
   Procedure_Default();
   Procedure_HeadForPickingArea();
+  Procedure_EnterPickingArea();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_HeadForPickingAreaSecondly();
@@ -457,7 +486,7 @@ void Main_XXX(void) {
 //       // }
 //       Motion_CorrectWhenMovingAtY();
 //       HAL_Delay(50);
-//     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
 // #define ISHIGH(x, n) (!!(x & (1 << n)))
 
 //     printf("%x,%x,%x,%x\r\n", ptr[0], ptr[1], ptr[2], ptr[3]);

@@ -143,14 +143,15 @@ void Procedure_Default(void) {
     while (1) {
         Motion_CorrectWhenMovingAtY();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (ptr[1] || ptr[2]) {
+        if (count_bits(ptr[3]) > 5) {
             // 压到黑线了
             break;
         }
     }
-    Motion_MoveForward(MOTION_LOW_SPEED);
+    Motion_MoveForward(MOTION_HIGH_SPEED);
     Motion_CorrectWhenMovingAtY();
     // 不停，直接进入下一阶段
+    HAL_Delay(100);
 
     /*TODO*/
 }
@@ -162,7 +163,9 @@ void Procedure_HeadForPickingArea(void) {
     // 到达结点4
     Motion_MoveLeftStable(2);
     // 越障
-    Motion_MoveForwardCrossing(3);
+    Motion_MoveForwardStable(1);
+    Motion_MoveForwardCrossing(1);
+    Motion_MoveForwardStable(1);
     // 到达取球区门口
     // 转到EnterPickingArea
     /*TODO*/
@@ -198,12 +201,14 @@ void Procedure_EnterPickingArea(void) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
         if (count_bits(ptr[2]) >= 5) {
+            printf("Enter Node 8 \r\n");
             break;
         }
     }
-    Motion_MoveToLeft(0);
+    // Motion_MoveToLeft(0);
     // Motion_CorrectInPickingArea();
     Motion_CurrentNodeUpdate();
+    HAL_Delay(100);
 
     // To node 9
     Motion_MoveLeftStableInPickingArea(1);
@@ -265,10 +270,13 @@ void Procedure_EnterPickingArea(void) {
         if (READ(info.info, MASK(i))) {
             BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
         } else {
-            BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
+            BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
+            // BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
         }
     }
-
+    ///*********************************************************************************88
+    // return;
+    ///*********************************************************************************88
 
     // 捡球
     if (BallStatus[16 * 2] == isBasketball || BallStatus[16 * 2 + 1] == isBasketball) {
@@ -328,10 +336,25 @@ void Procedure_ExitPickingArea(void) {
     }
 
     // 特判返回Node_7
-    Motion_MoveToRight(MOTION_HIGH_SPEED);
-    HAL_Delay(500);
-    Motion_MoveToRight(0);
-    Motion_CorrectAtCross();
+    Motion_MoveToRight(MOTION_LOW_SPEED);
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    while (1) {
+        Motion_CorrectWhenMovingAtX();
+        ptr = Sensor_GetCurrentInfo();
+
+        if (count_bits(ptr[1]) > 5) {
+            Motion_MoveToRight(MOTION_LOW_SPEED - 10);
+            while (1) {
+                ptr = Sensor_GetCurrentInfo();
+                if (IsActive(ptr[0], 6) || IsActive(ptr[3], 6)) {
+                    break;
+                }
+            }
+            Motion_MoveToRight(-50);
+            break;
+        }
+    }
+    // Motion_CorrectAtCross();
     CurrentNode = Node_7;
 
 
@@ -340,17 +363,20 @@ void Procedure_ExitPickingArea(void) {
 
 void Procedure_HeadForThrowingArea(void) {
     CurrentProcedure = eProcedure_HeadForThrowingArea;
-    Motion_MoveBackwardCrossing(3);
+    Motion_MoveBackwardStable(1);
+    Motion_MoveBackwardCrossing(1);
+    Motion_MoveBackwardStable(1);
 
-    // 想办法停在一个不错的地方
-    Motion_MoveToLeft(MOTION_LOW_SPEED);
-    uint16_t distance;
-    while ((distance = Sensor_GetLeftDistance()) >= 114514) {
-        Motion_CorrectWhenMovingAtX();
-    }
-    Motion_MoveToLeft(0);
+    // Motion_CorrectWhenThrowing();
+
+    // // 想办法停在一个不错的地方
+    // Motion_MoveToLeft(MOTION_LOW_SPEED);
+    // uint16_t distance;
+    // while ((distance = Sensor_GetLeftDistance()) >= 114514) {
+    //     Motion_CorrectWhenMovingAtX();
+    // }
+    // Motion_MoveToLeft(0);
     // 老规矩，修正
-    Motion_CorrectWhenThrowing();
 
     /*TODO*/
 }

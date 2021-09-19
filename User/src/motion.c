@@ -126,19 +126,30 @@ void Motion_MoveFromBeginningArea(node_t To) {
 
 void Motion_MoveLeftStable(uint8_t num) {
     uint8_t isBetweenNode = 0;
-    Motion_MoveToLeft(MOTION_HIGH_SPEED);
+    Motion_MoveToLeft(MOTION_HIGH_SPEED - 10);
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (count_bits(ptr[2]) >= 6 && isBetweenNode) {
-            isBetweenNode = 0;
-            Motion_CurrentNodeUpdate();
-            --num;
-            // 剩余结点数减一
-            printf("Decreased number %d to %d\r\n", num + 1, num);
+        if (count_bits(ptr[2]) >= 5) {
+            if (isBetweenNode) {
+                isBetweenNode = 0;
+                Motion_CurrentNodeUpdate();
+                --num;
+                printf("Decreased number %d to %d\r\n", num + 1, num);
+                // 剩余结点数减一
+            }
         } else {
             isBetweenNode = 1;
         }
+        // if (count_bits(ptr[2]) >= 6 && isBetweenNode) {
+        //     isBetweenNode = 0;
+        //     Motion_CurrentNodeUpdate();
+        //     --num;
+        //     // 剩余结点数减一
+        //     printf("Decreased number %d to %d\r\n", num + 1, num);
+        // } else {
+        //     isBetweenNode = 1;
+        // }
         if (!num) {
             // 即将到达目的地
             Motion_MoveToLeft(MOTION_LOW_SPEED - 23);
@@ -162,15 +173,26 @@ void Motion_MoveRightStable(uint8_t num) {
     Motion_MoveToRight(MOTION_HIGH_SPEED);
     while (1) {
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (count_bits(ptr[1]) >= 5 && isBetweenNode) {
-            // 如果这时两边首次没有示数，即首次进入无节点的区域
-            isBetweenNode = 0;
-            Motion_CurrentNodeDecreaseUpdate();
-            --num;
-            // 剩余结点数减一
+        if (count_bits(ptr[1]) >= 5) {
+            if (isBetweenNode) {
+                isBetweenNode = 0;
+                Motion_CurrentNodeDecreaseUpdate();
+                --num;
+                printf("Decreased number %d to %d\r\n", num + 1, num);
+                // 剩余结点数减一
+            }
         } else {
             isBetweenNode = 1;
         }
+        // if (count_bits(ptr[1]) >= 5 && isBetweenNode) {
+        //     // 如果这时两边首次没有示数，即首次进入无节点的区域
+        //     isBetweenNode = 0;
+        //     Motion_CurrentNodeDecreaseUpdate();
+        //     --num;
+        //     // 剩余结点数减一
+        // } else {
+        //     isBetweenNode = 1;
+        // }
         Motion_CorrectWhenMovingAtX();
         if (!num) {
             // 即将到达目的地
@@ -196,16 +218,26 @@ void Motion_MoveForwardStable(uint8_t num) {
     while (1) {
         Motion_CorrectWhenMovingAtY();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (count_bits(ptr[3]) >= 5 && isBetweenNode) {
-            // 如果这时两边首次没有示数，即首次进入无节点的区域
-            isBetweenNode = 0;
-            Motion_CurrentNodeUpdate();
-            --num;
-            printf("Decreased number %d to %d\r\n", num + 1, num);
-            // 剩余结点数减一
+        if (count_bits(ptr[3]) >= 5) {
+            if (isBetweenNode) {
+                isBetweenNode = 0;
+                Motion_CurrentNodeUpdate();
+                --num;
+                printf("Decreased number %d to %d\r\n", num + 1, num);
+                // 剩余结点数减一
+            }
         } else {
             isBetweenNode = 1;
         }
+        // if (count_bits(ptr[3]) >= 5 && isBetweenNode) {
+        //     isBetweenNode = 0;
+        //     Motion_CurrentNodeUpdate();
+        //     --num;
+        //     printf("Decreased number %d to %d\r\n", num + 1, num);
+        //     // 剩余结点数减一
+        // } else {
+        //     isBetweenNode = 1;
+        // }
         if (!num) {
             // 即将到达目的地
             Motion_MoveForward(MOTION_LOW_SPEED - 20);
@@ -229,16 +261,27 @@ void Motion_MoveBackwardStable(uint8_t num) {
     Motion_MoveBackward(MOTION_HIGH_SPEED);
     while (1) {
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (count_bits(ptr[0]) >= 5 && isBetweenNode) {
-            // 如果这时两边首次没有示数，即首次进入无节点的区域
-            isBetweenNode = 0;
-            Motion_CurrentNodeDecreaseUpdate();
-            --num;
-            // 剩余结点数减一
-            printf("Decreased number %d to %d\r\n", num + 1, num);
+        if (count_bits(ptr[0]) >= 5) {
+            if (isBetweenNode) {
+                isBetweenNode = 0;
+                Motion_CurrentNodeDecreaseUpdate();
+                --num;
+                printf("Decreased number %d to %d\r\n", num + 1, num);
+                // 剩余结点数减一
+            }
         } else {
             isBetweenNode = 1;
         }
+        // if (count_bits(ptr[0]) >= 5 && isBetweenNode) {
+        //     // 如果这时两边首次没有示数，即首次进入无节点的区域
+        //     isBetweenNode = 0;
+        //     Motion_CurrentNodeDecreaseUpdate();
+        //     --num;
+        //     // 剩余结点数减一
+        //     printf("Decreased number %d to %d\r\n", num + 1, num);
+        // } else {
+        //     isBetweenNode = 1;
+        // }
         Motion_CorrectWhenMovingAtY();
         if (!num) {
             // 即将到达目的地
@@ -259,25 +302,38 @@ void Motion_MoveBackwardStable(uint8_t num) {
 }
 
 void Motion_MoveLeftStableInPickingArea(uint8_t num) {
-    Motion_MoveToLeft(MOTION_LOW_SPEED);
+    uint8_t HasLine = 1;
+    Motion_MoveToLeft(MOTION_LOW_SPEED - 5);
     while (1) {
-        TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (IsActive(ptr[0], 6) || IsActive(ptr[3], 6)) {
-            Motion_CurrentNodeUpdate();
-            --num;
-        }
         Motion_CorrectWhenMovingAtX();
-        if (num == 1) {
-            Motion_MoveToLeft(15);
+        TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+        // if (IsActive(ptr[0], 5) || IsActive(ptr[3], 5)) {
+        if (count_bits(ptr[2]) >= 5) {
+            if (HasLine) {
+                HasLine = 0;
+                --num;
+                Motion_CurrentNodeUpdate();
+            }
+        } else {
+            HasLine = 1;
+        }
+
+        // if (num && ) {
+        //     Motion_CurrentNodeUpdate();
+        //     --num;
+        // }
+        // if (num == 1) {
+        if (!num) {
+            Motion_MoveToLeft(10);
             while (1) {
+                Motion_CorrectWhenMovingAtX();
                 ptr = Sensor_GetCurrentInfo();
-                if (IsActive(ptr[0], 4) || IsActive(ptr[3], 4)) {
+                if (IsActive(ptr[0], 3) || IsActive(ptr[3], 3)) {
                     break;
                 }
-                Motion_CorrectWhenMovingAtX();
             }
             Motion_MoveToLeft(0);
-            Motion_CurrentNodeUpdate();
+            // Motion_CurrentNodeUpdate();
             return;
         }
     }
@@ -285,16 +341,23 @@ void Motion_MoveLeftStableInPickingArea(uint8_t num) {
 }
 
 void Motion_MoveRightStableInPickingArea(uint8_t num) {
-    Motion_MoveToRight(MOTION_LOW_SPEED);
+    uint8_t HasLine = 1;
+    Motion_MoveToRight(MOTION_LOW_SPEED - 5);
     while (1) {
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (IsActive(ptr[0], 2) || IsActive(ptr[3], 2)) {
-            Motion_CurrentNodeDecreaseUpdate();
-            --num;
+        if (IsActive(ptr[0], 6) || IsActive(ptr[3], 6)) {
+            if (HasLine) {
+                HasLine = 0;
+                Motion_CurrentNodeDecreaseUpdate();
+                --num;
+            }
+        } else {
+            HasLine = 1;
         }
         Motion_CorrectWhenMovingAtX();
-        if (num == 1) {
-            Motion_MoveToRight(15);
+        // if (num == 1) {
+        if (!num) {
+            Motion_MoveToRight(10);
             while (1) {
                 ptr = Sensor_GetCurrentInfo();
                 if (IsActive(ptr[0], 4) || IsActive(ptr[3], 4)) {
@@ -303,7 +366,7 @@ void Motion_MoveRightStableInPickingArea(uint8_t num) {
                 Motion_CorrectWhenMovingAtX();
             }
             Motion_MoveToRight(0);
-            Motion_CurrentNodeDecreaseUpdate();
+            // Motion_CurrentNodeDecreaseUpdate();
             return;
         }
     }
@@ -319,7 +382,7 @@ void Motion_MoveForwardCrossing(uint8_t num) {
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
         if (count_bits(ptr[3]) >= 5) {
             // 即将到达目的地
-            Motion_MoveForward(MOTION_LOW_SPEED - 20);
+            Motion_MoveForward(MOTION_LOW_SPEED - 5);
             while (1) {
                 ptr = Sensor_GetCurrentInfo();
                 if (ptr[1] & (1 << 5) || ptr[2] & (1 << 5)) {
@@ -327,7 +390,7 @@ void Motion_MoveForwardCrossing(uint8_t num) {
                 }
             }
             Motion_MoveForward(-40);
-            CurrentNode = Node_7;
+            CurrentNode = Node_6;
             // ???? Sure is it? Why not Node_6?
             // Motion_CorrectAtCross();
             return;
@@ -346,7 +409,7 @@ void Motion_MoveBackwardCrossing(uint8_t num) {
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
         if (count_bits(ptr[0]) >= 5) {
             // 即将到达目的地
-            Motion_MoveForward(MOTION_LOW_SPEED - 23);
+            Motion_MoveBackward(MOTION_LOW_SPEED - 10);
             while (1) {
                 ptr = Sensor_GetCurrentInfo();
                 if (ptr[1] & (1 << 5) || ptr[2] & (1 << 5)) {
@@ -439,6 +502,7 @@ void Motion_CorrectAtCross(void) {
  * 
  */
 void Motion_CorrectInPickingArea(void) {
+    return;
     TraceInfo_t *ptr;
     uint8_t Begins[4], Ends[4];
     /*TODO*/
@@ -479,11 +543,17 @@ void Motion_CorrectWhenThrowing(void) {
 #define XXXXXXFLAG 1
 
 uint8_t Motion_PickUpBallForward(void) {
-    Motion_MoveForward(MOTION_LOW_SPEED);
+    Motion_MoveForward(MOTION_LOW_SPEED - 10);
+    printf("Running for balls\r\n");
+    HAL_Delay(400);
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
     while (1) {
         Motion_CorrectWhenMovingAtY();
+        ptr = Sensor_GetCurrentInfo();
 
-        if (XXXXXXFLAG) {
+
+        if (count_bits(ptr[0] > 6)) {
+            HAL_Delay(600);
             break;
         }
     }
@@ -504,12 +574,13 @@ uint8_t Motion_PickUpBallForward(void) {
     Steer_Init();
 
 
-    Motion_MoveBackward(MOTION_LOW_SPEED);
+    Motion_MoveBackward(MOTION_LOW_SPEED - 10);
 
     while (1) {
         Motion_CorrectWhenMovingAtY();
+        ptr = Sensor_GetCurrentInfo();
 
-        if (XXXXXXFLAG) {
+        if (IsActive(ptr[1], 6) || IsActive(ptr[2], 6)) {
             break;
         }
     }
@@ -521,5 +592,48 @@ uint8_t Motion_PickUpBallForward(void) {
 
 uint8_t Motion_PickUpBallBackward(void) {
     /*TODO*/
+    Motion_MoveBackward(MOTION_LOW_SPEED - 10);
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    HAL_Delay(400);
+    while (1) {
+        Motion_CorrectWhenMovingAtY();
+        ptr = Sensor_GetCurrentInfo();
+
+
+        if (count_bits(ptr[3] > 6)) {
+            HAL_Delay(600);
+            break;
+        }
+    }
+
+    Motion_MoveBackward(0);
+
+    ARM_Backward_TalonOpen();
+    ARM_Backward_Raise();
+    HAL_Delay(200);
+    ARM_Backward_TakeBall();
+    ARM_Backward_TalonClose();
+    HAL_Delay(200);
+    ARM_Backward_Raise();
+    HAL_Delay(200);
+    ARM_Backward_PutDown();
+    ARM_Backward_TalonOpen();
+    HAL_Delay(200);
+    Steer_Init();
+
+
+    Motion_MoveForward(MOTION_LOW_SPEED - 10);
+
+    while (1) {
+        Motion_CorrectWhenMovingAtY();
+        ptr = Sensor_GetCurrentInfo();
+
+        if (IsActive(ptr[1], 3) || IsActive(ptr[2], 3)) {
+            break;
+        }
+    }
+    Motion_MoveForward(0);
+
+    return 1;
 }
 
