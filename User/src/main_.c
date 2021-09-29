@@ -36,22 +36,15 @@ void TEST_MAIN_FUNCTION(void) {
 
   // Procedure_Default();
   // Procedure_HeadForPickingArea();
-  CurrentNode = Node_7;
+  // CurrentNode = Node_7;
   // Procedure_EnterPickingArea();
   // Procedure_ExitPickingArea();
   // Procedure_HeadForThrowingArea();
+  // Procedure_StayInThrowingArea();
   Motor_Decode(0, 0, 0);
-  while (1) {
-    ;
-  }
-  // Motion_MoveForwardStable(3);
-  // Motion_MoveLeftStable(2);
-  // // Motor_Decode(0, 0, 0);
-  // // Motion_CorrectAtCross();
-  // Motion_MoveForwardStable(1);
-  // Motion_MoveForwardCrossing(1);
-  // Motion_MoveForwardStable(1);
-  // Motion_MoveForward(0);
+  // while (1) {
+  //   ;
+  // }
 
   while (1) {
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -81,7 +74,9 @@ void Main_(void) {
   Debug_Init();
   Steer_Init();
   HAL_TIM_Base_Start_IT(&htim5);
-  HAL_Delay(2000);
+  HAL_Delay(1000);
+  ARM_Forward_TalonClose();
+  ARM_Backward_TalonClose();
 
   TEST_MAIN_FUNCTION();
 
@@ -90,17 +85,27 @@ void Main_(void) {
   Procedure_EnterPickingArea();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
+  Procedure_StayInThrowingArea();
+
   Procedure_HeadForPickingAreaSecondly();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
+  Procedure_StayInThrowingArea();
+
   Procedure_HeadForPickingAreaSecondly();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
+  Procedure_StayInThrowingArea();
+
   Procedure_HeadForPickingAreaSecondly();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
+  Procedure_StayInThrowingArea();
 
   printf("Seems to have accomplished the tasks\r\n");
+
+  ARM_BOTH_DANCE();
+  HAL_Delay(1000);
 
   while (1) {
     ;

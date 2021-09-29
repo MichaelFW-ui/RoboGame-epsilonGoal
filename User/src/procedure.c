@@ -33,6 +33,8 @@
 #include "motion.h"
 #include "position.h"
 #include "sensor.h"
+#include "cannon.h"
+#include "pushrod.h"
 
 Procedure_t CurrentProcedure = eProcedure_Default;
 uint8_t CurrentBallCnt = 0;
@@ -270,13 +272,13 @@ void Procedure_EnterPickingArea(void) {
         if (READ(info.info, MASK(i))) {
             BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
         } else {
-            BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
-            // BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
+            // BallStatus[(CurrentNode - 1) * 2 + i] = isBasketball;
+            BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
         }
     }
-    ///*********************************************************************************88
+    ///***********************************************************************//
     // return;
-    ///*********************************************************************************88
+    ///***********************************************************************//
 
     // 捡球
     if (BallStatus[16 * 2] == isBasketball || BallStatus[16 * 2 + 1] == isBasketball) {
@@ -366,58 +368,78 @@ void Procedure_HeadForThrowingArea(void) {
     Motion_MoveBackwardStable(1);
     Motion_MoveBackwardCrossing(1);
     Motion_MoveBackwardStable(1);
-
-    // Motion_CorrectWhenThrowing();
-
-    // // 想办法停在一个不错的地方
-    // Motion_MoveToLeft(MOTION_LOW_SPEED);
-    // uint16_t distance;
-    // while ((distance = Sensor_GetLeftDistance()) >= 114514) {
-    //     Motion_CorrectWhenMovingAtX();
-    // }
-    // Motion_MoveToLeft(0);
-    // 老规矩，修正
-
-    /*TODO*/
 }
 
 void Procedure_StayInThrowingArea(void) {
     CurrentProcedure = eProcedure_StayInThrowingArea;
-    /*TODO*/
+
+    Cannon_SetTargetSpeed(4700);
+    Motion_CorrectWhenThrowing();
+
     // 发射第一次
     /*TODO*/
-
-    HAL_Delay(1000);
+    Pushrod_MoveBackward(60000);
+    HAL_Delay(500);
     // 老规矩，修正
     Motion_CorrectWhenThrowing();
+    
     // 发射第二次
     /*TODO*/
-    
-    HAL_Delay(1000);
+    Pushrod_MoveBackward(60000);
+    HAL_Delay(500);
     // 老规矩，修正
     Motion_CorrectWhenThrowing();
     // 步进电机归位
-    /*TODO*/
 
+    Pushrod_MoveForward(120000);
+    Cannon_SetTargetSpeed(0);
+    /*TODO*/
 }
 
 void Procedure_HeadForPickingAreaSecondly(void) {
     CurrentProcedure = eProcedure_HeadForPickingAreaSecondly;
-    // 特判返回Node 4
-    Motion_MoveToRight(MOTION_LOW_SPEED);
-    HAL_Delay(500);
+    // // 特判返回Node 4
+    // Motion_MoveToRight(MOTION_LOW_SPEED);
+    // HAL_Delay(500);
+    // Motion_MoveToRight(0);
+    // Motion_CorrectAtCross();
+
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+
+    // To Node 4
+    Motion_MoveToRight(MOTION_LOW_SPEED - 10);
+    while (1) {
+        Motion_CorrectWhenMovingAtX();
+        ptr = Sensor_GetCurrentInfo();
+        if (IsActive(ptr[0], 6) || IsActive(ptr[3], 6)) {
+            break;
+        }
+    }
     Motion_MoveToRight(0);
-    Motion_CorrectAtCross();
+
 
     // To Node 7
-    Motion_MoveForwardCrossing(3);
-    Motion_CorrectAtCross();
-    
-    // To Node 8
+    Motion_MoveForwardStable(1);
+    Motion_MoveForwardCrossing(1);
+    Motion_MoveForwardStable(1);
+}
+
+void Procedure_EnterPickingAreaSecondly(void) {
+
+    // 到达结点8
     Motion_MoveToLeft(MOTION_LOW_SPEED);
-    HAL_Delay(500);
-    Motion_MoveToLeft(0);
-    Motion_CorrectInPickingArea();
+    while (1) {
+        Motion_CorrectWhenMovingAtX();
+        TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+        if (count_bits(ptr[2]) >= 5) {
+            printf("Enter Node 8 \r\n");
+            break;
+        }
+    }
+    // Motion_MoveToLeft(0);
+    // Motion_CorrectInPickingArea();
+    Motion_CurrentNodeUpdate();
+    HAL_Delay(100);
 
     node_t beg = Node_8;
     // 找最右边的一个篮球
@@ -457,7 +479,6 @@ void Procedure_HeadForPickingAreaSecondly(void) {
 
     /*TODO*/
 }
-
 
 #endif // CROSSOVER_OVERALL
 

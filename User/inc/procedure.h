@@ -24,7 +24,8 @@ typedef enum {
     eProcedure_ExitPickingArea = 3u,
     eProcedure_HeadForThrowingArea = 4u,
     eProcedure_StayInThrowingArea = 5u,
-    eProcedure_HeadForPickingAreaSecondly = 6u
+    eProcedure_HeadForPickingAreaSecondly = 6u,
+    eProcedure_EnterPickingAreaSecondly = 7u
 } Procedure_t;
 
 
@@ -61,6 +62,8 @@ void Procedure_HeadForThrowingArea(void);
 void Procedure_StayInThrowingArea(void);
 
 void Procedure_HeadForPickingAreaSecondly(void);
+
+void Procedure_EnterPickingAreaSecondly(void);
 
 
 /*            Procedures during the competition end here.                     */

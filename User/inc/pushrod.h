@@ -62,7 +62,7 @@ __STATIC_INLINE void Pushrod_SetDirection(Pushrod_DirectionTypeDef dir) {
  */
 __STATIC_INLINE void Pushrod_MoveForward(Pushrod_Distance_t distance) {
   Pushrod_DistanceInstance = distance;
-  Pushrod_SetDirection(Pushrod_CW);
+  Pushrod_SetDirection(Pushrod_CCW);
 }
 /**
  * @brief 推杆后退
@@ -72,7 +72,7 @@ __STATIC_INLINE void Pushrod_MoveForward(Pushrod_Distance_t distance) {
  */
 __STATIC_INLINE void Pushrod_MoveBackward(Pushrod_Distance_t distance) {
   Pushrod_DistanceInstance = distance;
-  Pushrod_SetDirection(Pushrod_CCW);
+  Pushrod_SetDirection(Pushrod_CW);
 }
 
 /**

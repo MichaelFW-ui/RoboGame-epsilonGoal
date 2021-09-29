@@ -21,18 +21,6 @@
 
 extern TraceInfo_t CurrentTrace[4];
 #define NULL_VALUE 0
-#define SWAP(a, b) (a ^= b ^= a ^= b)
-#define REBUILD(x) (x = ((x & 0x00FF) << 8) | ((x & 0xFF00) >> 8))
-
-// __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentAngle(void) {
-//     /*TODO*/
-//     return NULL_VALUE;
-// }
-
-// __STATIC_FORCEINLINE MotorInput_t Sensor_GetCurrentAngularVelocity(void) {
-//     /*TODO*/
-//     return NULL_VALUE;
-// }
 
 __STATIC_INLINE void Sensor_RefreshUART(UART_HandleTypeDef *hd) {
     UNUSED(hd);
@@ -43,18 +31,19 @@ __STATIC_INLINE void Sensor_RefreshUART(UART_HandleTypeDef *hd) {
 
 __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
     uint16_t cmd = 0x8000;
-    HAL_StatusTypeDef ret = HAL_UART_Transmit(&huart1, (uint8_t *)&cmd, 2, 0x05ff);
+    HAL_StatusTypeDef ret = HAL_UART_Transmit(&huart1, (uint8_t *)&cmd, 2, 0x004f);
     if (ret != HAL_OK) {
         printf("Failed to transmit 'Get Trace' command\r\n");
         Sensor_RefreshUART(&huart1);
     }
-    ret = HAL_UART_Receive(&huart1, (uint8_t*)CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0x06FF);
+    ret = HAL_UART_Receive(&huart1, (uint8_t*)CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0x004F);
     if (ret != HAL_OK) {
         printf("Failed to receive trace information\r\n");
         Sensor_RefreshUART(&huart1);
     } else {
         // printf("Received\r\n");
     }
+    Sensor_RefreshUART(&huart1);
     return CurrentTrace;
 }
 

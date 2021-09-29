@@ -69,11 +69,6 @@ __STATIC_INLINE HAL_StatusTypeDef Com_Receive(Com_DataTypeDef *cmd) {
         return HAL_ERROR;
 
     printf("Received Information %d\r\n", cmd->info);
-    // printf("%d, %d, %d\r\n", READ(cmd->info, 2), READ(cmd->info, 1), READ(cmd->info, 0));
-    // printf("%d, %d, %d\r\n", READ(cmd->info, 5), READ(cmd->info, 4), READ(cmd->info, 3));
-    // SWAP_BIT(cmd->info, 1, 4);
-    // SWAP_BIT(cmd->info, 1, 2);
-    // SWAP_BIT(cmd->info, 3, 4);
     printf("%d, %d, %d\r\n", READ(cmd->info, 4), READ(cmd->info, 2), READ(cmd->info, 0));
     printf("%d, %d, %d\r\n", READ(cmd->info, 5), READ(cmd->info, 3), READ(cmd->info, 1));
 

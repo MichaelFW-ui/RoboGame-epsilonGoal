@@ -17,7 +17,7 @@
 
 #include "motor.h"
 
-#define MOTION_HIGH_SPEED 58
+#define MOTION_HIGH_SPEED 59
 
 #define MOTION_LOW_SPEED 29
 
