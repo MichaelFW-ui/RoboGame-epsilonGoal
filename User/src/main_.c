@@ -42,9 +42,10 @@ void TEST_MAIN_FUNCTION(void) {
   // Procedure_HeadForThrowingArea();
   // Procedure_StayInThrowingArea();
   Motor_Decode(0, 0, 0);
-  // while (1) {
-  //   ;
-  // }
+  while (1) {
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    HAL_Delay(100);
+  }
 
   while (1) {
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -64,7 +65,7 @@ void TEST_MAIN_FUNCTION(void) {
     printf("%d                    %d\r\n", ISHIGH(ptr[1], 1), ISHIGH(ptr[2], 1));
     printf("%d                    %d\r\n", ISHIGH(ptr[1], 0), ISHIGH(ptr[2], 0));
     printf(" %d%d%d%d%d%d%d%d%d\r\n", ISHIGH(ptr[3], 8), ISHIGH(ptr[3], 7), ISHIGH(ptr[3], 6), ISHIGH(ptr[3], 5), ISHIGH(ptr[3], 4), ISHIGH(ptr[3], 3), ISHIGH(ptr[3], 2), ISHIGH(ptr[3], 1), ISHIGH(ptr[3], 0));
-    HAL_Delay(200);
+    HAL_Delay(500);
   }
 }
 
@@ -77,8 +78,13 @@ void Main_(void) {
   HAL_Delay(1000);
   ARM_Forward_TalonClose();
   ARM_Backward_TalonClose();
+  // ARM_Forward_PutDown();
+  // ARM_Backward_PutDown();
 
-  TEST_MAIN_FUNCTION();
+  // CurrentNode = Node_7;
+  // Procedure_EnterPickingArea();
+
+  // TEST_MAIN_FUNCTION();
 
   Procedure_Default();
   Procedure_HeadForPickingArea();
@@ -86,18 +92,23 @@ void Main_(void) {
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_StayInThrowingArea();
+  TEST_MAIN_FUNCTION();
+
 
   Procedure_HeadForPickingAreaSecondly();
+  Procedure_EnterPickingAreaSecondly();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_StayInThrowingArea();
 
   Procedure_HeadForPickingAreaSecondly();
+  Procedure_EnterPickingAreaSecondly();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_StayInThrowingArea();
 
   Procedure_HeadForPickingAreaSecondly();
+  Procedure_EnterPickingAreaSecondly();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_StayInThrowingArea();

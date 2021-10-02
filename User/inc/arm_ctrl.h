@@ -43,10 +43,10 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_PutDown(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TakeBall(void) {
-    Steer_SetAngleByDegree(4, 65);
-    for (int i = 105; i <= 180; i += 10) {
+    Steer_SetAngleByDegree(4, 0);
+    for (int i = 105; i <= 145; i += 5) {
         Steer_SetAngleByDegree(3, i + 15);
-        HAL_Delay(80);
+        HAL_Delay(40);
     }
     return HAL_OK;
 }
@@ -79,10 +79,10 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_PutDown(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TakeBall(void) {
-    Steer_SetAngleByDegree(1, 65);
-    for (int i = 90; i <= 190; i += 10) {
+    Steer_SetAngleByDegree(1, 0);
+    for (int i = 90; i <= 165; i += 5) {
         Steer_SetAngleByDegree(0, i);
-        HAL_Delay(80);
+        HAL_Delay(40);
     }
     return HAL_OK;
 }

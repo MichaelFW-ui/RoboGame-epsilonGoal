@@ -327,6 +327,7 @@ void Debug_CommandHandler(uint8_t *str) {
     case 'K':
       sscanf((char *)str, "K%d,%d\r\n", &n, &ret);
       Steer_SetAngleByDegree(n, ret);
+      break;
     case 'X':
       printf("X: List all the commands\r\n");
       printf("L: Stop the engine, not preventing correcting\r\n");

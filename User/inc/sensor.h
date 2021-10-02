@@ -44,6 +44,10 @@ __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
         // printf("Received\r\n");
     }
     Sensor_RefreshUART(&huart1);
+    CurrentTrace[0] &= (1 << 9) - 1;
+    CurrentTrace[1] &= (1 << 11) - 1;
+    CurrentTrace[2] &= (1 << 11) - 1;
+    CurrentTrace[3] &= (1 << 9) - 1;
     return CurrentTrace;
 }
 

@@ -199,6 +199,7 @@ void Procedure_EnterPickingArea(void) {
     }
     // 到达结点8
     Motion_MoveToLeft(MOTION_LOW_SPEED);
+    HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -210,10 +211,12 @@ void Procedure_EnterPickingArea(void) {
     // Motion_MoveToLeft(0);
     // Motion_CorrectInPickingArea();
     Motion_CurrentNodeUpdate();
+    CurrentNode = Node_8;
     HAL_Delay(100);
 
     // To node 9
     Motion_MoveLeftStableInPickingArea(1);
+    CurrentNode = Node_9;
 
     Com_SendWorkingCommand();
     Com_DataTypeDef info;
@@ -257,6 +260,9 @@ void Procedure_EnterPickingArea(void) {
 
     // To node 15
     Motion_MoveLeftStableInPickingArea(3);
+
+    printf("present at %d\r\n", CurrentNode);
+    CurrentNode = 15;
 
     Com_SendWorkingCommand();
     Com_Receive(&info);
@@ -356,7 +362,6 @@ void Procedure_ExitPickingArea(void) {
             break;
         }
     }
-    // Motion_CorrectAtCross();
     CurrentNode = Node_7;
 
 
@@ -368,31 +373,40 @@ void Procedure_HeadForThrowingArea(void) {
     Motion_MoveBackwardStable(1);
     Motion_MoveBackwardCrossing(1);
     Motion_MoveBackwardStable(1);
+    HAL_Delay(110);
+    Motor_Decode(0, 0, 0);
 }
 
 void Procedure_StayInThrowingArea(void) {
     CurrentProcedure = eProcedure_StayInThrowingArea;
 
+    CurrentNode = Node_4;
+    Motor_Decode(0, 0, 0);
+    Motion_MoveLeftInThrowingArea();
+    Motor_Decode(0, 0, 0);
+
     Cannon_SetTargetSpeed(4700);
-    Motion_CorrectWhenThrowing();
+    HAL_Delay(3000);
+    // Motion_CorrectWhenThrowing();
 
     // 发射第一次
     /*TODO*/
-    Pushrod_MoveBackward(60000);
-    HAL_Delay(500);
     // 老规矩，修正
-    Motion_CorrectWhenThrowing();
+    // Motion_CorrectWhenThrowing();
     
     // 发射第二次
     /*TODO*/
-    Pushrod_MoveBackward(60000);
-    HAL_Delay(500);
+    Pushrod_MoveBackward(65000 * 2);
+    HAL_Delay(7000);
     // 老规矩，修正
-    Motion_CorrectWhenThrowing();
+    // Motion_CorrectWhenThrowing();
     // 步进电机归位
 
-    Pushrod_MoveForward(120000);
+    Pushrod_MoveForward(65000 * 2);
     Cannon_SetTargetSpeed(0);
+
+    Motion_MoveRightInThrowingArea();
+    Motor_Decode(0, 0, 0);
     /*TODO*/
 }
 

@@ -185,7 +185,7 @@ void MotorCtrl_UpdateControlFlow(void) {
   }
 }
 
-#define MIN_FLOW 3
+#define MIN_FLOW 5
 #define MAX_INC 20
 
 

@@ -17,9 +17,9 @@
 
 #include "motor.h"
 
-#define MOTION_HIGH_SPEED 59
+#define MOTION_HIGH_SPEED 54
 
-#define MOTION_LOW_SPEED 29
+#define MOTION_LOW_SPEED 28
 
 typedef enum {
     Node_0 = 0u,
@@ -83,7 +83,8 @@ void Motion_CorrectAtCross(void);
 
 void Motion_CorrectInPickingArea(void);
 
-void Motion_CorrectWhenThrowing(void);
+void Motion_CorrectWhenMovingAtXInThrowingArea(void);
+
 
 
 void Motion_MoveLeftStable(uint8_t num);
@@ -110,6 +111,10 @@ void Motion_MoveRightStableInPickingArea(uint8_t num);
 uint8_t Motion_PickUpBallForward(void);
 
 uint8_t Motion_PickUpBallBackward(void);
+
+void Motion_MoveLeftInThrowingArea(void);
+
+void Motion_MoveRightInThrowingArea(void);
 
 
 /*                    API                                                     */
