@@ -103,7 +103,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_BOTH_DANCE(void) {
     ARM_Backward_Raise();
     HAL_Delay(300);
 
-    
+    return HAL_OK;
 }
 
 #endif // !__ARM_CTRL_H

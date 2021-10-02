@@ -479,8 +479,8 @@ void Motion_CorrectWhenMovingAtX(void) {
 void Motion_CorrectAtCross(void) {
     TraceInfo_t *ptr;
 
-    uint16_t mask9 = 0x7f << (((9 - 1) >> 1) - 3);
-    uint16_t mask11 = 0x7f << (((11 - 1) >> 1) - 3);
+    // uint16_t mask9 = 0x7f << (((9 - 1) >> 1) - 3);
+    // uint16_t mask11 = 0x7f << (((11 - 1) >> 1) - 3);
     uint8_t Begins[4], Ends[4];
 
     for (int i = 0; i < 5; ++i) {

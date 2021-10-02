@@ -262,7 +262,7 @@ void Procedure_EnterPickingArea(void) {
     Motion_MoveLeftStableInPickingArea(3);
 
     printf("present at %d\r\n", CurrentNode);
-    CurrentNode = 15;
+    CurrentNode = Node_15;
 
     Com_SendWorkingCommand();
     Com_Receive(&info);
@@ -479,7 +479,7 @@ void Procedure_EnterPickingAreaSecondly(void) {
             return;
 
         //   向左找
-        beg = CurrentNode + 1;
+        beg = (uint8_t)CurrentNode + 1;
         while (BallStatus[beg * 2] != isBasketball &&
                BallStatus[beg * 2 + 1] != isBasketball) {
             ++beg;
