@@ -348,7 +348,7 @@ void Debug_CommandHandler(uint8_t *str) {
 
 
 void Debug_MotionControlHandler(uint8_t * str) {
-  sscanf((char *)str, "D%d,%d,%d\r\n", &Motor_X, &Motor_Y, &Motor_W);
+  sscanf((char *)str, "D%hd,%hd,%hd\r\n", &Motor_X, &Motor_Y, &Motor_W);
   Motor_Decode(Motor_X, Motor_Y, Motor_W);
   printf("D Set To: %d,%d,%d\r\n", Motor_X, Motor_Y, Motor_W);
 }
