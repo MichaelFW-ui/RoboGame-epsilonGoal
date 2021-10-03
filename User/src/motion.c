@@ -69,14 +69,14 @@ void Motion_CurrentNodeUpdate(void) {
         CurrentNode = ProcedureNodeInitialBack[++j];
     }
 
-    if (CurrentProcedure == eProcedure_HeadForPickingAreaSecondly) {
-        uint8_t k = 0;
-        while (ProcedureNodeSubprogress[k] != CurrentNode) {
-            ++k;
-        }
-        CurrentNode = ProcedureNodeSubprogress[++k];
-    }
-    printf("[Log]Updated to %d\r\n", (uint8_t)CurrentNode);
+    // if (CurrentProcedure == eProcedure_HeadForPickingAreaSecondly) {
+    //     uint8_t k = 0;
+    //     while (ProcedureNodeSubprogress[k] != CurrentNode) {
+    //         ++k;
+    //     }
+    //     CurrentNode = ProcedureNodeSubprogress[++k];
+    // }
+    printf("[N]Updated %d\r\n", (uint8_t)CurrentNode);
 }
 
 
@@ -110,14 +110,15 @@ void Motion_CurrentNodeDecreaseUpdate(void) {
         CurrentNode = ProcedureNodeInitialBack[++j];
     }
 
-    if (CurrentProcedure == eProcedure_HeadForPickingAreaSecondly) {
-        uint8_t k = 0;
-        while (ProcedureNodeSubprogress[k] != CurrentNode) {
-            ++k;
-        }
-        CurrentNode = ProcedureNodeSubprogress[++k];
-    }
-    printf("[Log]Deupdated to %d\r\n", (uint8_t)CurrentNode);
+    // if (CurrentProcedure == eProcedure_HeadForPickingAreaSecondly) {
+    //     uint8_t k = 0;
+    //     while (ProcedureNodeSubprogress[k] != CurrentNode) {
+    //         ++k;
+    //     }
+    //     CurrentNode = ProcedureNodeSubprogress[++k];
+    // }
+
+    printf("[N]Deupdated %d\r\n", (uint8_t)CurrentNode);
 }
 
 // void Motion_MoveFromNodeToNode(node_t From, node_t To) {
@@ -250,7 +251,7 @@ void Motion_MoveForwardStable(uint8_t num) {
         // }
         if (!num) {
             // 即将到达目的地
-            Motion_MoveForward(MOTION_LOW_SPEED - 23);
+            Motion_MoveForward(MOTION_LOW_SPEED - 25);
             while (1) {
                 ptr = Sensor_GetCurrentInfo();
                 if (ptr[1] & (1 << 4) || ptr[2] & (1 << 4)) {
@@ -299,7 +300,7 @@ void Motion_MoveBackwardStable(uint8_t num) {
         Motion_CorrectWhenMovingAtY();
         if (!num) {
             // 即将到达目的地
-            Motion_MoveBackward(MOTION_LOW_SPEED - 23);
+            Motion_MoveBackward(MOTION_LOW_SPEED - 25);
             while (1) {
                 ptr = Sensor_GetCurrentInfo();
                 if (ptr[1] & (1 << 6) || ptr[2] & (1 << 6)) {
@@ -317,8 +318,8 @@ void Motion_MoveBackwardStable(uint8_t num) {
 
 void Motion_MoveLeftStableInPickingArea(uint8_t num) {
     uint8_t HasLine = 1;
-    Motion_MoveToLeft(MOTION_LOW_SPEED - 6);
-    HAL_Delay(200);
+    Motion_MoveToLeft(MOTION_LOW_SPEED);
+    HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -328,6 +329,7 @@ void Motion_MoveLeftStableInPickingArea(uint8_t num) {
                 HasLine = 0;
                 --num;
                 Motion_CurrentNodeUpdate();
+                HAL_Delay(50);
             }
         } else {
             HasLine = 1;
@@ -358,7 +360,7 @@ void Motion_MoveLeftStableInPickingArea(uint8_t num) {
 void Motion_MoveRightStableInPickingArea(uint8_t num) {
     uint8_t HasLine = 1;
     Motion_MoveToRight(MOTION_LOW_SPEED - 6);
-    HAL_Delay(200);
+    HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -590,22 +592,23 @@ void Motion_CorrectWhenMovingAtXInThrowingArea(void) {
 
 void Motion_MoveLeftInThrowingArea(void) {
     Motion_MoveToLeft(MOTION_LOW_SPEED - 10);
-    while (1) {
-        // Motion_CorrectWhenMovingAtXInThrowingArea();
-        Motion_CorrectWhenMovingAtX();
-        TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (count_bits(ptr[1]) >= 6) {
-            Motion_MoveToLeft(0);
-            break;
-        }
-    }
-    for (size_t i = 0; i < 10; i++)
+    // while (1) {
+    //     // Motion_CorrectWhenMovingAtXInThrowingArea();
+    //     Motion_CorrectWhenMovingAtX();
+    //     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    //     if (count_bits(ptr[1]) >= 6) {
+    //         Motion_MoveToLeft(0);
+    //         break;
+    //     }
+    // }
+    for (size_t i = 0; i < 160; i++)
     {
         // Motion_CorrectWhenMovingAtXInThrowingArea();
         Motion_CorrectWhenMovingAtX();
         HAL_Delay(20);
         /* code */
     }
+    Motion_MoveToLeft(0);
     
 
     /*TODO*/
@@ -613,14 +616,16 @@ void Motion_MoveLeftInThrowingArea(void) {
 
 void Motion_MoveRightInThrowingArea(void) {
     /*TODO*/
-    Motion_MoveToRight(MOTION_LOW_SPEED);
+    Motion_MoveToRight(MOTION_LOW_SPEED - 5);
 
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-        if (count_bits(ptr[1]) > 5 || IsActive(ptr[0], 8) || IsActive(ptr[3], 8)) {
+        // if (count_bits(ptr[1]) > 5 || IsActive(ptr[0], 8) || IsActive(ptr[3], 8)) {
+        if (count_bits(ptr[1]) > 5) {
             Motion_MoveToRight(10);
             while (1) {
+                Motion_CorrectWhenMovingAtX();
                 ptr = Sensor_GetCurrentInfo();
                 if (IsActive(ptr[0], 4) || IsActive(ptr[3], 4)) {
                     Motion_MoveToRight(0);
@@ -633,9 +638,9 @@ void Motion_MoveRightInThrowingArea(void) {
 }
 
 uint8_t Motion_PickUpBallForward(void) {
+    printf("RUNNING for balls AT %d Forward\r\n", CurrentNode);
     ARM_Forward_TalonOpen();
     Motion_MoveForward(MOTION_LOW_SPEED - 14);
-    printf("Running for balls\r\n");
     HAL_Delay(400);
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
     // if (CurrentNode == Node_8 || CurrentNode == Node_9 || CurrentNode == Node_10) {
@@ -647,7 +652,7 @@ uint8_t Motion_PickUpBallForward(void) {
         ptr = Sensor_GetCurrentInfo();
 
         if (count_bits(ptr[0] > 6)) {
-            for (int i = 0; i < 28; ++i) {
+            for (int i = 0; i < 33; ++i) {
                 Motion_CorrectWhenMovingAtY();
                 HAL_Delay(50);
             }
@@ -688,13 +693,14 @@ uint8_t Motion_PickUpBallForward(void) {
         }
     }
     Motion_MoveBackward(0);
-
+    HAL_Delay(100);
     return 1;
     /*TODO*/
 }
 
 uint8_t Motion_PickUpBallBackward(void) {
     /*TODO*/
+    printf("RUNNING for balls AT %d Backward\r\n", CurrentNode);
     ARM_Backward_TalonOpen();
     Motion_MoveBackward(MOTION_LOW_SPEED - 10);
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -705,9 +711,9 @@ uint8_t Motion_PickUpBallBackward(void) {
 
 
         if (count_bits(ptr[3] > 5)) {
-            for (int i = 0; i < 13; ++i) {
+            for (int i = 0; i < 27; ++i) {
                 Motion_CorrectWhenMovingAtY();
-                HAL_Delay(90);
+                HAL_Delay(45);
             }
             // HAL_Delay(600);
             break;
@@ -747,6 +753,7 @@ uint8_t Motion_PickUpBallBackward(void) {
         }
     }
     Motion_MoveForward(0);
+    HAL_Delay(100);
 
     return 1;
 }

@@ -22,12 +22,12 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonClose(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonOpen(void) {
-    Steer_SetAngleByDegree(5, 50);
+    Steer_SetAngleByDegree(5, 60);
     return HAL_OK;
 }
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_Raise(void) {
-    Steer_SetAngleByDegree(3, 90);
+    Steer_SetAngleByDegree(3, 75);
     Steer_SetAngleByDegree(4, 105);
     return HAL_OK;
 }
@@ -57,7 +57,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonClose(void) {
 }
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonOpen(void) {
-    Steer_SetAngleByDegree(2, 50);
+    Steer_SetAngleByDegree(2, 60);
     return HAL_OK;
 }
 
@@ -80,7 +80,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_PutDown(void) {
 
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TakeBall(void) {
     Steer_SetAngleByDegree(1, 0);
-    for (int i = 90; i <= 165; i += 5) {
+    for (int i = 90; i <= 170; i += 5) {
         Steer_SetAngleByDegree(0, i);
         HAL_Delay(40);
     }

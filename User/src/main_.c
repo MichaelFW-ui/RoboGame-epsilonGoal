@@ -88,20 +88,21 @@ void Main_(void) {
 
   // TEST_MAIN_FUNCTION();
 
+  // TEST_MAIN_FUNCTION();
   Procedure_Default();
   Procedure_HeadForPickingArea();
   Procedure_EnterPickingArea();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_StayInThrowingArea();
-  TEST_MAIN_FUNCTION();
-
 
   Procedure_HeadForPickingAreaSecondly();
   Procedure_EnterPickingAreaSecondly();
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_StayInThrowingArea();
+
+
 
   Procedure_HeadForPickingAreaSecondly();
   Procedure_EnterPickingAreaSecondly();

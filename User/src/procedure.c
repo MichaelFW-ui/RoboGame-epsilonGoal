@@ -38,7 +38,7 @@
 
 Procedure_t CurrentProcedure = eProcedure_Default;
 uint8_t CurrentBallCnt = 0;
-BallTypeDef BallStatus[40];
+volatile BallTypeDef BallStatus[40];
 
 #define CROSSOVER_OVERALL
 /*
@@ -307,9 +307,11 @@ void Procedure_EnterPickingArea(void) {
     while (1) {
         uint8_t beg = CurrentNode;
         while (BallStatus[beg * 2] != isBasketball &&
-            BallStatus[beg * 2 + 1] != isBasketball) {
+            BallStatus[beg * 2 + 1] != isBasketball && beg > 7) {
             --beg;
         }
+        if (beg == 7)
+            return;
         if (beg != CurrentNode) {
             Motion_MoveRightStableInPickingArea(CurrentNode - beg);
             Motion_CorrectInPickingArea();
@@ -338,13 +340,15 @@ void Procedure_ExitPickingArea(void) {
     // while (CurrentNode != Node_8) {
     //     Motion_MoveRightStableInPickingArea(1);
     // }
-
+    Motor_Decode(0, 0, 0);
+    HAL_Delay(100);
     if (CurrentNode != Node_8) {
         Motion_MoveRightStableInPickingArea(CurrentNode - Node_8);
     }
-
+    CurrentNode = Node_8;
     // 特判返回Node_7
     Motion_MoveToRight(MOTION_LOW_SPEED);
+    HAL_Delay(100);
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
     while (1) {
         Motion_CorrectWhenMovingAtX();
@@ -385,7 +389,7 @@ void Procedure_StayInThrowingArea(void) {
     Motion_MoveLeftInThrowingArea();
     Motor_Decode(0, 0, 0);
 
-    Cannon_SetTargetSpeed(4700);
+    Cannon_SetTargetSpeed(5000);
     HAL_Delay(3000);
     // Motion_CorrectWhenThrowing();
 
@@ -396,13 +400,18 @@ void Procedure_StayInThrowingArea(void) {
     
     // 发射第二次
     /*TODO*/
-    Pushrod_MoveBackward(65000 * 2);
-    HAL_Delay(7000);
+    Pushrod_MoveBackward(65000);
+    HAL_Delay(4000);
+    // Cannon_SetTargetSpeed(5000);
+    // HAL_Delay(3000);
+    Pushrod_MoveBackward(65000);
+    HAL_Delay(3000);
     // 老规矩，修正
     // Motion_CorrectWhenThrowing();
     // 步进电机归位
 
     Pushrod_MoveForward(65000 * 2);
+    CurrentBallCnt = 0;
     Cannon_SetTargetSpeed(0);
 
     Motion_MoveRightInThrowingArea();
@@ -421,39 +430,46 @@ void Procedure_HeadForPickingAreaSecondly(void) {
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
 
     // To Node 4
-    Motion_MoveToRight(MOTION_LOW_SPEED - 10);
-    while (1) {
-        Motion_CorrectWhenMovingAtX();
-        ptr = Sensor_GetCurrentInfo();
-        if (IsActive(ptr[0], 6) || IsActive(ptr[3], 6)) {
-            break;
-        }
-    }
-    Motion_MoveToRight(0);
+    // Motion_MoveToRight(MOTION_LOW_SPEED - 10);
+    // while (1) {
+    //     Motion_CorrectWhenMovingAtX();
+    //     ptr = Sensor_GetCurrentInfo();
+    //     if (IsActive(ptr[0], 6) || IsActive(ptr[3], 6)) {
+    //         break;
+    //     }
+    // }
+    // Motion_MoveToRight(0);
 
 
     // To Node 7
     Motion_MoveForwardStable(1);
     Motion_MoveForwardCrossing(1);
     Motion_MoveForwardStable(1);
+    CurrentNode = Node_7;
+    HAL_Delay(80);
+    Motion_MoveForward(0);
 }
 
 void Procedure_EnterPickingAreaSecondly(void) {
 
     // 到达结点8
-    Motion_MoveToLeft(MOTION_LOW_SPEED);
+    Motion_MoveToLeft(MOTION_LOW_SPEED - 5);
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
         if (count_bits(ptr[2]) >= 5) {
-            printf("Enter Node 8 \r\n");
+            CurrentNode = Node_8;
+            Motion_MoveToLeft(0);
             break;
         }
     }
     // Motion_MoveToLeft(0);
     // Motion_CorrectInPickingArea();
-    Motion_CurrentNodeUpdate();
+    // Motion_CurrentNodeUpdate();
     HAL_Delay(100);
+    printf("Enter area at 8\r\n");
+
+
 
     node_t beg = Node_8;
     // 找最右边的一个篮球
@@ -472,18 +488,22 @@ void Procedure_EnterPickingAreaSecondly(void) {
         if (CurrentBallCnt == 2)
             return;
         if (BallStatus[CurrentNode * 2 + 1] == isBasketball) {
-            CurrentBallCnt += Motion_PickUpBallForward();
+            CurrentBallCnt += Motion_PickUpBallBackward();
             BallStatus[CurrentNode * 2 + 1] = wasBasketball;
         }
         if (CurrentBallCnt == 2)
             return;
 
         //   向左找
-        beg = (uint8_t)CurrentNode + 1;
+        // beg = (uint8_t)CurrentNode + 1;
+        beg = CurrentNode;
         while (BallStatus[beg * 2] != isBasketball &&
-               BallStatus[beg * 2 + 1] != isBasketball) {
+               BallStatus[beg * 2 + 1] != isBasketball && beg < 17) {
             ++beg;
         }
+        if (beg == 17)
+            return;
+        printf("Head for beg:%d\r\n", beg);
         if (beg != CurrentNode)
             Motion_MoveLeftStableInPickingArea(beg - CurrentNode);
     }
