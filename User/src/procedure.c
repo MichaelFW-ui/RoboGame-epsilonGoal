@@ -289,7 +289,6 @@ void Procedure_EnterPickingArea(void) {
     // 捡球
     if (BallStatus[16 * 2] == isBasketball || BallStatus[16 * 2 + 1] == isBasketball) {
         Motion_MoveLeftStableInPickingArea(1);
-        Motion_CorrectInPickingArea();
         if (BallStatus[16 * 2] == isBasketball) {
             BallStatus[16 * 2] = wasBasketball;
             CurrentBallCnt += Motion_PickUpBallForward();
@@ -299,7 +298,6 @@ void Procedure_EnterPickingArea(void) {
             CurrentBallCnt += Motion_PickUpBallBackward();
         }
         Motion_MoveRightStableInPickingArea(1);
-        Motion_CorrectInPickingArea();
     } 
     // 够了？
     if (CurrentBallCnt == 2)
@@ -314,19 +312,16 @@ void Procedure_EnterPickingArea(void) {
             return;
         if (beg != CurrentNode) {
             Motion_MoveRightStableInPickingArea(CurrentNode - beg);
-            Motion_CorrectInPickingArea();
         }
         if (BallStatus[CurrentNode * 2] == isBasketball) {
             BallStatus[CurrentNode * 2] = wasBasketball;
             CurrentBallCnt += Motion_PickUpBallForward();
-            Motion_CorrectInPickingArea();
         }
         if (CurrentBallCnt == 2)
             return;
         if (BallStatus[CurrentNode * 2 + 1] == isBasketball) {
             BallStatus[CurrentNode * 2 + 1] = wasBasketball;
             CurrentBallCnt += Motion_PickUpBallBackward();
-            Motion_CorrectInPickingArea();
         }
         if (CurrentBallCnt == 2)
             return;

@@ -79,10 +79,6 @@ void Motion_CorrectWhenMovingAtY(void);
 
 void Motion_CorrectWhenMovingAtX(void);
 
-void Motion_CorrectAtCross(void);
-
-void Motion_CorrectInPickingArea(void);
-
 void Motion_CorrectWhenMovingAtXInThrowingArea(void);
 
 
@@ -117,32 +113,4 @@ void Motion_MoveLeftInThrowingArea(void);
 void Motion_MoveRightInThrowingArea(void);
 
 
-/*                    API                                                     */
-
-void Motion_MoveFromNodeToNode(node_t from, node_t to);
-
-void Motion_MoveFromBeginningArea(node_t to);
-
-
 #endif // !__MOTION_H
-
-//合理的伪代码
-
-// {
-//     SetSpeed()
-//     while (1) {
-//         Motion_CorrectWhenMoving()
-//         getTraceInfo()
-//         if (between node) {
-//             node++
-//         }
-//         if (node == targetnode) {
-//             SetSpeed(less)
-//             delay()
-//             SetSpeed(stop)
-//             break
-//         }
-//     }
-//     Motion_CorrectAtCross()
-// }
-

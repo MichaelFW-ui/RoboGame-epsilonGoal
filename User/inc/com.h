@@ -42,12 +42,6 @@ typedef struct {
 
 #define COM_HEADER huart5
 
-#define SWAP_BIT(x, a, b)                             \
-    do {                                              \
-        uint8_t ax = x & (1 << a), bx = x & (1 << b); \
-        x -= ax + bx;                                 \
-        x += ((ax >> a) << b) + ((bx >> b) << a);     \
-    } while (0)
 
 #define READ(x, n) (!!((x & (1 << n))))
 
