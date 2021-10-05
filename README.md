@@ -443,24 +443,7 @@ void MotorFeedback_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
                                                   : MotorFeedback_CCW);
     Temp_GetTicks(0);
   }
-  if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_2) {
-    Motor_InformationInstance.Directions[1] =
-      ((Motor_InB_GPIO_Port->IDR & Motor_InB_Pin) ? MotorFeedback_CW
-                                                  : MotorFeedback_CCW);
-    Temp_GetTicks(1);
-  }
-  if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_3) {
-    Motor_InformationInstance.Directions[2] =
-      ((Motor_InC_GPIO_Port->IDR & Motor_InC_Pin) ? MotorFeedback_CW
-                                                  : MotorFeedback_CCW);
-    Temp_GetTicks(2);
-  }
-  if (htim->Channel & HAL_TIM_ACTIVE_CHANNEL_4) {
-    Motor_InformationInstance.Directions[3] =
-      ((Motor_InD_GPIO_Port->IDR & Motor_InD_Pin) ? MotorFeedback_CW
-                                                  : MotorFeedback_CCW);
-    Temp_GetTicks(3);
-  }
+  // 以下省略 ...
 }
 ```
 
@@ -533,47 +516,19 @@ typedef struct {
 #define READ(x, n) (!!((x & (1 << n))))
 
 __STATIC_INLINE HAL_StatusTypeDef Com_SendWorkingCommand(void) {
-    uint8_t cmd = 0xf0;
-    return HAL_UART_Transmit(&COM_HEADER, &cmd, 1, 0x00ff);
+  // ...
 }
 
 __STATIC_INLINE HAL_StatusTypeDef Com_Receive(Com_DataTypeDef *cmd) {
-    HAL_StatusTypeDef ret;
-    cmd->info = 0;
-    ret = HAL_UART_Receive(&COM_HEADER, (uint8_t*)cmd, sizeof(Com_DataTypeDef), 0x0FFF);
-    printf("Tried to receive, and\r\n");
-    if (ret != HAL_OK) {
-        return HAL_ERROR;
-    }
-
-    if (cmd->info != cmd->header)
-        return HAL_ERROR;
-
-    printf("Received Information %d\r\n", cmd->info);
-    printf("%d, %d, %d\r\n", READ(cmd->info, 4), READ(cmd->info, 2), READ(cmd->info, 0));
-    printf("%d, %d, %d\r\n", READ(cmd->info, 5), READ(cmd->info, 3), READ(cmd->info, 1));
-    HAL_Delay(100);
-
-    return ret;
+  // ...
 }
 
-__STATIC_INLINE Com_DataTypeDef *Com_WorkAndReceive(void) {
-    static Com_DataTypeDef info;
-    info.info = 0;
-    Com_SendWorkingCommand();
-    printf("Command sent\r\n");
-    if (HAL_OK == Com_Receive(&info)) {
-        printf("Verified ok\r\n");
-    } else {
-        printf("Failed to receive new information\r\n");
-        info.info = 0;
-        info.header = 0;
-    }
-    return &info;
+__STATIC_INLINE Com_DataTypeDef * Com_WorkAndReceive(void) {
+  // ...
 }
 ```
 
-使用的时候，既可以采取`Com_SendWorkingCommand()` + `Com_Receive(&info)`的组合方式，也可以直接使用`Com_WorkAndReceive()`函数获得。
+使用的时候，既可以采取`Com_SendWorkingCommand()` + `Com_Receive(&info)`的组合方式，也可以直接使用`Com_WorkAndReceive()`函数获得。具体源代码简易参考代码仓库。
 
 ### debug.c
 
@@ -582,12 +537,7 @@ __STATIC_INLINE Com_DataTypeDef *Com_WorkAndReceive(void) {
 在进行具体讨论之前，我们想先提及如下函数。
 
 ```c  
-void Debug_BugCatcher(HAL_StatusTypeDef status) {
-  /*
-   *  TODO: 根据返回值判断是否成功，并记录
-   */
-  return;
-}
+void Debug_BugCatcher(HAL_StatusTypeDef status);
 ```
 
 这是一个我们没有实现的函数。通常意义下，这个函数应当在各种函数返回值中使用，用于判断函数是否有被正确地执行。一般地，由于种种特异化请求，该函数仅仅用于debug模块中，还是比较合适的。但是，由于debug模式一旦出错，可能造成无法输出调试信息。所以便没有什么用处，除非添加其他的错误提示，如信号灯和蜂鸣器。本次实验中，这个函数没有起到任何作用，也没有进行函数实现。
@@ -612,239 +562,10 @@ void Debug_Init(void) {
 其中使用了串口的IDLE中断实现了变长信号的接收，便于调试信号的解析。
 
 ```c  
-void Debug_CommandHandler(uint8_t *str) {
-  printf("Received\r\n");
-  int n = 0;
-  int ret = 0;
-  Com_DataTypeDef info;
-  switch (str[0]) {
-    case 'P':
-      /*    TODO      */
-      Debug_PrintHandler(str);
-      break;
-    case 'S':
-      Debug_SetArgumentHandler(str);
-      break;
-    case 'M':
-      Debug_MotionHandler(str);
-      break;
-    case 'L':
-      Motor_Decode(0, 0, 0);
-      Motor_X = Motor_Y = Motor_W = 0;
-      break;
-    case 'Z':
-      sscanf((char *)str, "Z%d\r\n", &n);
-      Cannon_SetTargetSpeed(n);
-      break;
-    case 'D':
-      Debug_MotionControlHandler(str);
-      break;
-    case 'W':
-      Com_SendWorkingCommand();
-      printf("Command sent\r\n");
-      if (HAL_OK == Com_Receive(&info)) {
-        printf("Verified ok\r\n");
-      } else {
-        printf("Failed to receive new information\r\n");
-      }
-      break;
-    case 'K':
-      sscanf((char *)str, "K%d,%d\r\n", &n, &ret);
-      Steer_SetAngleByDegree(n, ret);
-      break;
-    case 'X':
-      printf("X: List all the commands\r\n");
-      printf("L: Stop the engine, not preventing correcting\r\n");
-      printf("W: Send working command to Pi\r\n");
-      printf("K: Set steer angles\r\n");
-      printf("D: Set motions\r\n");
-      printf("Z: Set cannon speed\r\n");
-      printf("M: Set some motors, but not useful always\r\n");
-      printf("P, S: Not used anylonger\r\n");
-      break;
-
-    default:
-      /*TODO 错误处理*/
-      printf("Not supported command\r\n");
-      break;
-  }
-}
+void Debug_CommandHandler(uint8_t *str);
 ```
 
-我们实现的调试指令如上图所示。具体含义可以阅读代码，可以说是通俗易懂。其中的辅助函数如下。
-
-```c  
-/**
- * @brief 打印指令的控制
- *    TODO
- * 
- *      遇到浮点数可以使用std库的sscanf方法哦
- *      TODO
- *      P{控制单元}{可选编号}{参数，如P/I/D}
- * 
- * @param str 命令的字符串
- * @return None 
- */
-__STATIC_INLINE void Debug_PrintHandler(uint8_t *str) {
-  /*TODO:COMPLETION*/
-  uint8_t cmd, unit, ord, arg;
-  double val;
-  switch(str[1]) {
-    case 'M':
-      sscanf((char *)str, "%c%c%c%c", &cmd, &unit, &ord, &arg);
-      // 设置成为枚举值
-      ord -= 'A';
-      arg = (arg == 'P') ? (Motor_PID_P)
-                         : ((arg == 'I') ? (Motor_PID_I) : (Motor_PID_D));
-      // 设置
-      val = MotorCtrl_GetPIDArguments((MotorOrdinal_t)ord, (MotorPIDTypeDef)arg);
-      printf("%lf\r\n", val);
-      break;
-    default:
-      /*TODO*/
-      break;
-  }
-}
-
-/**
- * @brief 设置函数的控制，主要用于PID调试
- *      遇到浮点数可以使用std库的sscanf方法哦
- *      TODO
- *      S{控制单元}{可选编号}{参数，如P/I/D}{值}
- *      SMAP0.5   设置Motor A 的 P 为 0.5
- * 
- * @param str 
- * @return None 
- */
-__STATIC_INLINE void Debug_SetArgumentHandler(uint8_t *str) {
-  /*TODO:COMPLETION*/
-  uint8_t cmd, unit, ord, arg;
-  double val;
-  switch(str[1]) {
-    case 'M':
-      sscanf((char *)str, "%c%c%c%c%lf", &cmd, &unit, &ord, &arg, &val);
-      // 设置成为枚举值
-      ord -= 'A';
-      arg = (arg == 'P') ? (Motor_PID_P)
-                         : ((arg == 'I') ? (Motor_PID_I) : (Motor_PID_D));
-      // 设置
-      MotorCtrl_SetPIDArguments((MotorOrdinal_t)ord, (MotorPIDTypeDef)arg, val);
-      break;
-    default:
-      /*TODO*/
-      break;
-  }
-}
-
-
-/**
- * @brief 运动控制的信息处理
- * 
- *      格式：M{控制单元}{可选编号}{控制要求}
- *  
- *       控制单元：P推杆，M电机，G摩擦轮，S舵机。
- *       MPU     推杆前进
- *       MPB     推杆后退
- *       MMAU    电机 A 提速
- *       MMBB    电机 B 降速
- *      
- *      警告：使用时请关闭Motor的PID更新！
- *  TODO：Else?
- * @param str 
- * @return None 
- */
-__STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
-  static uint16_t TemporaryMotorCompare[] = {500, 500, 500, 500, 300};
-  switch (str[1]) {
-    case 'P':
-      if (str[2] == 'U') {
-        Pushrod_MoveForward(65000);
-      } else if (str[2] == 'B') {
-        Pushrod_MoveBackward(65000 * 2);
-      }
-      break;
-    case 'M':
-      switch (str[2]) {
-        case 'A':
-          if (str[3] == 'U') {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
-                                  TemporaryMotorCompare[0] += 50);
-          } else {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1,
-                                  TemporaryMotorCompare[0] -= 50);
-          }
-          printf("A%d\r\n", TemporaryMotorCompare[0]);
-          break;
-        case 'B':
-          if (str[3] == 'U') {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
-                                  TemporaryMotorCompare[1] += 50);
-          } else {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2,
-                                  TemporaryMotorCompare[1] -= 50);
-          }
-          printf("B%d\r\n", TemporaryMotorCompare[1]);
-          break;
-        case 'C':
-          if (str[3] == 'U') {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
-                                  TemporaryMotorCompare[2] += 50);
-          } else {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3,
-                                  TemporaryMotorCompare[2] -= 50);
-          }
-          printf("C%d\r\n", TemporaryMotorCompare[2]);
-          break;
-        case 'D':
-          if (str[3] == 'U') {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,
-                                  TemporaryMotorCompare[3] += 50);
-          } else {
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4,
-                                  TemporaryMotorCompare[3] -= 50);
-          }
-          printf("D%d\r\n", TemporaryMotorCompare[3]);
-          break;
-        case 'M':
-          if (str[3] == 'U') {
-            TemporaryMotorCompare[4] += 50;
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, TemporaryMotorCompare[4]);
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, TemporaryMotorCompare[4]);
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, TemporaryMotorCompare[4]);
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, TemporaryMotorCompare[4]);
-          } else {
-            TemporaryMotorCompare[4] -= 50;
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, TemporaryMotorCompare[4]);
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, TemporaryMotorCompare[4]);
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, TemporaryMotorCompare[4]);
-            __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, TemporaryMotorCompare[4]);
-          }
-          printf("M%d\r\n", TemporaryMotorCompare[4]);
-        default:
-          /*TODO*/
-          break;
-      }
-      break;
-    case 'G':
-      /*TODO*/
-      break;
-    case 'S':
-      /*TODO*/
-      break;
-    default:
-      /*TODO错误处理*/
-      break;
-  }
-}
-
-void Debug_MotionControlHandler(uint8_t * str) {
-  sscanf((char *)str, "D%hd,%hd,%hd\r\n", &Motor_X, &Motor_Y, &Motor_W);
-  Motor_Decode(Motor_X, Motor_Y, Motor_W);
-  printf("D Set To: %d,%d,%d\r\n", Motor_X, Motor_Y, Motor_W);
-}
-```
-
-这里的实现也不是复杂的事情，根据注释可以简单理解。值得注意的是，`MM`类的指令只有在关闭PID更新后可以使用。这里也只是在开始时调试使用了，后期完全没有任何作用。有相似作用的便是`P`和`S`指令。我们完全没有使用它们，仅仅是实现了而已。
+我们实现了一个指令解析函数。指令是一个字符串，包括大写字母、数字和英语逗号。根据不同的指令类型，可以得到不同的相应动作。查看源代码后便可以发现其中的实现也不是复杂的事情，根据注释可以简单理解。值得注意的是，`MM`类的指令只有在关闭PID更新后可以使用。这里也只是在开始时调试使用了，后期完全没有任何作用。有相似作用的便是`P`和`S`指令。我们完全没有使用它们，仅仅是实现了而已。
 
 ### position.c
 
@@ -871,6 +592,8 @@ uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t len, uint8_t *lowerbound
     return *lowerbound < *upperbound;
 }
 ```
+
+这个函数实现起来并不复杂，代码也写得比较美观，适合理解与学习。
 
 ### pushrod.c
 

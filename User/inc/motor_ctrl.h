@@ -64,9 +64,9 @@ extern MotorSpeed_t Motor_TargetSpeed[4];
  * @retval 修正后的PWM占空比
  */
 #define Motor_OutputFix(output)                                      \
-    (((uint16_t)(M(output)) < 900)                                   \
+    (((uint16_t)(M(output)) < 850)                                   \
          ? (((uint16_t)(M(output)) > 0) ? (uint16_t)(M(output)) : 0) \
-         : 900)
+         : 850)
 
 /**
  * @brief 修正反馈值用于PID计算
@@ -125,17 +125,17 @@ __STATIC_INLINE void MotorCtrl_Init(void) {
   *   这里放置PID的调试后的参数
   */
 
-  Motor_PID_Speed[0].Kp = 1;
-  Motor_PID_Speed[0].Ki = 0.3;
+  Motor_PID_Speed[0].Kp = 2.1;
+  Motor_PID_Speed[0].Ki = 0.22;
   Motor_PID_Speed[0].Kd = 0;
-  Motor_PID_Speed[1].Kp = 1;
-  Motor_PID_Speed[1].Ki = 0.3;
+  Motor_PID_Speed[1].Kp = 2.1;
+  Motor_PID_Speed[1].Ki = 0.22;
   Motor_PID_Speed[1].Kd = 0;
-  Motor_PID_Speed[2].Kp = 1;
-  Motor_PID_Speed[2].Ki = 0.3;
+  Motor_PID_Speed[2].Kp = 2.1;
+  Motor_PID_Speed[2].Ki = 0.22;
   Motor_PID_Speed[2].Kd = 0;
-  Motor_PID_Speed[3].Kp = 1;
-  Motor_PID_Speed[3].Ki = 0.3;
+  Motor_PID_Speed[3].Kp = 2.1;
+  Motor_PID_Speed[3].Ki = 0.22;
   Motor_PID_Speed[3].Kd = 0;
 }
 
@@ -150,14 +150,15 @@ void MotorCtrl_SetDirection(MotorOrdinal_t Motor, MotorDirection_t direction);
  * @param PIDs PID数据类型
  */
 void __STATIC_INLINE MotorCtrl_CalculateNextOutput(void) {
+  // if (Motor_InformationInstance.ReloadTimes[0] > 1) Motor_PID_Speed[0].Current = 0;
+  // if (Motor_InformationInstance.ReloadTimes[1] > 1) Motor_PID_Speed[1].Current = 0;
+  // if (Motor_InformationInstance.ReloadTimes[2] > 1) Motor_PID_Speed[2].Current = 0;
+  // if (Motor_InformationInstance.ReloadTimes[3] > 1) Motor_PID_Speed[3].Current = 0;
+  if (Motor_InformationInstance.ReloadTimes[0] > 1) Motor_InformationInstance.TimeTicks[0] = 0;
+  if (Motor_InformationInstance.ReloadTimes[1] > 1) Motor_InformationInstance.TimeTicks[1] = 0;
+  if (Motor_InformationInstance.ReloadTimes[2] > 1) Motor_InformationInstance.TimeTicks[2] = 0;
+  if (Motor_InformationInstance.ReloadTimes[3] > 1) Motor_InformationInstance.TimeTicks[3] = 0;
   MotorCtrl_CalculateNextOutputByTargets(Motor_PID_Speed, Motor_TargetSpeed);
-  if (Motor_InformationInstance.ReloadTimes[0] > 1) Motor_PID_Speed[0].Current = 0;
-  if (Motor_InformationInstance.ReloadTimes[1] > 1) Motor_PID_Speed[1].Current = 0;
-  if (Motor_InformationInstance.ReloadTimes[2] > 1) Motor_PID_Speed[2].Current = 0;
-  if (Motor_InformationInstance.ReloadTimes[3] > 1) Motor_PID_Speed[3].Current = 0;
-  // if (Motor_PID_Speed[2].Current < 28 || Motor_PID_Speed[2].Current > 32) {
-  //     printf("Error %f \r\n", Motor_PID_Speed[2].Current);
-  // }
 }
 
 void __STATIC_INLINE MotorCtrl_SetPIDArguments(MotorOrdinal_t motor,

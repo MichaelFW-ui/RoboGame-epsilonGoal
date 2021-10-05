@@ -205,11 +205,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
   /* USER CODE BEGIN Callback 1 */
   if (htim->Instance == TIM2) {
+    printf("A\r\n");
     MotorFeedback_TIM_PeriodElapsedCallback();
   }
 
   if (htim->Instance == TIM4) {
     FrequentlyCalledUpdate();
+    MotorFeedback_TIM_PeriodElapsedCallback();
   }
   if (htim->Instance == TIM5) {
     Pushrod_TIM_UpdateHandler();

@@ -196,7 +196,6 @@ void MotorCtrl_UpdateControlFlow(void) {
  * @return MotorSpeed_t* 当前速度指针，类型是signed的
  */
 MotorSpeed_t *MotorCtrl_UpdateFeedback(MotorFeedback_InformationTypeDef *info) {
-  // 终于忍不住使用了静态变量（
   static MotorSpeed_t motorSpeed_data[4];
   static MotorSpeed_t PreSpeed[4];
   for (int i = 0; i < 4; ++i) {
@@ -207,6 +206,9 @@ MotorSpeed_t *MotorCtrl_UpdateFeedback(MotorFeedback_InformationTypeDef *info) {
       if (motorSpeed_data[i] < MIN_FLOW)
         motorSpeed_data[i] = 0;
       PreSpeed[i] = cur;
+      if (info->ReloadTimes[i] > 1) {
+        motorSpeed_data[i] = 0;
+      }
     } else {
       MotorSpeed_t cur = Motor_FeedbackFix(info->TimeTicks[i]);
       if (cur - PreSpeed[i] > -MAX_INC && cur - PreSpeed[i] < MAX_INC)
@@ -214,6 +216,9 @@ MotorSpeed_t *MotorCtrl_UpdateFeedback(MotorFeedback_InformationTypeDef *info) {
       if (motorSpeed_data[i] > -MIN_FLOW)
         motorSpeed_data[i] = 0;
       PreSpeed[i] = cur;
+      if (info->ReloadTimes[i] > 1) {
+        motorSpeed_data[i] = 0;
+      }
     }
   }
   return motorSpeed_data;

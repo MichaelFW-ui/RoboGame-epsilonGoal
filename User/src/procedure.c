@@ -372,7 +372,6 @@ void Procedure_HeadForThrowingArea(void) {
     Motion_MoveBackwardStable(1);
     Motion_MoveBackwardCrossing(1);
     Motion_MoveBackwardStable(1);
-    HAL_Delay(110);
     Motor_Decode(0, 0, 0);
 }
 

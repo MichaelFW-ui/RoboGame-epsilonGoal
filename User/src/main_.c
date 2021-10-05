@@ -103,7 +103,6 @@ void Main_(void) {
   Procedure_StayInThrowingArea();
 
 
-
   Procedure_HeadForPickingAreaSecondly();
   Procedure_EnterPickingAreaSecondly();
   Procedure_ExitPickingArea();
@@ -118,8 +117,10 @@ void Main_(void) {
 
   printf("Seems to have accomplished the tasks\r\n");
 
-  ARM_BOTH_DANCE();
+  // ARM_BOTH_DANCE();
+  // If you dance, the director will laugh at you.
   HAL_Delay(1000);
+  Steer_Init();
 
   while (1) {
     ;

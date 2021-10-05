@@ -16,6 +16,7 @@
 
 #include "stm32f1xx_hal.h"
 #include "tim.h"
+#include "stdio.h"
 
 #define MOTOR_FEEDBACK_HANDLE htim2
 
@@ -53,6 +54,7 @@ extern MotorFeedback_InformationTypeDef Motor_InformationInstance;
  * @return None 
  */
 __STATIC_INLINE void MotorFeedback_TIM_PeriodElapsedCallback(void) {
+  // printf("E\r\n");
   Motor_InformationInstance.ReloadTimes[0] += 1;
   Motor_InformationInstance.ReloadTimes[1] += 1;
   Motor_InformationInstance.ReloadTimes[2] += 1;

@@ -259,6 +259,7 @@ void Motion_MoveForwardStable(uint8_t num) {
                 }
             }
             Motion_MoveForward(-60);
+            HAL_Delay(100);
             // Motion_CorrectAtCross();
             return;
         }
@@ -308,6 +309,7 @@ void Motion_MoveBackwardStable(uint8_t num) {
                 }
             }
             Motion_MoveBackward(-60);
+            HAL_Delay(100);
             // Motion_CorrectAtCross();
             return;
         }
@@ -359,7 +361,7 @@ void Motion_MoveLeftStableInPickingArea(uint8_t num) {
 
 void Motion_MoveRightStableInPickingArea(uint8_t num) {
     uint8_t HasLine = 1;
-    Motion_MoveToRight(MOTION_LOW_SPEED - 6);
+    Motion_MoveToRight(MOTION_LOW_SPEED);
     HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtX();
