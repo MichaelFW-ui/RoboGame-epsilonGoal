@@ -54,7 +54,6 @@ extern MotorFeedback_InformationTypeDef Motor_InformationInstance;
  * @return None 
  */
 __STATIC_INLINE void MotorFeedback_TIM_PeriodElapsedCallback(void) {
-  // printf("E\r\n");
   Motor_InformationInstance.ReloadTimes[0] += 1;
   Motor_InformationInstance.ReloadTimes[1] += 1;
   Motor_InformationInstance.ReloadTimes[2] += 1;
@@ -68,6 +67,7 @@ __STATIC_INLINE void MotorFeedback_TIM_PeriodElapsedCallback(void) {
  * @return None 
  */
 __STATIC_INLINE void MotorFeedback_Init(void) {
+  HAL_TIM_Base_Start_IT(&MOTOR_FEEDBACK_HANDLE);
   HAL_TIM_IC_Start_IT(&MOTOR_FEEDBACK_HANDLE, TIM_CHANNEL_1);
   HAL_TIM_IC_Start_IT(&MOTOR_FEEDBACK_HANDLE, TIM_CHANNEL_2);
   HAL_TIM_IC_Start_IT(&MOTOR_FEEDBACK_HANDLE, TIM_CHANNEL_3);

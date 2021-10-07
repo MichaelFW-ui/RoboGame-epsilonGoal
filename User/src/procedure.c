@@ -166,6 +166,7 @@ void Procedure_HeadForPickingArea(void) {
     Motion_MoveLeftStable(2);
     // 越障
     Motion_MoveForwardStable(1);
+    // Com_SendWorkingCommand();
     Motion_MoveForwardCrossing(1);
     Motion_MoveForwardStable(1);
     // 到达取球区门口
@@ -282,9 +283,6 @@ void Procedure_EnterPickingArea(void) {
             BallStatus[(CurrentNode - 1) * 2 + i] = isNOTBasketball;
         }
     }
-    ///***********************************************************************//
-    // return;
-    ///***********************************************************************//
 
     // 捡球
     if (BallStatus[16 * 2] == isBasketball || BallStatus[16 * 2 + 1] == isBasketball) {
@@ -383,7 +381,7 @@ void Procedure_StayInThrowingArea(void) {
     Motion_MoveLeftInThrowingArea();
     Motor_Decode(0, 0, 0);
 
-    Cannon_SetTargetSpeed(5000);
+    Cannon_SetTargetSpeed(5200);
     HAL_Delay(3000);
     // Motion_CorrectWhenThrowing();
 
@@ -395,7 +393,7 @@ void Procedure_StayInThrowingArea(void) {
     // 发射第二次
     /*TODO*/
     Pushrod_MoveBackward(65000);
-    HAL_Delay(4000);
+    HAL_Delay(3000);
     // Cannon_SetTargetSpeed(5000);
     // HAL_Delay(3000);
     Pushrod_MoveBackward(65000);
@@ -415,28 +413,12 @@ void Procedure_StayInThrowingArea(void) {
 
 void Procedure_HeadForPickingAreaSecondly(void) {
     CurrentProcedure = eProcedure_HeadForPickingAreaSecondly;
-    // // 特判返回Node 4
-    // Motion_MoveToRight(MOTION_LOW_SPEED);
-    // HAL_Delay(500);
-    // Motion_MoveToRight(0);
-    // Motion_CorrectAtCross();
 
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
 
-    // To Node 4
-    // Motion_MoveToRight(MOTION_LOW_SPEED - 10);
-    // while (1) {
-    //     Motion_CorrectWhenMovingAtX();
-    //     ptr = Sensor_GetCurrentInfo();
-    //     if (IsActive(ptr[0], 6) || IsActive(ptr[3], 6)) {
-    //         break;
-    //     }
-    // }
-    // Motion_MoveToRight(0);
-
-
     // To Node 7
     Motion_MoveForwardStable(1);
+    // Com_SendWorkingCommand();
     Motion_MoveForwardCrossing(1);
     Motion_MoveForwardStable(1);
     CurrentNode = Node_7;
@@ -447,7 +429,7 @@ void Procedure_HeadForPickingAreaSecondly(void) {
 void Procedure_EnterPickingAreaSecondly(void) {
 
     // 到达结点8
-    Motion_MoveToLeft(MOTION_LOW_SPEED - 5);
+    Motion_MoveToLeft(MOTION_LOW_SPEED);
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -501,11 +483,6 @@ void Procedure_EnterPickingAreaSecondly(void) {
         if (beg != CurrentNode)
             Motion_MoveLeftStableInPickingArea(beg - CurrentNode);
     }
-
-
-
-
-    /*TODO*/
 }
 
 #endif // CROSSOVER_OVERALL

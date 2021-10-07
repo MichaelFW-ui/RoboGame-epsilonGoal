@@ -31,6 +31,7 @@ __STATIC_INLINE void Cannon_SetTargetSpeed(int16_t speed) {
   HAL_StatusTypeDef ret = HAL_UART_Transmit(&CANNON_HANDLE, (uint8_t *)&sent.speed, sizeof(sent.speed), 0x00FF);
   if (ret != HAL_OK) {
     printf("Failed to set\r\n");
+    Cannon_SetTargetSpeed(speed);
   } else {
     printf("Set target%d\r\n", speed);
   }

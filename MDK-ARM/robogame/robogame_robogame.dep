@@ -4,7 +4,7 @@ F (armlib_lock_glue.c)(0x611D2023)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x60DDAA1E)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599EDB3E)
 I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x60DDAA1E)
-F (../Core/Src/main.c)(0x615C5D0C)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\main.o --omf_browse robogame\main.crf --depend robogame\main.d)
+F (../Core/Src/main.c)(0x615D7F67)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\main.o --omf_browse robogame\main.crf --depend robogame\main.d)
 I (../Core/Inc/main.h)(0x613B6420)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60DDAA2C)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x613B6420)
@@ -47,7 +47,7 @@ I (..\User\inc\rfid.h)(0x611B1033)
 I (..\User\inc\main_.h)(0x613C8DFC)
 I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 I (..\User\inc\pn5180.h)(0x611B10CE)
 I (..\User\inc\pushrod.h)(0x61487E0A)
@@ -851,7 +851,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x60DDAA2C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x60DDAA2C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x60DDAA2C)
 F (..\User\src\cannon.c)(0x61120127)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\cannon.o --omf_browse robogame\cannon.crf --depend robogame\cannon.d)
-I (..\User\inc\cannon.h)(0x613B6572)
+I (..\User\inc\cannon.h)(0x615D2A21)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60DDAA2C)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x613B6420)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x60DDAA2C)
@@ -885,7 +885,7 @@ I (../Core/Inc/usart.h)(0x613B641F)
 I (../Core/Inc/main.h)(0x613B6420)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 F (..\User\src\com.c)(0x612589A9)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\com.o --omf_browse robogame\com.crf --depend robogame\com.d)
-I (..\User\inc\com.h)(0x6159C8FE)
+I (..\User\inc\com.h)(0x615D568F)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60DDAA2C)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x613B6420)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x60DDAA2C)
@@ -954,24 +954,24 @@ I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (..\User\inc\motor.h)(0x61335EC1)
 I (..\User\inc\pushrod.h)(0x61487E0A)
 I (..\User\inc\delay.h)(0x610D0828)
 I (D:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x599EDB3A)
-I (..\User\inc\com.h)(0x6159C8FE)
+I (..\User\inc\com.h)(0x615D568F)
 I (../Core/Inc/usart.h)(0x613B641F)
-I (..\User\inc\arm_ctrl.h)(0x61598D7A)
+I (..\User\inc\arm_ctrl.h)(0x615E5C31)
 I (..\User\inc\steer_ctrl.h)(0x6148A816)
 I (..\User\inc\pwm_generate.h)(0x61113805)
 I (../Core/Inc/i2c.h)(0x613B641E)
-I (..\User\inc\cannon.h)(0x613B6572)
+I (..\User\inc\cannon.h)(0x615D2A21)
 F (..\User\src\detect.c)(0x60F51EA5)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\detect.o --omf_browse robogame\detect.crf --depend robogame\detect.d)
 F (..\User\src\error.c)(0x60F51EB5)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\error.o --omf_browse robogame\error.crf --depend robogame\error.d)
 F (..\User\src\foc.c)(0x60F51E9D)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\foc.o --omf_browse robogame\foc.crf --depend robogame\foc.d)
-F (..\User\src\main_.c)(0x615C63D9)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\main_.o --omf_browse robogame\main_.crf --depend robogame\main_.d)
+F (..\User\src\main_.c)(0x615D8788)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\main_.o --omf_browse robogame\main_.crf --depend robogame\main_.d)
 I (..\User\inc\main_.h)(0x613C8DFC)
-I (..\User\inc\arm_ctrl.h)(0x61598D7A)
+I (..\User\inc\arm_ctrl.h)(0x615E5C31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60DDAA2C)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x613B6420)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x60DDAA2C)
@@ -1006,22 +1006,22 @@ I (..\User\inc\pwm_generate.h)(0x61113805)
 I (../Core/Inc/i2c.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
-I (..\User\inc\cannon.h)(0x613B6572)
+I (..\User\inc\cannon.h)(0x615D2A21)
 I (../Core/Inc/usart.h)(0x613B641F)
-I (..\User\inc\com.h)(0x6159C8FE)
+I (..\User\inc\com.h)(0x615D568F)
 I (..\User\inc\debug.h)(0x612E1745)
 I (..\User\inc\motion.h)(0x615C63F4)
 I (..\User\inc\motor.h)(0x61335EC1)
 I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (..\User\inc\position.h)(0x6159CF6C)
 I (..\User\inc\procedure.h)(0x61471CE2)
 I (..\User\inc\pushrod.h)(0x61487E0A)
 I (..\User\inc\delay.h)(0x610D0828)
 I (..\User\inc\sensor.h)(0x61567752)
-F (..\User\src\motion.c)(0x615C4CC9)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\motion.o --omf_browse robogame\motion.crf --depend robogame\motion.d)
+F (..\User\src\motion.c)(0x615E71DC)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\motion.o --omf_browse robogame\motion.crf --depend robogame\motion.d)
 I (..\User\inc\motion.h)(0x615C63F4)
 I (..\User\inc\motor.h)(0x61335EC1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60DDAA2C)
@@ -1057,9 +1057,9 @@ I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
-I (..\User\inc\arm_ctrl.h)(0x61598D7A)
+I (..\User\inc\arm_ctrl.h)(0x615E5C31)
 I (..\User\inc\steer_ctrl.h)(0x6148A816)
 I (..\User\inc\pwm_generate.h)(0x61113805)
 I (../Core/Inc/i2c.h)(0x613B641E)
@@ -1102,7 +1102,7 @@ I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 F (..\User\src\motor_ctrl.c)(0x615C589B)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\motor_ctrl.o --omf_browse robogame\motor_ctrl.crf --depend robogame\motor_ctrl.d)
 I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
@@ -1138,11 +1138,11 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x60DDAA2C)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 I (..\User\inc\delay.h)(0x610D0828)
 F (..\User\src\motor_feedback.c)(0x6127A373)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\motor_feedback.o --omf_browse robogame\motor_feedback.crf --depend robogame\motor_feedback.d)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60DDAA2C)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x613B6420)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x60DDAA2C)
@@ -1217,10 +1217,10 @@ I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 I (../Core/Inc/usart.h)(0x613B641F)
-F (..\User\src\procedure.c)(0x615C4B99)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\procedure.o --omf_browse robogame\procedure.crf --depend robogame\procedure.d)
+F (..\User\src\procedure.c)(0x615E50CB)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\procedure.o --omf_browse robogame\procedure.crf --depend robogame\procedure.d)
 I (..\User\inc\procedure.h)(0x61471CE2)
 I (..\User\inc\motion.h)(0x615C63F4)
 I (..\User\inc\motor.h)(0x61335EC1)
@@ -1257,13 +1257,13 @@ I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
-I (..\User\inc\com.h)(0x6159C8FE)
+I (..\User\inc\com.h)(0x615D568F)
 I (../Core/Inc/usart.h)(0x613B641F)
 I (..\User\inc\position.h)(0x6159CF6C)
 I (..\User\inc\sensor.h)(0x61567752)
-I (..\User\inc\cannon.h)(0x613B6572)
+I (..\User\inc\cannon.h)(0x615D2A21)
 I (..\User\inc\pushrod.h)(0x61487E0A)
 I (..\User\inc\delay.h)(0x610D0828)
 F (..\User\src\pushrod.c)(0x6127842C)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\pushrod.o --omf_browse robogame\pushrod.crf --depend robogame\pushrod.d)
@@ -1437,7 +1437,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x60DDAA2C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x60DDAA2C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x60DDAA2C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x60DDAA2C)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
@@ -1853,12 +1853,12 @@ I (..\User\inc\motor_ctrl.h)(0x615C5E3E)
 I (../Core/Inc/tim.h)(0x613B641E)
 I (../Core/Inc/main.h)(0x613B6420)
 I (..\User\inc\pid.h)(0x611E6DCA)
-I (..\User\inc\motor_feedback.h)(0x615C5D19)
+I (..\User\inc\motor_feedback.h)(0x615C7E83)
 I (D:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599EDB3C)
 I (..\User\inc\position.h)(0x6159CF6C)
 I (../Core/Inc/usart.h)(0x613B641F)
 F (..\User\src\arm_ctrl.c)(0x611F1278)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\User\inc -I ..\User\VL53L0X\core\inc -I ..\User\VL53L0X\platform\inc-I.\RTE\_robogame-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F10X_HD -DUSE_HAL_DRIVER -DSTM32F103xE -DSTM32_THREAD_SAFE_STRATEGY="2"-o robogame\arm_ctrl.o --omf_browse robogame\arm_ctrl.crf --depend robogame\arm_ctrl.d)
-I (..\User\inc\arm_ctrl.h)(0x61598D7A)
+I (..\User\inc\arm_ctrl.h)(0x615E5C31)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x60DDAA2C)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x613B6420)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x60DDAA2C)

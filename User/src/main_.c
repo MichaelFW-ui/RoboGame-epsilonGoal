@@ -41,10 +41,10 @@ void TEST_MAIN_FUNCTION(void) {
   // Procedure_HeadForThrowingArea();
   // Procedure_StayInThrowingArea();
   Motor_Decode(0, 0, 0);
-  while (1) {
-    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
-    HAL_Delay(100);
-  }
+  // while (1) {
+  //   TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+  //   HAL_Delay(100);
+  // }
 
   while (1) {
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -77,18 +77,13 @@ void Main_(void) {
   Debug_Init();
   Steer_Init();
   HAL_TIM_Base_Start_IT(&htim5);
-  HAL_Delay(1000);
+  HAL_Delay(200);
   ARM_Forward_TalonClose();
   ARM_Backward_TalonClose();
-  // ARM_Forward_PutDown();
-  // ARM_Backward_PutDown();
-
-  // CurrentNode = Node_7;
-  // Procedure_EnterPickingArea();
+  HAL_Delay(300);
 
   // TEST_MAIN_FUNCTION();
 
-  // TEST_MAIN_FUNCTION();
   Procedure_Default();
   Procedure_HeadForPickingArea();
   Procedure_EnterPickingArea();
@@ -101,7 +96,6 @@ void Main_(void) {
   Procedure_ExitPickingArea();
   Procedure_HeadForThrowingArea();
   Procedure_StayInThrowingArea();
-
 
   Procedure_HeadForPickingAreaSecondly();
   Procedure_EnterPickingAreaSecondly();

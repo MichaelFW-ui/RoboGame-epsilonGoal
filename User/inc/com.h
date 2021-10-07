@@ -54,15 +54,23 @@ __STATIC_INLINE HAL_StatusTypeDef Com_Receive(Com_DataTypeDef *cmd) {
     HAL_StatusTypeDef ret;
     cmd->info = 0;
     ret = HAL_UART_Receive(&COM_HEADER, (uint8_t*)cmd, sizeof(Com_DataTypeDef), 0x0FFF);
-    printf("Tried to receive, and\r\n");
+    printf("Tried to receive:\r\n");
     if (ret != HAL_OK) {
-        return HAL_ERROR;
+        printf("[F]Did not receive the result\r\n");
+        // 重新发送，重新接受
+        Com_SendWorkingCommand();
+        return Com_Receive(cmd);
     }
 
-    if (cmd->info != cmd->header)
-        return HAL_ERROR;
+    if (cmd->info != cmd->header) {
+        printf("[E]result not good\r\n");
+        // 重新发送，重新接受
+        Com_SendWorkingCommand();
+        return Com_Receive(cmd);
+        
+    }
 
-    printf("Received Information %d\r\n", cmd->info);
+    printf("[S]Received Information %d\r\n", cmd->info);
     printf("%d, %d, %d\r\n", READ(cmd->info, 4), READ(cmd->info, 2), READ(cmd->info, 0));
     printf("%d, %d, %d\r\n", READ(cmd->info, 5), READ(cmd->info, 3), READ(cmd->info, 1));
     HAL_Delay(100);
