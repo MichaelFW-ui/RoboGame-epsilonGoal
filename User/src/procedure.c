@@ -375,25 +375,18 @@ void Procedure_HeadForThrowingArea(void) {
 
 void Procedure_StayInThrowingArea(void) {
     CurrentProcedure = eProcedure_StayInThrowingArea;
-
+    
     CurrentNode = Node_4;
     Motor_Decode(0, 0, 0);
     Motion_MoveLeftInThrowingArea();
     Motor_Decode(0, 0, 0);
 
-    Cannon_SetTargetSpeed(5200);
+    Cannon_SetTargetSpeed(5400);
     HAL_Delay(3000);
     // Motion_CorrectWhenThrowing();
 
-    // 发射第一次
-    /*TODO*/
-    // 老规矩，修正
-    // Motion_CorrectWhenThrowing();
-    
-    // 发射第二次
-    /*TODO*/
     Pushrod_MoveBackward(65000);
-    HAL_Delay(3000);
+    HAL_Delay(4000);
     // Cannon_SetTargetSpeed(5000);
     // HAL_Delay(3000);
     Pushrod_MoveBackward(65000);

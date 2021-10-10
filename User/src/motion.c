@@ -609,7 +609,7 @@ void Motion_MoveLeftInThrowingArea(void) {
     //         break;
     //     }
     // }
-    for (size_t i = 0; i < 130; i++)
+    for (size_t i = 0; i < 125; i++)
     {
         // Motion_CorrectWhenMovingAtXInThrowingArea();
         Motion_CorrectWhenMovingAtX();

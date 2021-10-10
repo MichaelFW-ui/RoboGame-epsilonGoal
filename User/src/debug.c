@@ -202,6 +202,8 @@ __STATIC_INLINE void Debug_MotionHandler(uint8_t *str) {
       if (str[2] == 'U') {
         Pushrod_MoveForward(65000);
       } else if (str[2] == 'B') {
+        Pushrod_MoveBackward(65000);
+      } else if (str[2] == 'C') {
         Pushrod_MoveBackward(65000 * 2);
       }
       break;
