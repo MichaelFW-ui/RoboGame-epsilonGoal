@@ -130,14 +130,21 @@ void PID_Calculate_Incremental(PID_InformationTypeDef *handle,
   handle->Previous = error;
   handle->Current = current;
 
+#define MAX_OUTPUT_UNDER_CONTROL 260
 
-  if (handle->Output >= 250) handle->Output = 250;
-  if (handle->Output <= -250) handle->Output = -250;
+  if (handle->Output >= MAX_OUTPUT_UNDER_CONTROL)
+      handle->Output = MAX_OUTPUT_UNDER_CONTROL;
+  if (handle->Output <= -MAX_OUTPUT_UNDER_CONTROL)
+      handle->Output = -MAX_OUTPUT_UNDER_CONTROL;
 
-  if ((uint32_t)handle->Target == 0) {
-    handle->Output = 0;
-    handle->Current = 0;
-    handle->prePrevious = 0;
-    handle->Previous = 0;
+#define MIN_SPEED_UNDER_CONTROL 5
+
+  if ((uint32_t)handle->Target == 0 &&
+      (handle->Current > -MIN_SPEED_UNDER_CONTROL &&
+       handle->Current < MIN_SPEED_UNDER_CONTROL)) {
+      handle->Output      = 0;
+      handle->Current     = 0;
+      handle->prePrevious = 0;
+      handle->Previous    = 0;
   }
 }

@@ -381,19 +381,18 @@ void Procedure_StayInThrowingArea(void) {
     Motion_MoveLeftInThrowingArea();
     Motor_Decode(0, 0, 0);
 
-    Cannon_SetTargetSpeed(5400);
-    HAL_Delay(3000);
-    // Motion_CorrectWhenThrowing();
 
+    // Cannon_SetTargetSpeed(5300);
+    Cannon_SetTargetSpeed(5250);
+    HAL_Delay(5000);
     Pushrod_MoveBackward(65000);
-    HAL_Delay(4000);
-    // Cannon_SetTargetSpeed(5000);
-    // HAL_Delay(3000);
+    HAL_Delay(2500);
+    Cannon_SetTargetSpeed(5250);
+    HAL_Delay(2500);
+    // Cannon_SetTargetSpeed(5500);
+    // HAL_Delay(5000);
     Pushrod_MoveBackward(65000);
     HAL_Delay(3000);
-    // 老规矩，修正
-    // Motion_CorrectWhenThrowing();
-    // 步进电机归位
 
     Pushrod_MoveForward(65000 * 2);
     CurrentBallCnt = 0;
@@ -401,7 +400,6 @@ void Procedure_StayInThrowingArea(void) {
 
     Motion_MoveRightInThrowingArea();
     Motor_Decode(0, 0, 0);
-    /*TODO*/
 }
 
 void Procedure_HeadForPickingAreaSecondly(void) {
