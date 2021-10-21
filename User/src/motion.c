@@ -222,7 +222,7 @@ void Motion_MoveForwardStable(uint8_t num) {
                 return;
             }
             Motion_MoveForward(-20);
-            HAL_Delay(200);
+            HAL_Delay(300);
             Motion_MoveForward(0);
             return;
         }
@@ -264,7 +264,7 @@ void Motion_MoveBackwardStable(uint8_t num) {
                 return;
             }
             Motion_MoveBackward(-20);
-            HAL_Delay(200);
+            HAL_Delay(300);
             Motion_MoveBackward(0);
             return;
         }
@@ -273,7 +273,7 @@ void Motion_MoveBackwardStable(uint8_t num) {
 
 void Motion_MoveLeftStableInPickingArea(uint8_t num) {
     uint8_t HasLine = 1;
-    Motion_MoveToLeft(MOTION_LOW_SPEED);
+    Motion_MoveToLeft(MOTION_LOW_SPEED + 10);
     HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtX();
@@ -307,8 +307,8 @@ void Motion_MoveLeftStableInPickingArea(uint8_t num) {
 
 void Motion_MoveRightStableInPickingArea(uint8_t num) {
     uint8_t HasLine = 1;
-    Motion_MoveToRight(MOTION_LOW_SPEED);
-    HAL_Delay(100);
+    Motion_MoveToRight(MOTION_LOW_SPEED + 10);
+    HAL_Delay(50);
     while (1) {
         Motion_CorrectWhenMovingAtX();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -341,6 +341,7 @@ void Motion_MoveForwardCrossing(uint8_t num) {
     UNUSED(num);
 
     Motion_MoveForward(MOTION_LOW_SPEED);
+    // HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtY();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -364,6 +365,7 @@ void Motion_MoveBackwardCrossing(uint8_t num) {
     UNUSED(num);
 
     Motion_MoveBackward(MOTION_LOW_SPEED);
+    // HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtY();
         TraceInfo_t *ptr = Sensor_GetCurrentInfo();
@@ -532,19 +534,19 @@ void Motion_CorrectWhenMovingAtXInThrowingArea(void) {
 
 void Motion_MoveLeftInThrowingArea(void) {
     Motion_MoveToLeft(MOTION_LOW_SPEED - 10);
-    for (size_t i = 0; i < 125; i++)
+    for (size_t i = 0; i < 111; i++)
     {
         Motion_CorrectWhenMovingAtX();
         HAL_Delay(20);
     }
     Motion_MoveToLeft(0);
-    for (size_t i = 0; i < 50; i++)
-    {
-        Motion_CorrectWhenMovingAtX();
-        HAL_Delay(20);
-    }
-    Motion_MoveToLeft(10);
-    HAL_Delay(500);
+    // for (size_t i = 0; i < 50; i++)
+    // {
+    //     Motion_CorrectWhenMovingAtX();
+    //     HAL_Delay(20);
+    // }
+    // Motion_MoveToLeft(10);
+    // HAL_Delay(500);
     Motor_Decode(0, 0, 0);
     
     
@@ -581,7 +583,7 @@ uint8_t Motion_PickUpBallForward(void) {
         ptr = Sensor_GetCurrentInfo();
 
         if (count_bits(ptr[0] > 6)) {
-            for (int i = 0; i < 31; ++i) {
+            for (int i = 0; i < 27; ++i) {
                 Motion_CorrectWhenMovingAtY();
                 HAL_Delay(50);
             }
@@ -643,7 +645,7 @@ uint8_t Motion_PickUpBallBackward(void) {
 
 
         if (count_bits(ptr[3] > 5)) {
-            for (int i = 0; i < 25; ++i) {
+            for (int i = 0; i < 24; ++i) {
                 Motion_CorrectWhenMovingAtY();
                 HAL_Delay(45);
             }

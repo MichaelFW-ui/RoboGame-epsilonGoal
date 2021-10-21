@@ -41,9 +41,9 @@ void TEST_MAIN_FUNCTION(void) {
   // Procedure_HeadForThrowingArea();
   // Procedure_StayInThrowingArea();
   Motor_Decode(0, 0, 0);
-  while (1) {
-    ;
-  }
+  // while (1) {
+  //   ;
+  // }
   // while (1) {
   //   TraceInfo_t *ptr = Sensor_GetCurrentInfo();
   //   HAL_Delay(100);

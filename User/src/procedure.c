@@ -383,18 +383,18 @@ void Procedure_StayInThrowingArea(void) {
 
 
     // Cannon_SetTargetSpeed(5300);
-    Cannon_SetTargetSpeed(5250);
+    Cannon_SetTargetSpeed(4930);
     HAL_Delay(5000);
-    Pushrod_MoveBackward(65000);
-    HAL_Delay(2500);
-    Cannon_SetTargetSpeed(5250);
-    HAL_Delay(2500);
+    Pushrod_MoveBackward(61500);
+    HAL_Delay(2000);
+    // Cannon_SetTargetSpeed(4900);
+    HAL_Delay(3000);
     // Cannon_SetTargetSpeed(5500);
     // HAL_Delay(5000);
-    Pushrod_MoveBackward(65000);
+    Pushrod_MoveBackward(61500);
     HAL_Delay(3000);
 
-    Pushrod_MoveForward(65000 * 2);
+    Pushrod_MoveForward(61500 * 2);
     CurrentBallCnt = 0;
     Cannon_SetTargetSpeed(0);
 
