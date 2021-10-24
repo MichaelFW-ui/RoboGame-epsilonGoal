@@ -222,6 +222,8 @@ void Procedure_EnterPickingArea(void) {
     Com_SendWorkingCommand();
     Com_DataTypeDef info;
     Com_Receive(&info);
+    Com_SendWorkingCommand();
+    Com_Receive(&info);
 
     for (int i = 0; i < 6; ++i) {
         /*
@@ -383,18 +385,20 @@ void Procedure_StayInThrowingArea(void) {
 
 
     // Cannon_SetTargetSpeed(5300);
-    Cannon_SetTargetSpeed(4930);
-    HAL_Delay(5000);
-    Pushrod_MoveBackward(61500);
-    HAL_Delay(2000);
-    // Cannon_SetTargetSpeed(4900);
+    // Cannon_SetTargetSpeed(3000);
+    Cannon_SetTargetSpeed(5100);
     HAL_Delay(3000);
-    // Cannon_SetTargetSpeed(5500);
-    // HAL_Delay(5000);
-    Pushrod_MoveBackward(61500);
+    HAL_Delay(4000);
+    Pushrod_MoveBackward(5000 * 10);
+
+    // Cannon_SetTargetSpeed(3000);
+    Cannon_SetTargetSpeed(5100);
+    HAL_Delay(3000);
+    HAL_Delay(3000);
+    Pushrod_MoveBackward(5000 * 15);
     HAL_Delay(3000);
 
-    Pushrod_MoveForward(61500 * 2);
+    Pushrod_MoveForward(5000 * 25);
     CurrentBallCnt = 0;
     Cannon_SetTargetSpeed(0);
 

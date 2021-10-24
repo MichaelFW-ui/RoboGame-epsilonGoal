@@ -23,7 +23,23 @@ typedef struct {
   int16_t speed;
 } Cannon_CommunicationTypeDef;
 
+
+__STATIC_INLINE void Cannon_SoftReset(void) {
+  Cannon_CommunicationTypeDef sent;
+  sent.header = 0x4000;
+  HAL_StatusTypeDef ret = HAL_UART_Transmit(&CANNON_HANDLE, (uint8_t *)&sent.header, sizeof(sent.speed), 0x00FF);
+  if (ret != HAL_OK) {
+    printf("Failed to reset\r\n");
+  } else {
+    printf("Reset target\r\n");
+  }
+  
+}
+
 __STATIC_INLINE void Cannon_SetTargetSpeed(int16_t speed) {
+  // if (speed < 4500) {
+  //   Cannon_SoftReset();
+  // }
   Cannon_CommunicationTypeDef sent;
   sent.speed = speed;
   sent.header = (uint16_t)speed >> 2;

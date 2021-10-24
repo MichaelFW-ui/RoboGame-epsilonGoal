@@ -49,7 +49,7 @@ typedef uint8_t Steer_COMNumber_t;
  * @retval None
  */
 void __STATIC_FORCEINLINE Steer_SetAngleByDegree(Steer_COMNumber_t SteerNumber,
-                                                 uint8_t angle) {
+                                                 int16_t angle) {
   PWM_SetPWM_ByDutyCycle(SteerNumber, (uint16_t)((angle * 2.0 / 180 + 0.5) / 20 * 4096));
 }
 

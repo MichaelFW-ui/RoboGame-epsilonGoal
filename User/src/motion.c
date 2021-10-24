@@ -138,6 +138,8 @@ void Motion_MoveLeftStable(uint8_t num) {
                     break;
                 }
             }
+            Motion_MoveToLeft(-10);
+            HAL_Delay(150);
             return;
         }
     }
@@ -180,6 +182,8 @@ void Motion_MoveRightStable(uint8_t num) {
                     break;
                 }
             }
+            Motion_MoveToRight(-10);
+            HAL_Delay(150);
             return;
         }
     }
@@ -273,7 +277,11 @@ void Motion_MoveBackwardStable(uint8_t num) {
 
 void Motion_MoveLeftStableInPickingArea(uint8_t num) {
     uint8_t HasLine = 1;
-    Motion_MoveToLeft(MOTION_LOW_SPEED + 10);
+    if (CurrentNode == Node_8) {
+        Motion_MoveToLeft(MOTION_LOW_SPEED - 5);
+    } else {
+        Motion_MoveToLeft(MOTION_LOW_SPEED);
+    }
     HAL_Delay(100);
     while (1) {
         Motion_CorrectWhenMovingAtX();
@@ -575,7 +583,7 @@ void Motion_MoveRightInThrowingArea(void) {
 uint8_t Motion_PickUpBallForward(void) {
     printf("BALL AT %d Forward\r\n", CurrentNode);
     ARM_Forward_TalonOpen();
-    Motion_MoveForward(MOTION_LOW_SPEED - 14);
+    Motion_MoveForward(MOTION_LOW_SPEED - 6);
     HAL_Delay(400);
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
     while (1) {
@@ -583,9 +591,9 @@ uint8_t Motion_PickUpBallForward(void) {
         ptr = Sensor_GetCurrentInfo();
 
         if (count_bits(ptr[0] > 6)) {
-            for (int i = 0; i < 27; ++i) {
+            for (int i = 0; i < 23; ++i) {
                 Motion_CorrectWhenMovingAtY();
-                HAL_Delay(50);
+                HAL_Delay(30);
             }
             break;
         }
@@ -604,7 +612,7 @@ uint8_t Motion_PickUpBallForward(void) {
     HAL_Delay(800);
     Motion_MoveBackward(0);
     ARM_Forward_Raise();
-    HAL_Delay(300);
+    HAL_Delay(200);
     ARM_Forward_PutDown();
     HAL_Delay(500);
     ARM_Forward_TalonOpen();
@@ -615,7 +623,7 @@ uint8_t Motion_PickUpBallForward(void) {
     Steer_Init();
 
 
-    Motion_MoveBackward(MOTION_LOW_SPEED - 7);
+    Motion_MoveBackward(MOTION_LOW_SPEED);
     HAL_Delay(200);
 
     while (1) {
@@ -636,7 +644,7 @@ uint8_t Motion_PickUpBallBackward(void) {
     /*TODO*/
     printf("BALLS AT %d Backward\r\n", CurrentNode);
     ARM_Backward_TalonOpen();
-    Motion_MoveBackward(MOTION_LOW_SPEED - 10);
+    Motion_MoveBackward(MOTION_LOW_SPEED - 6);
     TraceInfo_t *ptr = Sensor_GetCurrentInfo();
     HAL_Delay(400);
     while (1) {
@@ -645,9 +653,9 @@ uint8_t Motion_PickUpBallBackward(void) {
 
 
         if (count_bits(ptr[3] > 5)) {
-            for (int i = 0; i < 24; ++i) {
+            for (int i = 0; i < 21; ++i) {
                 Motion_CorrectWhenMovingAtY();
-                HAL_Delay(45);
+                HAL_Delay(35);
             }
             break;
         }
@@ -667,7 +675,7 @@ uint8_t Motion_PickUpBallBackward(void) {
     HAL_Delay(800);
     Motion_MoveForward(0);
     ARM_Backward_Raise();
-    HAL_Delay(300);
+    HAL_Delay(200);
     ARM_Backward_PutDown();
     HAL_Delay(500);
     ARM_Backward_TalonOpen();
@@ -678,7 +686,7 @@ uint8_t Motion_PickUpBallBackward(void) {
     Steer_Init();
 
 
-    Motion_MoveForward(MOTION_LOW_SPEED - 7);
+    Motion_MoveForward(MOTION_LOW_SPEED);
     HAL_Delay(200);
 
     while (1) {
