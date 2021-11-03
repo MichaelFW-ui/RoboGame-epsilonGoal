@@ -51,10 +51,6 @@ __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
     return CurrentTrace;
 }
 
-__STATIC_INLINE uint16_t Sensor_GetLeftDistance(void) {
-    /*TODO*/
-    return NULL_VALUE;
-}
 
 __STATIC_INLINE int count_bits(int x) {
     // From zhihu

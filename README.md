@@ -373,7 +373,7 @@ API，计算下一次的PID或者根据新的target计算下一次的PID。一�
 
 ### motor_feedback.c
 
-`motor_feedback.c / .h`文件，实现了对底盘电机的编码器解密，获得当前的实际速度。
+`motor_feedback.c/.h`文件，实现了对底盘电机的编码器解密，获得当前的实际速度。
 
 由于前期设计错误，这样的代码会出现突发爆转。具体原因是本程序中采取的计数方式是通过TIM输入捕获间隔时间来计算速度，而传统的方式是根据一定时间内的输入捕获次数来计算速度。这就导致遗漏输入捕获时造成速度的异常突变。具体逻辑如下。如果想要更好的逻辑，请参考其他队伍的手册。
 
@@ -597,49 +597,263 @@ uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t len, uint8_t *lowerbound
 
 ### pushrod.c
 
-```c  
+`pushrod.c/.h`文件实现了简单的脉冲控制步进电机的功能。具体实现为创建全局变量`Pushrod_DistanceInstace`和`Pushrod_DirectionInstance`，分别用于控制剩余移动步数和移动方向。
+
+而且需要提供如下的update函数。Update函数以一个自定义的周期定义。这个周期应当使得步进电机可以旋转到位又不至于过慢。具体参数自己调节。
+
+```c
+void Pushrod_TIM_UpdateHandler(void) {
+  static int cnt = 0;
+  cnt += 1;
+  if (Pushrod_DistanceInstance) {
+    HAL_GPIO_WritePin(Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin,
+                      ((Pushrod_DistanceInstance & 0x0001) == 1)
+                        ? GPIO_PIN_SET
+                        : GPIO_PIN_RESET);
+    --Pushrod_DistanceInstance;
+  }
+}
 ```
 
-```c  
+这个函数没有体现出来方向的切换，事实上，方向由如下函数决定。
+
+```c
+__STATIC_INLINE void Pushrod_SetDirection(Pushrod_DirectionTypeDef dir) {
+  HAL_GPIO_WritePin(Pushrod_Direction_GPIO_Port, Pushrod_Direction_Pin,
+                    dir ? GPIO_PIN_SET : GPIO_PIN_RESET);
+  Delay_us(5);
+}
 ```
 
-```c  
-```
+那么，控制步进电机的方法就很容易了。
 
-```c  
-```
-
-```c  
-```
-
-```c  
-```
-
-```c  
-```
-
-```c  
+```c
+__STATIC_INLINE void Pushrod_MoveForward(Pushrod_Distance_t distance) {
+  Pushrod_DistanceInstance = distance;
+  Pushrod_SetDirection(Pushrod_CCW);
+}
+__STATIC_INLINE void Pushrod_MoveBackward(Pushrod_Distance_t distance) {
+  Pushrod_DistanceInstance = distance;
+  Pushrod_SetDirection(Pushrod_CW);
+}
+__STATIC_INLINE void Pushrod_SuddenStop(void){
+  HAL_GPIO_WritePin(Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin, GPIO_PIN_RESET);
+  Pushrod_DistanceInstance = 0;
+}
 ```
 
 ### steer_ctrl.c
 
-### delay.c
+这里定义了舵机的运动方式。舵机是PWM驱动的，显然本MCU的PWM输出不足以满足这些舵机的需要，所以我们使用了PCA9685芯片/模块满足这种需求。
 
-### pid.c
+这个文件中，只有舵机的操作API，如下。
+
+```c
+typedef uint8_t Steer_COMNumber_t;
+void __STATIC_FORCEINLINE Steer_SetAngleByDegree(Steer_COMNumber_t SteerNumber,
+                                                 int16_t angle) {
+  PWM_SetPWM_ByDutyCycle(SteerNumber, (uint16_t)((angle * 2.0 / 180 + 0.5) / 20 * 4096));
+}
+void __STATIC_FORCEINLINE Steer_Init(void) {
+  /* 代码 */
+}
+```
+
+顺带一提，我们精调了`Steer_Init()`函数的默认值，让机器人的待机动作更加美观。想看的观众可以去看比赛回放欣赏。
 
 ### pwm_generate.c
 
+这里是PCA9685的驱动代码。其中的代码是我根据Datasheet和Arduino的驱动源代码重写的。
+
+具体包括如下API。
+
+```c
+void PWM_SetFrequencyAndStartUp(double frequency);
+void PWM_SetPWM_ByDutyCycle(uint8_t Ordinal, uint16_t DutyCycle);
+```
+
+其他的函数大多是辅助函数，用于PCA9685的协议解析。PCA9685有着不错的PWM生成能力，也建议读者自行实验。此外，PWM产生芯片现货其实不多，SG3525也能起到这个作用，但是只有两路，事实上意义不大。所以，如果想板载一个PWM生成器，又买不到PCA9685，可以考虑板载一个小型MCU，也能达到相同的目的。
+
+这里使用模块主要原因还是我太菜了。
+
+### delay.c
+
+`delay.c`中实现了延迟函数。事实上HAL库实现了毫秒级别的延迟可以使用。但是呢，在处理电机方向切换的时候，需要微秒级别的死区，如果改用毫秒代替，那电机的转动就十分笨拙了，还会耽误中断函数的处理。
+
+由于先前搭载了`FreeFTOS`，这里的系统时钟由`TIM7`这个基本定时器提供。这一点可以在`main.c`中看出，由`HAL_IncTick()`函数调用。
+
+这也就意味着，`SysTick`这个不靠谱的定时器可以被我们使用。`SysTick`由HAL库自动初始化。
+
+```c
+void Delay_Init(void) {
+  Delay_Factor_us = HAL_RCC_GetHCLKFreq() / 1000 / 1000;
+  Delay_Factor_ms = Delay_Factor_us * 1000;
+}
+void Delay_us(uint16_t us) {
+  uint32_t tmp;
+  SysTick->LOAD = us * Delay_Factor_us;
+  SysTick->VAL = 0x00;
+  SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+  do {
+    tmp = SysTick->CTRL;
+  } while (tmp & 0x01 && !(tmp & (1 << 16)));
+  SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+  SysTick->VAL = 0x00;
+}
+```
+
+简单快捷地实现了微秒级延迟。
+
+### pid.c
+
+PID是老生常谈地话题。通常我们学习的PID包括位置PID和增量PID。这里的`pid.c/.h`中定义了PID的基本格式，和一些相关的操作方法。
+
+*这里的API是本人初始构建使用，后面移植时发现由许多细小问题。建议读者学习原理后自主实现。不对程序漏洞造成的损害负责。*
+
+```c
+typedef struct {
+  double Ki;              // Ki
+  double Kp;              // Kp
+  double Kd;              // Kd
+  double Integral;        // 积分累计
+  double Derivative;      // 微分项
+  double Target;          // 目标值
+  double Current;         // 当前值
+  double Previous;        // 上一值
+  double Output;          // 输出值
+  double prePrevious;     // 上上一值
+} PID_InformationTypeDef;
+```
+
+```c
+__STATIC_INLINE void PID_SetTarget(PID_InformationTypeDef *handle,
+                                   double target) {
+  handle->Target = target;
+}
+void PID_InformationInit(PID_InformationTypeDef *handle);
+
+void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current);
+
+void PID_Calculate_Locational_CounterOverflow(PID_InformationTypeDef *handle,
+```
+
+我也听到位置是`position`的说法。我的英语很菜，凑合着阅读吧。
+
+
 ### callback.c
 
-### iso15693.c
+众所周知，HAL库引入了先进的回调函数体系，让一些任务的处理更加简易。
 
-### pn5180.c
+这个`callback.c`里面包括了原生的`callback`，和转发出来的自定义`callback`。当然实际使用的时候，还是原生`callback`更符合项目的要求。
+
+```c
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+  if (htim->Instance == TIM2) {
+    MotorFeedback_IC_CaptureCallback(htim);
+  }
+}
+```
+
+
+### iso15693.c 和 pn5180.c
+
+这里是源自作者`lakun@qq.com`的驱动。我在其中加入了`RFID_Ordinal_t`用于不同方向的RFID切换。
+
+但是，由于视觉的效果超出预期，我们放弃了RFID方案。这套代码没有经过测试，但是因为原作者已经测试通过，应该也没有问题。
+
+这里就不作代码介绍了，贴一个枚举`RFID_Ordinal_t`。
+
+```c
+typedef enum {
+    RFID_A = 0,
+    RFID_B = 1
+} RFID_Ordinal_t;
+```
 
 ### sensor.c
 
+`Sensor`模块是我思维震荡的主要部分。这里实现了底盘信息读取和解析的基本盘。原本打算是底盘建模配合角速度计联合调控，后来发现实现方法十分复杂就放弃了。
+
+后来的巡线设计可能在重点函数部分讲解。这里只剩下了简单的获取底盘信息的函数。底盘信息由另一块系统板提供。另一块系统板代码十分简单，所以不提供开源了。
+
+```c
+__STATIC_INLINE void Sensor_RefreshUART(UART_HandleTypeDef *hd) {
+    UNUSED(hd);
+    MX_USART1_UART_Init();
+}
+__STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
+    uint16_t cmd = 0x8000;
+    HAL_StatusTypeDef ret = HAL_UART_Transmit(&huart1, (uint8_t *)&cmd, 2, 0x004f);
+    if (ret != HAL_OK) {
+        printf("Failed to transmit 'Get Trace' command\r\n");
+        Sensor_RefreshUART(&huart1);
+    }
+    ret = HAL_UART_Receive(&huart1, (uint8_t*)CurrentTrace, 4 * (sizeof(TraceInfo_t)), 0x004F);
+    if (ret != HAL_OK) {
+        printf("Failed to receive trace information\r\n");
+        Sensor_RefreshUART(&huart1);
+    } else {
+        // printf("Received\r\n");
+    }
+    Sensor_RefreshUART(&huart1);
+    CurrentTrace[0] &= (1 << 9) - 1;
+    CurrentTrace[1] &= (1 << 11) - 1;
+    CurrentTrace[2] &= (1 << 11) - 1;
+    CurrentTrace[3] &= (1 << 9) - 1;
+    return CurrentTrace;
+}
+```
+
+这里的错误处理十分有意思。实际使用的时候，因为连接问题，经常出现地盘掉线的错误。一般地，地盘掉线的原理，是上控制板Uart发生错误，或者下控制板Uart发生错误。下控制板发生错误，可以手动复位。但是上控制板运行着流程控制，不能复位。所以就使用了软件刷新的方法。函数`Sensor_RefreshUART()`就实现了这一功能。
+
+还有值得一提的是，这里也实现了一个奇怪的函数。它的作用是输出一个二进制数中1的个数。这个函数来自于知乎，具体作者我也不清楚。但是这个函数相当高效，十分感谢。
+
+```c
+__STATIC_INLINE int count_bits(int x) {
+    // From zhihu
+    int xx = x;
+    xx = xx - ((xx >> 1) & 0x55555555);
+    xx = (xx & 0x33333333) + ((xx >> 2) & 0x33333333);
+    xx = (xx + (xx >> 4)) & 0x0f0f0f0f;
+    xx = xx + (xx >> 8);
+    return (xx + (xx >> 16)) & 0xff;
+}
+```
+
 ### arm_ctrl.c
 
+这个文件定义了各种舵机动作。水花队的舵机调控十分流畅，但是我们的电控人员水平不足，没有使用什么高深技巧。代码主要实现了如下函数。
+
+```c
+__STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonClose(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonOpen(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Forward_Raise(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Forward_PutDown(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TakeBall(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonClose(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonOpen(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Backward_Raise(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Backward_PutDown(void);
+
+__STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TakeBall(void);
+
+```
+```c
+```
+```c
+```
+
 ### VL53L0X系列
+
+VL53L0X是ST公司开发的激光测距芯片/模块，使用的API全套提供，并且具有HAL库一样的高封装性。只需要提供I2C接口，就可以轻松使用。我很喜欢，就抑移植了过来。但是比赛中并没有使用，因为机械结构不允许。所以我也不做代码介绍了，有兴趣的读者可以自行观看。
 
 ## 重点函数实现介绍
 
@@ -659,15 +873,31 @@ uint8_t Position_GetOneActive(TraceInfo_t line, uint8_t len, uint8_t *lowerbound
 
 ## 出现的一些问题
 
+这里记录制作过程中的各种问题，读者可以有所参考。
+
 ### 电路板地干扰
+
+众所周知，数字电路、模拟电路、功率电路的运行中会产生不同的噪声。这些噪声会在地平面里回荡，如果不能好好处理便会影响电路工作。这里我们将功率地和数字地分开，使用零欧电阻单点接地，一定程度上隔离了噪声。具体的工作原理上网查询便可得知。
 
 ### 接线震动接触不良
 
-### 程序设计内存泄漏
+正常运动的机器人的震动是非常大的。仅仅使用杜邦线连接的端口在一两次运作下便会断开。在实际调试中，我们一方面对控制电路进行了热熔胶加固，保证控制电路的连接性；另一方面对通讯电路进行了焊接处理，保证通讯电路的稳定性。
+
+没曾想到的是，决赛的时候，现成的USB转TTL模块发生了接触不良的故障。这属于寿命到头了，我们没有办法解决。最后惨遭淘汰。
+
+### 程序设计访问异常内存
+
+在设计节点计数的程序时，经常出现跑飞的情况。检查返回值，发现机器人跑到了几十万的节点处。排除重复计数的影响，只可能是`for`语句没有设置更加合理的终止条件，使程序跑到了内存之外。
+
+当然，也有的时候，程序直接进入了`HardFault`状态。这个也是访问了异常内存的原因。这次不是跑飞了，是直接挂掉了。因为部分内存空间是不允许访问的。
 
 ### 通信中断，外设异常
 
-ORE，接线，波特率
+通信中出现了线路中断现象，最常见的情况是Uart错乱。原因是上一数据帧和下一数据帧的数据交错，造成数据检验不通过。而且这时候Uart并不认为自己没有正常工作。这时候就需要软件重启Uart了。
+
+还有的时候，发生了ORE错误，这是因为发送频率太高，前一个数据帧还没有被处理，就又有下一个数据送来。合理调整发送频率即可。
+
+对于工作环境不良的通信线路，推荐使用较低的波特率。在调低波特率后，通信稳定性有所提升。
 
 ### 未能正常使用模块
 
