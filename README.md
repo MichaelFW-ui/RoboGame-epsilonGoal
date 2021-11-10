@@ -737,8 +737,7 @@ void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current);
 void PID_Calculate_Locational_CounterOverflow(PID_InformationTypeDef *handle,
 ```
 
-我也听到位置是`position`的说法。我的英语很菜，凑合着阅读吧。
-
+我也听到位置是`positional`的说法。我的英语很菜，凑合着阅读吧。
 
 ### callback.c
 
@@ -753,7 +752,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
   }
 }
 ```
-
 
 ### iso15693.c 和 pn5180.c
 
@@ -826,23 +824,14 @@ __STATIC_INLINE int count_bits(int x) {
 
 ```c
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonClose(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonOpen(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_Raise(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_PutDown(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TakeBall(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonClose(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TalonOpen(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_Raise(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_PutDown(void);
-
 __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TakeBall(void);
 ```
 
@@ -850,21 +839,129 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TakeBall(void);
 
 VL53L0X是ST公司开发的激光测距芯片/模块，使用的API全套提供，并且具有HAL库一样的高封装性。只需要提供I2C接口，就可以轻松使用。我很喜欢，就抑移植了过来。但是比赛中并没有使用，因为机械结构不允许。所以我也不做代码介绍了，有兴趣的读者可以自行观看。
 
-## 重点函数实现介绍
+## 重点部分实现的思路和方法
+
+由于个人时间有限，很难把重点代码一一解释清楚。这里只是大致编写部分流程的思路。如果有疑问的话，推荐根据程序的执行流程阅读代码，这样便能充分理解代码的作用。
+
+由于MCU的特性，阅读代码的时候应当十分注意中断函数和回调函数的使用。通常，这两种函数会将程序的执行流程打散，降低了程序的易读性。但是话说回来，中断的形式是十分符合人类直觉的。所以，推荐读者充分理解中断函数的作用，知道它们调整了什么变量，产生了什么作用。这样便能事半功倍。
 
 ### 主控逻辑和流程
 
+主控逻辑在`main_.c`和`procedure.c`中充分体现。
+
+`main_.c`文件中，主要由函数`Main_()`控制全部流程。流程的具体实现，由`procedure.c`提供细节。在每个`procedure`中，机器人可能完成了移动、识别、抓取、投篮等动作。这些动作通常被良好封装了起来，比如`Motion_MoveForwardStable()`, `Motion_PickUpBallBackward`。
+
+这些函数的调用之间，往往需要部分延时或者调控。比如有的运动函数之后需要`Motor_Decode(0, 0, 0);`以防止机器人的继续运动。同时也起到了减速刹车的作用。
+
+机器人在正常运行的过程中也产生了丰富的`log`消息。在调试阶段，我们通过`NRF24L01`模组将消息打印在电脑上，借此检查机器人是否正常运行。这样的消息打印无论何时都是十分必要的。
+
+`procedure`的具体实现是一个很奇妙的过程。每个`procedure`中，一般地，可以认为是一个或者多个(移动-动作)的任务组。每个任务组也是由更小的函数实现的。至于巡线、姿态之类的问题，在后文将得到解答。
+
 ### 电机使用
+
+前文已经提到，这里的电机编码器使用了较为奇怪的读取方式。我们在每个输入捕获的回调函数中完成了速度的解析。这样做的好处是速度更新及时，且具有较高精度。但是可以预见的是，如果出现遗漏的捕获，便会产生一个极低的速度值。这种情况并不多见，但是一旦出现便会十分致命。
+
+在其他RoboMaster例程中，经常使用的方法是采取低通滤波器进行一阶滤波，消除这样的极高误差。但是由于个人能力有限，我们使用的仅仅是差分检查。
+
+```c
+    if (info->Directions[i] == MotorFeedback_CW) {
+      MotorSpeed_t cur = Motor_FeedbackFix(info->TimeTicks[i]);
+      if (cur - PreSpeed[i] > -MAX_INC && cur - PreSpeed[i] < MAX_INC)
+        motorSpeed_data[i] = cur;
+      if (motorSpeed_data[i] < MIN_FLOW)
+        motorSpeed_data[i] = 0;
+      PreSpeed[i] = cur;
+      if (info->ReloadTimes[i] > 1) {
+        motorSpeed_data[i] = 0;
+      }
+    } else {
+      MotorSpeed_t cur = Motor_FeedbackFix(info->TimeTicks[i]);
+      if (cur - PreSpeed[i] > -MAX_INC && cur - PreSpeed[i] < MAX_INC)
+        motorSpeed_data[i] = -cur;
+      if (motorSpeed_data[i] > -MIN_FLOW)
+        motorSpeed_data[i] = 0;
+      PreSpeed[i] = cur;
+      if (info->ReloadTimes[i] > 1) {
+        motorSpeed_data[i] = 0;
+      }
+    }
+```
+
+可以看到，`cur - PreSpeed[i]`就是我们使用的差分检查方法。如果差分值小于`MAX_INC`，即`Max_Increment`，则认为这次是合法的输入捕获结果，将其记录在速度上。否则，认为是极高误差，忽略即可。
+
+注意，即使是异常误差，也需要在`PreSpeed[i]`中记录。否则可能出现速度锁死的情况，影响程序的继续运行。因为部分时候正常的加速也会超过`MAX_INC`，我们不能将标准卡的太死。
 
 ### 摩擦轮调用
 
-### 多方通讯
+摩擦轮电机采取了直流无刷电机。直流无刷电机具有转速高、力矩可控、寿命长的特点。但是直流无刷电机的控制方法十分复杂，不是简简单单的PWM即可控制。一般地，初学者可能学习的，应当是根据霍尔编码器进行周期换向控制的方法。这种方法实现简单，但是控制精度不高，而且速度受电压变化波动较大。由于本人实力有限，这里采用了现成的控制模块，使得无刷电机的控制和有刷电机一样简单。
+
+由于简单控制方法受到电压限制，我们采取了额外的稳压模块进行调整。极端的时候甚至达到了八投八中，可以说是比较成功的。
+
+### 步进电机使用
+
+步进电机是一个十分容易控制的东西。当然，前提是你不需要自己实现驱动器。在驱动器的帮助下，步进电机的前进后退只是脉冲的事。脉冲怎么实现呢？
+
+一般地，我们可以借用TIM的PWM功能伪装成脉冲，只需要占空比不要太离谱就行；但是PWM功能的缺点是无法精确控制步数，这也就将步进电机的精确控制优点抛弃了。
+
+所以我们使用TIM的溢出中断实现了手工的脉冲。
+
+```c
+void Pushrod_TIM_UpdateHandler(void) {
+  static int cnt = 0;
+  cnt += 1;
+  if (Pushrod_DistanceInstance) {
+    HAL_GPIO_WritePin(Pushrod_Pulse_GPIO_Port, Pushrod_Pulse_Pin,
+                      ((Pushrod_DistanceInstance & 0x0001) == 1)
+                        ? GPIO_PIN_SET
+                        : GPIO_PIN_RESET);
+    --Pushrod_DistanceInstance;
+  }
+}
+
+可以看到，这里只是简单的根据奇偶判断高低电平的程序。
+
+```
 
 ### 舵机使用
 
+舵机的控制只需要PWM。但是由于需要的数量较多，我们采取了成熟的PWM模块实现这一功能。PWM产生芯片不多，市面上常见的好像只有这一种。按需使用即可。
+
+使用方法上，我个人推荐的流程是，先去搜索引擎中搜索相关的例程和博客，大致了解它的使用方法。然后参阅datasheet，了解其中每个寄存器的作用。最后移植例程，并根据datasheet微调你需要的内容。
+
+这样，博客中你不理解的事物，和datasheet看不懂的专有名词，得到了相互介绍，一举两得。
+
 ### 底盘循迹、运动和计数
 
-### 步进电机使用
+底盘巡线是一个头疼的事物。一开始我们打算采取全局建模的方式，即根据底盘信息实时计算出机器人在平面上的三维坐标。这显然是不现实的，因为根据去年`HelloWorld`队的计划书看来，这样的作法会造成各种各样误差，每一个误差都需要特判修正。
+
+但是，我们也看到其他队伍的程序设计，"灯亮了，反着走"，这样的思路在具体实现中会频繁出现跑飞情况。即使是八强比赛中也看到了这样的不堪。
+
+所以我们结合了二者，采取了多红外对管阵列 + 弹簧式反馈调节方法。这里放一个示例。
+```c
+void Motion_CorrectWhenMovingAtX(void) {
+    TraceInfo_t *ptr = Sensor_GetCurrentInfo();
+    uint8_t LeftBegin, LeftEnd, RightBegin, RightEnd;
+    // 得到左右的点位
+    Position_GetOneActive(ptr[1], 11, &LeftBegin, &LeftEnd);
+    Position_GetOneActive(ptr[2], 11, &RightBegin, &RightEnd);
+
+    uint8_t Left = (LeftEnd + LeftBegin);
+    uint8_t Right = (RightEnd + RightBegin);
+
+    // 反馈调节
+    int16_t Front = (((int16_t)((int8_t)Left + (int8_t)Right) - 20) * (-2));
+    Motor_SetY(Front);
+    Motor_SetW(((int16_t)((int8_t)Left - (int8_t)Right)) * (50));
+}
+```
+
+可以看到，我们解析底盘点位之后，使用了弹簧式的一阶反馈模型进行调节。一方面，避免了大幅度调整的抖动。另一方面，避免了循迹面窄小造成的跑飞现象。实际测试中，一般一天测试下来，至多会有一次跑飞。这个成功率是相当有水平的。
+
+### 多方通讯
+
+主要的通信方向，是主控板和辅控板，主控板和树莓派，主控板和NRF24L01。这里全部采用了UART方式，其中NRF24L01使用了模块转接。
+
+具体使用时，由于机器人震动剧烈，容易造成接触不良通讯中断，从而卡死USART外设。所以使用时的波特率全部设置为了9600，牺牲了通讯速率，提高了稳定性。
 
 ## 出现的一些问题
 

@@ -23,9 +23,6 @@ volatile Pushrod_Distance_t Pushrod_DistanceInstance;
  * @retval None
  */
 void Pushrod_TIM_UpdateHandler(void) {
-  /*
-      TODO:使用合适的引脚，完成推杆的运转
-  */
   static int cnt = 0;
   cnt += 1;
   if (Pushrod_DistanceInstance) {
