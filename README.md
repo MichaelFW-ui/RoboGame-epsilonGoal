@@ -291,14 +291,15 @@ __STATIC_FORCEINLINE void Motor_AddY(MotorInput_t y);
 __STATIC_FORCEINLINE void Motor_AddW(MotorInput_t w);
 ```
 
-这里是电机三轴运动的API，可以直接设定速度，或者设定速度的增加量。
+这里是电机三轴运动的接口函数，可以直接设定速度，或者设定速度的增加量。
 
 ```c
 __STATIC_INLINE void Motor_Init(void);
 void Motor_Decode(MotorInput_t x, MotorInput_t y, MotorInput_t w);
 ```
 
-是电机解算的初始化函数和电机解算的API。在`Motor_Decode()`中写入期望的三轴速度即可。
+是电机解算的初始化函数和电机解算的接口函数。在`Motor_Decode()`中写入期望的三轴速度即可。
+这个地方出现过了有趣的Bug，原因已经记录在我的个人网站上，这里不多赘述。
 
 ### motor_ctrl.c
 
@@ -331,7 +332,7 @@ typedef int16_t MotorSpeed_t;
 #define Motor_Encode(Motor, Direction) (uint8_t)((Motor << 1) | Direction)
 ```
 
-该宏定义用于编码不同电机和方向，相当于Python语言中的元组。
+该宏定义用于编码不同电机和方向，使得可以用单一变量进行`Motor`和`Direction`的同时控制。
 
 ```c
 #define Motor_OutputFix ...
@@ -351,11 +352,11 @@ __STATIC_FORCEINLINE void MotorCtrl_SetDutyCycle(MotorOrdinal_t Motor, uint16_t 
 void MotorCtrl_SetDirection(MotorOrdinal_t Motor, MotorDirection_t direction);
 void __STATIC_INLINE MotorCtrl_SetPIDArguments(MotorOrdinal_t motor, MotorPIDTypeDef pid, double val);
 double __STATIC_INLINE MotorCtrl_GetPIDArguments(MotorOrdinal_t motor, MotorPIDTypeDef pid);
-void __STATIC_INLINE MotorCtrl_PrintArguments(void) {
-void __STATIC_INLINE MotorCtrl_SetTarget(MotorSpeed_t speed, uint8_t ord) {
+void __STATIC_INLINE MotorCtrl_PrintArguments(void);
+void __STATIC_INLINE MotorCtrl_SetTarget(MotorSpeed_t speed, uint8_t ord);
 ```
 
-十分面向对象思想的Set和Get函数，字面意思理解即可。
+字面意思理解即可。
 
 ```c
 void MotorCtrl_UpdateControlFlow(void);
@@ -369,13 +370,14 @@ void __STATIC_INLINE MotorCtrl_CalculateNextOutput(void);
 void MotorCtrl_CalculateNextOutputByTargets(PID_InformationTypeDef *PIDs, MotorSpeed_t *target);
 ```
 
-API，计算下一次的PID或者根据新的target计算下一次的PID。一般地，我们是周期调用前者即可。Target取值取决于一个全局变量。
+API，计算下一次的PID或者根据新的target计算下一次的PID。一般地，周期调用前者即可。
+Target取值取决于一个全局变量。可以通过改变这个全局变量来控制速度。
 
 ### motor_feedback.c
 
 `motor_feedback.c/.h`文件，实现了对底盘电机的编码器解密，获得当前的实际速度。
 
-由于前期设计错误，这样的代码会出现突发爆转。具体原因是本程序中采取的计数方式是通过TIM输入捕获间隔时间来计算速度，而传统的方式是根据一定时间内的输入捕获次数来计算速度。这就导致遗漏输入捕获时造成速度的异常突变。具体逻辑如下。如果想要更好的逻辑，请参考其他队伍的手册。
+由于前期设计错误，这样的代码会出现爆转。具体原因是本程序中采取的计数方式是通过TIM输入捕获间隔时间来计算速度，而传统的方式是根据一定时间内的输入捕获次数来计算速度。这就导致遗漏输入捕获时造成速度的异常突变。具体逻辑如下。如果想要更好的逻辑，请参考其他队伍的手册。
 
 ```c
 typedef enum {
@@ -467,6 +469,8 @@ typedef struct {
 - 如果`uint16_t sent > 0`，则将`sent`值赋给摩擦轮速度。
 - 如果`uint16_t sent == 0`，则返回底盘的红外对管信息。
 
+这样可以在不改变原有代码的基础上多传递一些信息。
+
 具体的控制代码部分如下。
 
 ```c  
@@ -483,6 +487,8 @@ __STATIC_INLINE void Cannon_SetTargetSpeed(int16_t speed) {
   }
 }
 ```
+
+> 2022年4月13日指正，原文中“DMA和阻塞不能同时使用”的说法和具体情况不符。真正的原因和CubeMX的遗留Bug有关。具体内容已记录于个人网站上，不再赘述。
 
 可以注意到其中的数据结构`Cannon_CommunicationTypeDef`并没有被很好地使用。这属于历史遗留问题。如果你在代码中看到了这样的更改，即代码被改写避免了上述冗余，你可以自行查看commit日志，尝试找出我们在哪一天修复了这个问题。
 
@@ -532,7 +538,7 @@ __STATIC_INLINE Com_DataTypeDef * Com_WorkAndReceive(void) {
 
 ### debug.c
 
-`debug.c`中实现了我们的大部分debug函数和操作。debug的需要，是各种参数的调定、动作的执行和调试信息的输出。参数调定的可视化和条理化需要较高的编程技巧，我们没有实现。而动作的执行和调试信息的输出，我们则做到了良好的、友好的实现方式。
+`debug.c`中实现了我们的大部分debug函数和操作。debug的具体要求包括各种参数的调定、动作的执行和调试信息的输出。参数调定的可视化和条理化需要较高的编程技巧，因此我们没有实现。而动作的执行和调试信息的输出，我们则做到了良好的、友好的实现方式。
 
 在进行具体讨论之前，我们想先提及如下函数。
 
@@ -655,30 +661,30 @@ void __STATIC_FORCEINLINE Steer_SetAngleByDegree(Steer_COMNumber_t SteerNumber,
   PWM_SetPWM_ByDutyCycle(SteerNumber, (uint16_t)((angle * 2.0 / 180 + 0.5) / 20 * 4096));
 }
 void __STATIC_FORCEINLINE Steer_Init(void) {
-  /* 代码 */
+  /* Code Here */
 }
 ```
 
-顺带一提，我们精调了`Steer_Init()`函数的默认值，让机器人的待机动作更加美观。想看的观众可以去看比赛回放欣赏。
+顺带一提，我们精调了`Steer_Init()`函数的默认值，让机器人的待机动作更加美观，同时不会影响正常工作。
 
 ### pwm_generate.c
 
 这里是PCA9685的驱动代码。其中的代码是我根据Datasheet和Arduino的驱动源代码重写的。
 
-具体包括如下API。
+具体包括如下接口函数。
 
 ```c
 void PWM_SetFrequencyAndStartUp(double frequency);
 void PWM_SetPWM_ByDutyCycle(uint8_t Ordinal, uint16_t DutyCycle);
 ```
 
-其他的函数大多是辅助函数，用于PCA9685的协议解析。PCA9685有着不错的PWM生成能力，也建议读者自行实验。此外，PWM产生芯片现货其实不多，SG3525也能起到这个作用，但是只有两路，事实上意义不大。所以，如果想板载一个PWM生成器，又买不到PCA9685，可以考虑板载一个小型MCU，也能达到相同的目的。
+其他的函数大多是辅助函数，用于PCA9685的协议解析。PCA9685有着不错的PWM生成能力，也建议读者自行实验。此外，PWM生成芯片市面上并不多见，SG3525也能起到这个作用，但是只有两路，事实上意义不大。所以，如果想板载多路PWM生成器，又买不到PCA9685，可以考虑板载一个小型MCU，也能达到相同的目的。
 
-这里使用模块主要原因还是我太菜了。
+这里使用模块主要原因，是PCA9685模块的驱动方法已经比较成熟，没有必要考虑额外的MCU辅助。
 
 ### delay.c
 
-`delay.c`中实现了延迟函数。事实上HAL库实现了毫秒级别的延迟可以使用。但是呢，在处理电机方向切换的时候，需要微秒级别的死区，如果改用毫秒代替，那电机的转动就十分笨拙了，还会耽误中断函数的处理。
+`delay.c`中实现了延迟函数。事实上HAL库实现了毫秒级别的延迟可以使用。但是，在处理电机方向切换的时候，需要微秒级别的死区，如果改用毫秒代替，那电机的转动就十分笨拙了，还会耽误中断函数的处理。
 
 由于先前搭载了`FreeFTOS`，这里的系统时钟由`TIM7`这个基本定时器提供。这一点可以在`main.c`中看出，由`HAL_IncTick()`函数调用。
 
@@ -704,11 +710,13 @@ void Delay_us(uint16_t us) {
 
 简单快捷地实现了微秒级延迟。
 
+但是后期查阅数据手册后发现驱动内部已经考虑到了死区问题，这里的解决方案事实上没有意义。
+
 ### pid.c
 
 PID是老生常谈地话题。通常我们学习的PID包括位置PID和增量PID。这里的`pid.c/.h`中定义了PID的基本格式，和一些相关的操作方法。
 
-*这里的API是本人初始构建使用，后面移植时发现由许多细小问题。建议读者学习原理后自主实现。不对程序漏洞造成的损害负责。*
+*这里的函数是本人初始构建的，后面移植时发现由许多细小问题。建议读者学习原理后自主实现。不对程序漏洞造成的损害负责。*
 
 ```c
 typedef struct {
@@ -734,16 +742,21 @@ void PID_InformationInit(PID_InformationTypeDef *handle);
 
 void PID_Calculate_Locational(PID_InformationTypeDef *handle, double current);
 
-void PID_Calculate_Locational_CounterOverflow(PID_InformationTypeDef *handle,
+void PID_Calculate_Locational_CounterOverflow(PID_InformationTypeDef *handle, 
+                                              double current,
+                                              double IntegralMinimum,
+                                              double IntegralMaximum);
+
+void PID_Calculate_Incremental(PID_InformationTypeDef *handle, double current);
 ```
 
-我也听到位置是`positional`的说法。我的英语很菜，凑合着阅读吧。
+我也听到位置是`positional`的说法。所以将`locational`改变为`positional`更符合原生语言习惯。
 
 ### callback.c
 
-众所周知，HAL库引入了先进的回调函数体系，让一些任务的处理更加简易。
+HAL库原生支持回调函数体系，充分利用回调函数方法将有助于我们的编程开发。
 
-这个`callback.c`里面包括了原生的`callback`，和转发出来的自定义`callback`。当然实际使用的时候，还是原生`callback`更符合项目的要求。
+这个`callback.c`里面包括了原生的`callback`，和转发出来的自定义`callback`。将`callback`转发有助于集中查找回调函数位置，因为回调函数一般没有确定的位置，如果随处放置将增加查找的麻烦。
 
 ```c
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
@@ -759,7 +772,10 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 
 但是，由于视觉的效果超出预期，我们放弃了RFID方案。这套代码没有经过测试，但是因为原作者已经测试通过，应该也没有问题。
 
-这里就不作代码介绍了，贴一个枚举`RFID_Ordinal_t`。
+这里便不作代码介绍，源代码可以参考[原作者GitHub-Repo](https://github.com/yzhengBTT/HAL_STM32_PN5180_SPI_DEMO).
+
+推荐使用枚举的方式区分不同的方向。
+枚举`RFID_Ordinal_t`。
 
 ```c
 typedef enum {
@@ -768,11 +784,13 @@ typedef enum {
 } RFID_Ordinal_t;
 ```
 
+当然，采取`面向对象`编程思想的话，不需要上面的枚举。由于编程时并未学习到C++工程建立方法，当时没有想到使用类来完成这一工作。
+
 ### sensor.c
 
-`Sensor`模块是我思维震荡的主要部分。这里实现了底盘信息读取和解析的基本盘。原本打算是底盘建模配合角速度计联合调控，后来发现实现方法十分复杂就放弃了。
+`Sensor`模块是机器人运动的重要组成部分。这里实现了底盘信息读取和解析的基本盘。原本打算是底盘建模配合角速度计联合调控，后来发现实现方法十分复杂就放弃了。
 
-后来的巡线设计可能在重点函数部分讲解。这里只剩下了简单的获取底盘信息的函数。底盘信息由另一块系统板提供。另一块系统板代码十分简单，所以不提供开源了。
+后来的巡线设计可能在重点函数部分讲解。这里只剩下了简单的获取底盘信息的函数。底盘信息由另一块系统板提供。另一块系统板代码十分简单，所以不提供源代码了。
 
 ```c
 __STATIC_INLINE void Sensor_RefreshUART(UART_HandleTypeDef *hd) {
@@ -802,7 +820,7 @@ __STATIC_INLINE TraceInfo_t* Sensor_GetCurrentInfo(void) {
 }
 ```
 
-这里的错误处理十分有意思。实际使用的时候，因为连接问题，经常出现地盘掉线的错误。一般地，地盘掉线的原理，是上控制板Uart发生错误，或者下控制板Uart发生错误。下控制板发生错误，可以手动复位。但是上控制板运行着流程控制，不能复位。所以就使用了软件刷新的方法。函数`Sensor_RefreshUART()`就实现了这一功能。
+这里的错误处理十分有意思。实际使用的时候，因为连接问题，经常出现底盘掉线的错误。一般地，底盘掉线的结果，是上控制板Uart外设发生错误，或者下控制板Uart发生错误。下控制板发生错误，可以手动复位。但是上控制板运行着流程控制，不能复位。所以就使用了软件刷新的方法。函数`Sensor_RefreshUART()`就实现了这一功能。
 
 还有值得一提的是，这里也实现了一个奇怪的函数。它的作用是输出一个二进制数中1的个数。这个函数来自于知乎，具体作者我也不清楚。但是这个函数相当高效，十分感谢。
 
@@ -820,7 +838,7 @@ __STATIC_INLINE int count_bits(int x) {
 
 ### arm_ctrl.c
 
-这个文件定义了各种舵机动作。水花队的舵机调控十分流畅，但是我们的电控人员水平不足，没有使用什么高深技巧。代码主要实现了如下函数。
+这个文件定义了各种舵机动作。水花队的舵机调控十分流畅，我们很是羡慕。但是我们的电控人员水平不足，没有掌握高深技巧。代码主要实现了如下函数。
 
 ```c
 __STATIC_INLINE HAL_StatusTypeDef ARM_Forward_TalonClose(void);
@@ -837,7 +855,7 @@ __STATIC_INLINE HAL_StatusTypeDef ARM_Backward_TakeBall(void);
 
 ### VL53L0X系列
 
-VL53L0X是ST公司开发的激光测距芯片/模块，使用的API全套提供，并且具有HAL库一样的高封装性。只需要提供I2C接口，就可以轻松使用。我很喜欢，就抑移植了过来。但是比赛中并没有使用，因为机械结构不允许。所以我也不做代码介绍了，有兴趣的读者可以自行观看。
+VL53L0X是ST公司开发的激光测距芯片/模块，使用的API全套提供，并且具有HAL库一样的高封装性。只需要提供I2C接口，就可以轻松使用。我很喜欢，就移植了过来。但是比赛中并没有使用，因为机械结构不允许。所以这里也不做代码介绍，有兴趣的读者可以自行查阅相关资料。
 
 ## 重点部分实现的思路和方法
 
@@ -895,13 +913,13 @@ VL53L0X是ST公司开发的激光测距芯片/模块，使用的API全套提供�
 
 摩擦轮电机采取了直流无刷电机。直流无刷电机具有转速高、力矩可控、寿命长的特点。但是直流无刷电机的控制方法十分复杂，不是简简单单的PWM即可控制。一般地，初学者可能学习的，应当是根据霍尔编码器进行周期换向控制的方法。这种方法实现简单，但是控制精度不高，而且速度受电压变化波动较大。由于本人实力有限，这里采用了现成的控制模块，使得无刷电机的控制和有刷电机一样简单。
 
-由于简单控制方法受到电压限制，我们采取了额外的稳压模块进行调整。极端的时候甚至达到了八投八中，可以说是比较成功的。
+由于简单控制方法受到电压限制，我们采取了额外的稳压模块进行调整，经测试效果比较稳定。
 
 ### 步进电机使用
 
-步进电机是一个十分容易控制的东西。当然，前提是你不需要自己实现驱动器。在驱动器的帮助下，步进电机的前进后退只是脉冲的事。脉冲怎么实现呢？
+步进电机是一个十分容易控制的东西。当然，前提是你不需要自己实现驱动器。在驱动器的帮助下，步进电机的前进后退只是脉冲的事。
 
-一般地，我们可以借用TIM的PWM功能伪装成脉冲，只需要占空比不要太离谱就行；但是PWM功能的缺点是无法精确控制步数，这也就将步进电机的精确控制优点抛弃了。
+一般地，我们可以借用TIM的PWM功能伪装成脉冲，只需要占空比符合要求即可；但是PWM功能的缺点是无法精确控制步数，这也就将步进电机的精确控制优点抛弃了。
 
 所以我们使用TIM的溢出中断实现了手工的脉冲。
 
@@ -975,7 +993,7 @@ void Motion_CorrectWhenMovingAtX(void) {
 
 正常运动的机器人的震动是非常大的。仅仅使用杜邦线连接的端口在一两次运作下便会断开。在实际调试中，我们一方面对控制电路进行了热熔胶加固，保证控制电路的连接性；另一方面对通讯电路进行了焊接处理，保证通讯电路的稳定性。
 
-没曾想到的是，决赛的时候，现成的USB转TTL模块发生了接触不良的故障。这属于寿命到头了，我们没有办法解决。最后惨遭淘汰。
+没曾想到的是，决赛的时候，现成的USB转TTL模块发生了接触不良的故障。这属于工业产品的寿命问题，我们没有办法解决。最后惨遭淘汰。
 
 ### 程序设计访问异常内存
 
@@ -993,11 +1011,11 @@ void Motion_CorrectWhenMovingAtX(void) {
 
 ### 未能正常使用模块
 
-对于任何使用的模块，一定要根据芯片的Datasheet，或者参照官方例程使用。对于网络上的教程，推荐大致浏览后对照Datasheet再进行解读。点名批评CSDN，坑害我许久。
+对于任何使用的模块，一定要根据芯片的Datasheet，或者参照官方例程使用。对于网络上的教程，推荐大致浏览后对照Datasheet再进行解读。
 
 ### 麦克纳姆轮方向错误
 
-麦克纳姆轮的X型和O型是从下往上看的，但是教程中给反了，所以测试的时候总是无法正确行驶。调试时间长达一个月，将近退赛。再次批评CSDN。
+麦克纳姆轮的X型和O型是从下往上看的，但是教程中给反了，所以测试的时候总是无法正确行驶。调试时间长达一个月，将近退赛。
 
 ### 未能做到短路保护
 
@@ -1031,4 +1049,5 @@ PID代码写错了 + 参数没调好。这个问题是最普遍的。
 
 ### 机械结构设计缺陷
 
-请参考《epsilonGoal队技术总结》。
+请参考《epsilonGoal队技术总结》。技术总结是否成为公开文档的问题应参照组委会规定。
+
